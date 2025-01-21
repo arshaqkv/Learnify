@@ -1,7 +1,7 @@
 import { LoginDTO, LoginResponseDTO } from "../../DTOs/UserDTO";
 import bcryptjs from "bcryptjs";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
-import { generateAccessToken } from "../../../config/generateToken";
+import { generateAccessToken, generateRefreshToken } from "../../../config/generateToken";
 
 export class LoginUser {
   constructor(private userRepository: IUserRepository) {}
@@ -21,9 +21,11 @@ export class LoginUser {
     }
 
     const accessToken = generateAccessToken({ id: user._id, role: user.role });
+    const refreshToken = generateRefreshToken({ id: user._id, role: user.role })
 
     return {
       accessToken,
+      refreshToken,
       user: {
         firstName: user.firstname,
         lastName: user.lastname,

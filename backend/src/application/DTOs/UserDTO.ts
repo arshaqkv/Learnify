@@ -6,13 +6,14 @@ export interface SignUpDTO {
   phone: number;
 }
 
-export interface LoginDTO{
-    email: string,
-    password: string
+export interface LoginDTO {
+  email: string;
+  password: string;
 }
 
 export interface LoginResponseDTO {
   accessToken: string;
+  refreshToken: string;
   user: {
     firstName: string;
     lastName: string;
@@ -22,4 +23,9 @@ export interface LoginResponseDTO {
     profileImage: string;
     createdAt?: Date;
   };
+}
+
+export interface verifyOtpDTO {
+  email: string;
+  otp: string;
 }
