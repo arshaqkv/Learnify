@@ -1,20 +1,34 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../../config/verifyToken";
+import { CustomError } from "./error.middleware";
 
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void =>{
-    const token = req.cookies.accessToken
-    if(!token){
-        res.status(401).json({success: false, message: "Unauthorized"})
+export const isAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const token = req.cookies.accessToken;
+  if (!token) {
+    throw new CustomError("Unauthorized", 401);
+  }
+  try {
+    const decoded = verifyAccessToken(token);
+    if (!decoded) {
+      throw new CustomError("Unauthorized", 401);
     }
-    try {
-        const decoded = verifyAccessToken(token)
-        if(!decoded){
-            res.status(401).json({success: false, message: "Unauthorized"})
-        }
-        req.user = decoded 
-        console.log('###########', req.user)
-        next()
-    } catch (error) {
-        res.status(401).json({ message: "Invalid or expired access token" });
+    req.user = decoded;
+    console.log("###########", req.user);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const authorizeRole = (roles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if(!roles.includes(req.user?.role || '')){
+        throw new CustomError(`Access denied. Not allowed to access this resource`, 403)
     }
-}
+    next()
+  };
+};

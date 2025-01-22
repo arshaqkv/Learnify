@@ -1,5 +1,6 @@
 import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
+import { CustomError } from "../../../interface/middlewares/error.middleware";
 import { verifyOtpDTO } from "../../DTOs/UserDTO";
 
 export class VerifyOtp {
@@ -14,11 +15,11 @@ export class VerifyOtp {
     const otpRecord = await this.otpRepository.findOtpByEmail(email);
 
     if (!otpRecord || otpRecord.otp !== otp) {
-      throw new Error("Invalid OTP");
+      throw new CustomError("Invalid OTP", 400);
     }
 
     if (otpRecord.expiresAt < new Date()) {
-      throw new Error("OTP expired");
+      throw new CustomError("OTP expired", 400);
       await this.otpRepository.deleteOtpByEmail(email)
     }
 

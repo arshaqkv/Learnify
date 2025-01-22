@@ -28,4 +28,17 @@ export class MongoUserRepository implements IUserRepository {
   ): Promise<void> {
     await UserModel.findOneAndUpdate({ email }, data, { new: true });
   }
+
+  async getAllUsers(): Promise<User[]> {
+    const users = await UserModel.find({role: {$ne: 'admin'}})
+    return users
+  }
+
+  async blockUser(id: string): Promise<void> {
+    await UserModel.findByIdAndUpdate(id, {isBlocked: true}, {new: true})
+  }
+
+  async unblockuser(id: string): Promise<void> {
+    await UserModel.findByIdAndUpdate(id, {isBlocked: false}, {new: true})
+  }
 }

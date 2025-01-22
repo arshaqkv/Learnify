@@ -6,4 +6,7 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmailAndUpdate(email: string, data: Partial<User>): Promise<void>;
   findByIdAndUpdate(id: string): Promise<User | null>;
+  getAllUsers(): Promise<User[]>;
+  blockUser(id: string): Promise<void>;
+  unblockuser(id: string): Promise<void>;
 }

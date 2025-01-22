@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AuthDIContainer } from "../../infrastructure/di/containers/authDIContainer";
 import { cookieOptions } from "../../utils/cookieHelper";
 import { config } from "../../config/config";
 
 export class UserController {
   //user signup
-  async signup(req: Request, res: Response) {
+  async signup(req: Request, res: Response, next: NextFunction) {
     try {
       const { firstName, lastName, email, password, phone } = req.body;
       const signupUser = AuthDIContainer.getSignupUserUseCase();
@@ -14,12 +14,12 @@ export class UserController {
         .status(201)
         .json({ success: true, message: "User signed up successfully", user });
     } catch (error: any) {
-      console.log(error);
+      next(error);
     }
   }
 
   //user login
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       const data = {
@@ -34,7 +34,37 @@ export class UserController {
         .status(200)
         .json({ succuess: true, message: "Logged in successfully", user });
     } catch (error: any) {
-      console.log(error);
+      next(error);
+    }
+  }
+
+  async getUserData(req: Request, res: Response, next: NextFunction){
+    try {
+      const { id } = req.user
+      const getUserData = AuthDIContainer.getUserDataUseCase()
+      const user = await getUserData.execute(id)
+      res.status(200).json({success: true, user})
+    } catch (error: any) {
+      next(error)
+    }
+  }
+
+  async adminLogin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email, password } = req.body;
+      const data = {
+        email,
+        password,
+      };
+      const adminLogin = AuthDIContainer.getAdminLoginUseCase();
+      const { accessToken, refreshToken, user } = await adminLogin.execute(data);
+      res
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .status(200)
+        .json({ succuess: true, message: "Admin Logged in successfully", user });
+    } catch (error) {
+      next(error);
     }
   }
 
@@ -53,19 +83,21 @@ export class UserController {
     }
   }
 
-  async verifyOtp(req: Request, res: Response) {
+  async verifyOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, otp } = req.body;
-      const verifyOtp = AuthDIContainer.getVerifyOtpUseCase()
-      await verifyOtp.execute({email, otp})
-      res.status(200).send({success: true, message: "Email verification succussfull"})
+      const verifyOtp = AuthDIContainer.getVerifyOtpUseCase();
+      await verifyOtp.execute({ email, otp });
+      res
+        .status(200)
+        .send({ success: true, message: "Email verification succussfull" });
     } catch (error) {
-      console.log(error)
+      next(error);
     }
   }
 
   //logout user
-  async logout(req: Request, res: Response) {
+  async logout(req: Request, res: Response, next: NextFunction) {
     try {
       res.clearCookie("accessToken", {
         httpOnly: true,
@@ -82,8 +114,8 @@ export class UserController {
       res
         .status(200)
         .send({ success: true, message: "Logged out successfully" });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      next(error)
     }
   }
 }

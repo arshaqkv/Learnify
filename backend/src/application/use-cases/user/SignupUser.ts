@@ -5,6 +5,7 @@ import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { generateOtp } from "../../../utils/generateOtp";
 import { sendEmail } from "../../../infrastructure/services/EmailService";
 import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
+import { CustomError } from "../../../interface/middlewares/error.middleware";
 
 export class SignupUser {
   constructor(
@@ -16,7 +17,7 @@ export class SignupUser {
     const { firstname, lastname, email, password, phone } = data;
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
-      throw new Error("Email already in use");
+      throw new CustomError("Email already in use", 400) 
     }
     const hashedPassword = await bcryptjs.hash(password, 10);
     const newUser = new User(firstname, lastname, email, hashedPassword, phone);

@@ -10,6 +10,7 @@ export class User {
     public isVerified: boolean = false,
     public isBlocked: boolean = false,
     public _id?: string,
+    public googleId?: string,
     public createdAt?: Date,
     public updatedAt?: Date
   ) {}
