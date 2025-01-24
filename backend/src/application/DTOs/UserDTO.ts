@@ -3,7 +3,7 @@ export interface SignUpDTO {
   lastname: string;
   email: string;
   password: string;
-  phone: number;
+  phone: string;
 }
 
 export interface LoginDTO {
@@ -18,9 +18,9 @@ export interface LoginResponseDTO {
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
-    phone: number;
+    phone?: string;
     profileImage: string;
+    role: string;
     createdAt?: Date;
   };
 }

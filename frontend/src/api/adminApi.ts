@@ -1,25 +1,38 @@
-import axios from "./axios/axiosInstance";
-import { config } from "../config/config";
-
-const API_URL = config.app.BASE_URL;
+import axios from "./axios/adminInstance";
 
 //admin login
 export const loginAdminAPI = async (data: {
   email: string;
   password: string;
 }) => {
-  const response = axios.post(`${API_URL}/admin/login`, data);
+  const response = axios.post("/login", data);
   return response;
 };
 
 export const logoutAdminAPI = async () => {
-  const response = axios.post(`${API_URL}/admin/logout`);
+  const response = axios.post("/logout");
+  return response;
+};
+
+//user management
+export const getAllUsers = async () => {
+  const response = axios.get(`/get-students`);
+  return response;
+};
+
+export const blockUser = async (id: string) => {
+  const response = axios.patch(`/block-user${id}`);
+  return response;
+};
+
+export const unblockUser = async (id: string) => {
+  const response = axios.patch(`/unblock-user${id}`);
   return response;
 };
 
 //category management
 export const getAllCategories = async () => {
-  const response = axios.get(`${API_URL}/admin/categories`);
+  const response = axios.get("/categories");
   return response;
 };
 
@@ -27,7 +40,7 @@ export const createCategory = async (data: {
   name: string;
   description: string;
 }) => {
-  const response = axios.post(`${API_URL}/admin/category/add`, data);
+  const response = axios.post("/category/add", data);
   return response;
 };
 
@@ -35,11 +48,11 @@ export const editCategory = async (
   id: string,
   data: { name: string; description: string }
 ) => {
-  const response = axios.put(`${API_URL}/admin/category/edit/${id}`, data);
+  const response = axios.put(`/category/edit/${id}`, data);
   return response;
 };
 
-export const removefCategory = async (id: string) => {
-  const response = axios.put(`${API_URL}/admin/category/remove/${id}`);
+export const removeCategory = async (id: string) => {
+  const response = axios.put(`/category/remove/${id}`);
   return response;
 };

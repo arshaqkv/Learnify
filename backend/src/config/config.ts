@@ -16,7 +16,8 @@ interface Config {
   environment: string;
   user: string,
   pass: string
-  cors: CorsConfig
+  cors: CorsConfig,
+  googleclientId: string
 }
 
 export const config: Config = {
@@ -32,5 +33,6 @@ export const config: Config = {
     ALLOWED_HEADERS: ['Content-type', 'Authorization'],
     ALLOWED_METHODS: ["GET", "POST", "DELETE", "PUT","PATCH"],
     CREDENTIALS: true
-  }
+  },
+  googleclientId: process.env.CLIENT_ID as string
 };

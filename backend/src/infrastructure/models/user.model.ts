@@ -5,8 +5,8 @@ interface IUser extends Document {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
-  phone: number;
+  password?: string;
+  phone: string;
   role: string;
   isVerified: boolean;
   isBlocked: boolean;
@@ -33,10 +33,9 @@ const UserSchema: Schema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     phone: {
-      type: Number,
+      type: String,
     },
     role: {
       type: String,

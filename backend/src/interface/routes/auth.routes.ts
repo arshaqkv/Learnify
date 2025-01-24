@@ -10,6 +10,7 @@ router.post("/signup", (req, res, next) => userController.signup(req, res, next)
 router.post('/login', (req, res, next) => userController.login(req, res, next))
 router.post('/logout', (req, res, next) => userController.logout(req, res, next))
 router.put('/verify-otp', (req, res, next) => userController.verifyOtp(req, res, next))
+router.post('/google', (req, res, next) => userController.googleLogin(req, res, next))
 
 router.use(isAuthenticated, authorizeRole(['student', 'instructor']))
     .get('/profile', (req, res, next) => userController.getUserData(req, res, next))

@@ -39,9 +39,9 @@ export class LoginUser {
         firstName: user.firstname,
         lastName: user.lastname,
         email: user.email,
-        role: user.role,
         phone: user.phone,
         profileImage: user.profileImage,
+        role: user.role,
         createdAt: user.createdAt,
       },
     };

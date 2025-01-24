@@ -9,6 +9,7 @@ import { GetUser } from "../../../application/use-cases/user/GetUser";
 import { GetAllUsers } from "../../../application/use-cases/admin/student/GetAllUsers";
 import { BlockUser } from "../../../application/use-cases/admin/student/BlockUser";
 import { UnblockUser } from "../../../application/use-cases/admin/student/UnblockUser";
+import { GoogleLogin } from "../../../application/use-cases/user/GoogleLogin";
 
 class AuthDIContainer {
   static getUserRepository() {
@@ -55,6 +56,11 @@ class AuthDIContainer {
   static getUnblockUserUseCase() {
     return new UnblockUser(this.getUserRepository());
   }
+
+  static getGoogleLoginUseCase() {
+    return new GoogleLogin(this.getUserRepository())
+  }
 }
+
 
 export { AuthDIContainer };

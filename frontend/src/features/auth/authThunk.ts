@@ -1,5 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { signupUserAPI, loginUserAPI, logoutUserAPI } from "../../api/authApi";
+import {
+  signupUserAPI,
+  loginUserAPI,
+  logoutUserAPI,
+  getUserAPI,
+  googleLoginAPI,
+} from "../../api/authApi";
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
@@ -9,7 +15,7 @@ export const signupUser = createAsyncThunk(
       lastname: string;
       email: string;
       password: string;
-      phone: number;
+      phone: string;
     },
     { rejectWithValue }
   ) => {
@@ -34,14 +40,38 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-    'auth/logout',
-    async({}, {rejectWithValue}) =>{
-        try {
-            const response = await logoutUserAPI()
-            return response.data
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message);
-        }
+export const getUser = createAsyncThunk(
+  "auth/profile",
+  async ({}, { rejectWithValue }) => {
+    try {
+      const response = await getUserAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
     }
-)
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async ({}, { rejectWithValue }) => {
+    try {
+      const response = await logoutUserAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const googleLogin = createAsyncThunk(
+  "auth/google",
+  async (token: string, { rejectWithValue }) => {
+    try {
+      const response = await googleLoginAPI(token);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);

@@ -22,7 +22,7 @@ adminRouter.use(isAuthenticated, authorizeRole(["admin"]))
 
 //student
 adminRouter.use(isAuthenticated, authorizeRole(["admin"]))
-  .get("/students", (req, res, next) => studentController.getAllUsers(req, res, next))
+  .get("/get-students", (req, res, next) => studentController.getAllUsers(req, res, next))
   .patch('/block-user/:id', (req, res, next) => studentController.blockUser(req, res, next))
   .patch('/unblock-user/:id', (req, res, next) => studentController.unBlockUser(req, res, next));
 

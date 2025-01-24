@@ -30,11 +30,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    clearError(state) {
+    startLoading(state) {
+      state.loading = true;
       state.error = null;
     },
-    clearMessage(state) {
-      state.message = null;
+    endLoading(state){
+      state.loading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -89,5 +91,5 @@ const authSlice = createSlice({
 });
 
 
-export const { clearError, clearMessage } = authSlice.actions
+export const {  } = authSlice.actions
 export default authSlice.reducer

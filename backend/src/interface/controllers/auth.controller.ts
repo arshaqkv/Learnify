@@ -38,17 +38,19 @@ export class UserController {
     }
   }
 
-  async getUserData(req: Request, res: Response, next: NextFunction){
+  //get user data
+  async getUserData(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.user
-      const getUserData = AuthDIContainer.getUserDataUseCase()
-      const user = await getUserData.execute(id)
-      res.status(200).json({success: true, user})
+      const { id } = req.user;
+      const getUserData = AuthDIContainer.getUserDataUseCase();
+      const user = await getUserData.execute(id);
+      res.status(200).json({ success: true, user });
     } catch (error: any) {
-      next(error)
+      next(error);
     }
   }
 
+  //admin login
   async adminLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
@@ -57,12 +59,18 @@ export class UserController {
         password,
       };
       const adminLogin = AuthDIContainer.getAdminLoginUseCase();
-      const { accessToken, refreshToken, user } = await adminLogin.execute(data);
+      const { accessToken, refreshToken, user } = await adminLogin.execute(
+        data
+      );
       res
         .cookie("accessToken", accessToken, cookieOptions)
         .cookie("refreshToken", refreshToken, cookieOptions)
         .status(200)
-        .json({ succuess: true, message: "Admin Logged in successfully", user });
+        .json({
+          succuess: true,
+          message: "Admin Logged in successfully",
+          user,
+        });
     } catch (error) {
       next(error);
     }
@@ -72,17 +80,22 @@ export class UserController {
   async refreshToken(req: Request, res: Response) {
     try {
       const { refreshToken } = req.cookies;
+      console.log(refreshToken);
       const newAccessToken =
-        AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
+        await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
+      console.log(newAccessToken);
       res
         .cookie("accessToken", newAccessToken, cookieOptions)
         .status(200)
-        .json({ message: "Token refreshed" });
+        .json({ message: "Token refreshed", newAccessToken });
     } catch (error: any) {
       console.log(error);
     }
   }
 
+  //resend otp
+
+  //verify otp
   async verifyOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, otp } = req.body;
@@ -115,7 +128,23 @@ export class UserController {
         .status(200)
         .send({ success: true, message: "Logged out successfully" });
     } catch (error: any) {
-      next(error)
+      next(error);
+    }
+  }
+
+  //google login
+  async googleLogin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token } = req.body;
+      const googleLogin = AuthDIContainer.getGoogleLoginUseCase();
+      const { accessToken, refreshToken, user } = await googleLogin.execute(token);
+      res
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .status(200)
+        .json({ message: "Logged in succussfully", user });
+    } catch (error) {
+      next(error);
     }
   }
 }
