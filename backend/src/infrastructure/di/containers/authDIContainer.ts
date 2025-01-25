@@ -10,6 +10,9 @@ import { GetAllUsers } from "../../../application/use-cases/admin/student/GetAll
 import { BlockUser } from "../../../application/use-cases/admin/student/BlockUser";
 import { UnblockUser } from "../../../application/use-cases/admin/student/UnblockUser";
 import { GoogleLogin } from "../../../application/use-cases/user/GoogleLogin";
+import { SendOtp } from "../../../application/use-cases/user/SendOtp";
+import { ForgotPassword } from "../../../application/use-cases/user/ForgotPassword";
+import { ResetPassword } from "../../../application/use-cases/user/ResetPassword";
 
 class AuthDIContainer {
   static getUserRepository() {
@@ -36,6 +39,10 @@ class AuthDIContainer {
     return new VerifyOtp(this.getOtpRepository(), this.getUserRepository());
   }
 
+  static getSendOtpUseCase() {
+    return new SendOtp(this.getOtpRepository());
+  }
+
   static getUserDataUseCase() {
     return new GetUser(this.getUserRepository());
   }
@@ -58,9 +65,16 @@ class AuthDIContainer {
   }
 
   static getGoogleLoginUseCase() {
-    return new GoogleLogin(this.getUserRepository())
+    return new GoogleLogin(this.getUserRepository());
+  }
+
+  static getForgotPasswordUseCase() {
+    return new ForgotPassword(this.getUserRepository());
+  }
+
+  static getResetPasswordUseCase() {
+    return new ResetPassword(this.getUserRepository());
   }
 }
-
 
 export { AuthDIContainer };

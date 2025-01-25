@@ -9,6 +9,7 @@ interface CorsConfig {
 }
 
 interface Config {
+  client_url: string,
   port: number;
   databaseUrl: string;
   jwtAccessSecret: string;
@@ -21,6 +22,7 @@ interface Config {
 }
 
 export const config: Config = {
+  client_url: process.env.CLIENT_URL as string || 'http://localhost:5173',
   port: parseInt(process.env.PORT || "3000", 10),
   databaseUrl: process.env.DATABASE_URL as string,
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET as string,

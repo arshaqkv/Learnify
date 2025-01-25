@@ -12,6 +12,8 @@ export class User {
     public isBlocked: boolean = false,
     public _id?: string,
     public createdAt?: Date,
-    public updatedAt?: Date
+    public updatedAt?: Date,
+    public resetPasswordToken?: string,
+    public resetPasswordExpiresAt?: Date
   ) {}
 }

@@ -93,7 +93,19 @@ export class UserController {
     }
   }
 
-  //resend otp
+  //resend
+  async sendOtp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      const sendOtp = AuthDIContainer.getSendOtpUseCase();
+      await sendOtp.execute(email);
+      res
+        .status(200)
+        .json({ success: true, message: "Verification email sent" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
 
   //verify otp
   async verifyOtp(req: Request, res: Response, next: NextFunction) {
@@ -106,6 +118,33 @@ export class UserController {
         .send({ success: true, message: "Email verification succussfull" });
     } catch (error) {
       next(error);
+    }
+  }
+
+  //forgot password
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      const forgotPassword = AuthDIContainer.getForgotPasswordUseCase();
+      await forgotPassword.execute(email);
+      res
+        .status(200)
+        .json({ success: true, message: "Reset link sent to email" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  //reset password
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token } = req.params;
+      const { password } = req.body
+      const resetPassword = AuthDIContainer.getResetPasswordUseCase()
+      await resetPassword.execute(token, password)
+      res.status(200).json({success: true, message: 'Password changed successfully'})
+    } catch (error: any) {
+      next(error)
     }
   }
 
@@ -137,7 +176,9 @@ export class UserController {
     try {
       const { token } = req.body;
       const googleLogin = AuthDIContainer.getGoogleLoginUseCase();
-      const { accessToken, refreshToken, user } = await googleLogin.execute(token);
+      const { accessToken, refreshToken, user } = await googleLogin.execute(
+        token
+      );
       res
         .cookie("accessToken", accessToken, cookieOptions)
         .cookie("refreshToken", refreshToken, cookieOptions)

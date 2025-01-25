@@ -5,13 +5,15 @@ interface IUser extends Document {
   firstname: string;
   lastname: string;
   email: string;
-  password?: string;
+  password: string;
   phone: string;
   role: string;
   isVerified: boolean;
   isBlocked: boolean;
   profileImage: string;
   googleId?: string;
+  resetPasswordToken: string;
+  resetPasswordExpiresAt: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -57,6 +59,10 @@ const UserSchema: Schema = new Schema(
     googleId: {
       type: String,
     },
+    resetPasswordToken: {
+      type: String
+    },
+    resetPasswordExpiresAt: Date
   },
   { timestamps: true }
 );

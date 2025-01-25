@@ -9,4 +9,5 @@ export interface IUserRepository {
   getAllUsers(): Promise<User[]>;
   blockUser(id: string): Promise<void>;
   unblockuser(id: string): Promise<void>;
+  findByData(token: string): Promise<User | null>
 }

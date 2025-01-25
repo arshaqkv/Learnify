@@ -19,7 +19,7 @@ const OtpSchema: Schema = new Schema(
     expiresAt: {
       type: Date,
       required: true,
-      expires: 60
+      index: { expires: 300 },
     },
   },
   { timestamps: true }

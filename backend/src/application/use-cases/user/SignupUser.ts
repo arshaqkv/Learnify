@@ -3,7 +3,7 @@ import { User } from "../../../domain/entities/user.entity";
 import { SignUpDTO } from "../../DTOs/UserDTO";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { generateOtp } from "../../../utils/generateOtp";
-import { sendEmail } from "../../../infrastructure/services/EmailService";
+import { sendVerificationEmail } from "../../../infrastructure/services/EmailService";
 import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 
@@ -24,7 +24,7 @@ export class SignupUser {
     let { otp, expiresAt } = generateOtp();
     await this.otpRepository.createOtp({ email, otp, expiresAt });
 
-    await sendEmail(email, otp);
+    await sendVerificationEmail(email, otp);
     return await this.userRepository.createUser(newUser);
   }
 }

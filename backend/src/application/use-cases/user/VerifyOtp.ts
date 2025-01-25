@@ -18,9 +18,8 @@ export class VerifyOtp {
       throw new CustomError("Invalid OTP", 400);
     }
 
-    if (otpRecord.expiresAt < new Date()) {
+    if (new Date(otpRecord.expiresAt.getTime() - 1 * 60 * 1000) < new Date()) {
       throw new CustomError("OTP expired", 400);
-      await this.otpRepository.deleteOtpByEmail(email)
     }
 
     await this.userRepository.findByEmailAndUpdate(email, {isVerified: true})
