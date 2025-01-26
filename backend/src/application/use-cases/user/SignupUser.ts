@@ -16,11 +16,18 @@ export class SignupUser {
   async execute(data: SignUpDTO): Promise<User> {
     const { firstname, lastname, email, password, phone } = data;
     const existingUser = await this.userRepository.findByEmail(email);
+
+    if(existingUser?.isVerified === false){
+      throw new CustomError("Please verify your account", 400)
+    }
+
     if (existingUser) {
       throw new CustomError("Email already in use", 400) 
     }
+
     const hashedPassword = await bcryptjs.hash(password, 10);
     const newUser = new User(firstname, lastname, email, hashedPassword, phone);
+
     let { otp, expiresAt } = generateOtp();
     await this.otpRepository.createOtp({ email, otp, expiresAt });
 

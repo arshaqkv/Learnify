@@ -28,7 +28,7 @@ export const sendVerificationEmail = async (
   const mailOptions = {
     from: config.user,
     to: email,
-    subject: "Verify your email",
+    subject: "Learnify | Verify your email",
     html: message,
   };
   await mailTransporter.sendMail(mailOptions, (err, info) => {
@@ -48,7 +48,7 @@ export const sendPasswordResetEmail = async (
   const mailOptions = {
     from: config.user,
     to: email,
-    subject: "Reset your password",
+    subject: "Learnify | Reset your password",
     html: message,
   };
   await mailTransporter.sendMail(mailOptions, (err, info) => {
@@ -68,7 +68,7 @@ export const sendPasswordChangedEmail = async (
   const mailOptions = {
     from: config.user,
     to: email,
-    subject: "Reset password successfull",
+    subject: "Learnify | Reset password successfull",
     html: message,
   };
   await mailTransporter.sendMail(mailOptions, (err, info) => {

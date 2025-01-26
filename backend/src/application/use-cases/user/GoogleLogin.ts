@@ -27,6 +27,10 @@ export class GoogleLogin {
 
     let user = await this.userRepository.findByEmail(email);
 
+    if(user && user.googleId === undefined){
+        throw new CustomError("User already exist", 400)
+    }
+
     if (!user) {
       user = new User(
         given_name,

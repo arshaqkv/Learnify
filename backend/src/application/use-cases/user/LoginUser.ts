@@ -15,18 +15,22 @@ export class LoginUser {
       throw new CustomError("Invalid Credentials", 400);
     }
 
+    if(user.googleId){
+      throw new CustomError("User registered with social login", 400)
+    } 
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
       throw new CustomError("Invalid Credentials", 400);
     }
 
-    if(user.isBlocked){
-      throw new CustomError("You are blocked", 400)
+    if(user.isVerified === false){
+      throw new CustomError("User not verified", 400)
     }
 
-    if(user.googleId){
-      throw new CustomError("User registered with social login", 400)
+    if(user.isBlocked){
+      throw new CustomError("You are blocked", 400)
     }
 
     const accessToken = generateAccessToken({ id: user._id, role: user.role });

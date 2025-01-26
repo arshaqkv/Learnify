@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, signupUser } from "./authThunk";
+import { forgotPassword, googleLogin, loginUser, logoutUser, resetPassword } from "./authThunk";
 
 interface UserAuthState {
   user: {
@@ -37,23 +37,12 @@ const authSlice = createSlice({
     endLoading(state){
       state.loading = false;
       state.error = null;
+      state.message = null
     },
   },
   extraReducers: (builder) => {
     builder
-    //signup 
-    .addCase(signupUser.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(signupUser.fulfilled, (state, action)=>{
-      state.loading = false
-      state.message = action.payload
-    })
-    .addCase(signupUser.rejected, (state, action) =>{
-      state.loading = false,
-      state.error = action.payload as string
-    })
+    
 
     //login
     .addCase(loginUser.pending, (state) =>{
@@ -62,12 +51,33 @@ const authSlice = createSlice({
     })
     .addCase(loginUser.fulfilled, (state, action) =>{
       state.loading = false
-      state.user = action.payload
+      state.user = action.payload.user
       state.isAuthenticated = true
-      state.message = action.payload
+      state.message = action.payload.message  
     })
     .addCase(loginUser.rejected, (state, action) =>{
       state.loading = false
+      state.error = action.payload as string
+    })
+
+    //forgot password
+    .addCase(forgotPassword.fulfilled, (state, action)=>{
+      state.loading = false
+      state.message = action.payload.message
+    })
+    .addCase(forgotPassword.rejected, (state, action) =>{
+      state.loading = false,
+      state.error = action.payload as string
+    })
+
+    //reset password
+    
+    .addCase(resetPassword.fulfilled, (state, action)=>{
+      state.loading = false
+      state.message = action.payload.message
+    })
+    .addCase(resetPassword.rejected, (state, action) =>{
+      state.loading = false,
       state.error = action.payload as string
     })
 
@@ -80,16 +90,32 @@ const authSlice = createSlice({
       state.loading = false
       state.user = null
       state.isAuthenticated = false
-      state.message = action.payload
+      state.message = action.payload.message
     })
     .addCase(logoutUser.rejected, (state, action) =>{
       state.loading = false
       state.error = action.payload as string
     })
 
+    //google login
+    .addCase(googleLogin.pending, (state) =>{
+      state.loading = true
+      state.error = null
+    })
+    .addCase(googleLogin.fulfilled, (state, action) =>{
+      state.loading = false
+      state.user = action.payload.user
+      state.isAuthenticated = true
+      state.message = action.payload.message
+    })
+    .addCase(googleLogin.rejected, (state, action) =>{
+      state.loading = false
+      state.error = action.payload as string
+    })
+    
   },
 });
 
 
-export const {  } = authSlice.actions
+export const { startLoading, endLoading } = authSlice.actions
 export default authSlice.reducer

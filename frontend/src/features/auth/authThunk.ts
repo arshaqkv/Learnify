@@ -5,7 +5,12 @@ import {
   logoutUserAPI,
   getUserAPI,
   googleLoginAPI,
+  forgotPasswordAPI,
+  sendOtpAPI,
+  verifyOtpAPI,
+  resetPasswordAPI,
 } from "../../api/authApi";
+
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
@@ -52,9 +57,57 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const sendOtp = createAsyncThunk(
+  "auth/sendOtp",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await sendOtpAPI(email);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const verifyOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async (data: { email: string; otp: string }, { rejectWithValue }) => {
+    try {
+      const response = await verifyOtpAPI(data);
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await forgotPasswordAPI(email);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({token, password}: {token: string; password: string}, { rejectWithValue }) => {
+    try {
+      const response = await resetPasswordAPI(token, password);
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
 export const logoutUser = createAsyncThunk(
   "auth/logout",
-  async ({}, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await logoutUserAPI();
       return response.data;

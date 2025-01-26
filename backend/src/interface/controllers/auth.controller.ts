@@ -12,7 +12,7 @@ export class UserController {
       const user = await signupUser.execute(req.body);
       res
         .status(201)
-        .json({ success: true, message: "User signed up successfully", user });
+        .json({ success: true, message: "Verification mail sent", user });
     } catch (error: any) {
       next(error);
     }
@@ -101,7 +101,7 @@ export class UserController {
       await sendOtp.execute(email);
       res
         .status(200)
-        .json({ success: true, message: "Verification email sent" });
+        .json({ success: true, message: "Resend verification email" });
     } catch (error: any) {
       next(error);
     }
@@ -111,11 +111,12 @@ export class UserController {
   async verifyOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, otp } = req.body;
+      console.log(email, otp)
       const verifyOtp = AuthDIContainer.getVerifyOtpUseCase();
       await verifyOtp.execute({ email, otp });
       res
         .status(200)
-        .send({ success: true, message: "Email verification succussfull" });
+        .send({ success: true, message: "Account created succussfully" });
     } catch (error) {
       next(error);
     }
@@ -139,12 +140,14 @@ export class UserController {
   async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { token } = req.params;
-      const { password } = req.body
-      const resetPassword = AuthDIContainer.getResetPasswordUseCase()
-      await resetPassword.execute(token, password)
-      res.status(200).json({success: true, message: 'Password changed successfully'})
+      const { password } = req.body;
+      const resetPassword = AuthDIContainer.getResetPasswordUseCase();
+      await resetPassword.execute(token, password);
+      res
+        .status(200)
+        .json({ success: true, message: "Password changed successfully" });
     } catch (error: any) {
-      next(error)
+      next(error);
     }
   }
 
