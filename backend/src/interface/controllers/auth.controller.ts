@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthDIContainer } from "../../infrastructure/di/containers/authDIContainer";
-import { cookieOptions } from "../../utils/cookieHelper";
+import { accessCookieOptions, resetCookieOptions } from "../../utils/cookieHelper";
 import { config } from "../../config/config";
 
 export class UserController {
@@ -29,8 +29,8 @@ export class UserController {
       const loginUser = AuthDIContainer.getLoginUserUseCase();
       const { accessToken, refreshToken, user } = await loginUser.execute(data);
       res
-        .cookie("accessToken", accessToken, cookieOptions)
-        .cookie("refreshToken", refreshToken, cookieOptions)
+        .cookie("accessToken", accessToken, accessCookieOptions)
+        .cookie("refreshToken", refreshToken, resetCookieOptions)
         .status(200)
         .json({ succuess: true, message: "Logged in successfully", user });
     } catch (error: any) {
@@ -63,8 +63,8 @@ export class UserController {
         data
       );
       res
-        .cookie("accessToken", accessToken, cookieOptions)
-        .cookie("refreshToken", refreshToken, cookieOptions)
+        .cookie("accessToken", accessToken, accessCookieOptions)
+        .cookie("refreshToken", refreshToken, resetCookieOptions)
         .status(200)
         .json({
           succuess: true,
@@ -77,19 +77,17 @@ export class UserController {
   }
 
   //refresh token
-  async refreshToken(req: Request, res: Response) {
+  async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies;
-      console.log(refreshToken);
       const newAccessToken =
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
-      console.log(newAccessToken);
       res
-        .cookie("accessToken", newAccessToken, cookieOptions)
+        .cookie("accessToken", newAccessToken, accessCookieOptions)
         .status(200)
-        .json({ message: "Token refreshed", newAccessToken });
+        .json({ message: "Token refreshed" });
     } catch (error: any) {
-      console.log(error);
+      next(error)
     }
   }
 
@@ -183,8 +181,8 @@ export class UserController {
         token
       );
       res
-        .cookie("accessToken", accessToken, cookieOptions)
-        .cookie("refreshToken", refreshToken, cookieOptions)
+        .cookie("accessToken", accessToken, accessCookieOptions)
+        .cookie("refreshToken", refreshToken, resetCookieOptions)
         .status(200)
         .json({ message: "Logged in succussfully", user });
     } catch (error) {
@@ -192,3 +190,4 @@ export class UserController {
     }
   }
 }
+

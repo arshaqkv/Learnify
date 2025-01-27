@@ -4,16 +4,21 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast, { Toaster } from "react-hot-toast";
-import { endLoading, startLoading } from "../../features/auth/authSlice";
-import { loginUser } from "../../features/auth/authThunk";
 import { Loader, EyeOff, Eye } from "lucide-react";
+import { loginAdmin } from "../../features/admin/adminThunk";
+import { endLoading, startLoading } from "../../features/admin/adminSlice";
 
 const AdminLogin = () => {
-  const { isAuthenticated, loading } = useAppSelector(
-    (state) => state.auth
-  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { isAuthenticated,loading } = useAppSelector((state) => state.admin);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAuthenticated]);
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
@@ -29,13 +34,6 @@ const AdminLogin = () => {
       .required("Password is required"),
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
-
-
 
   const formik = useFormik({
     initialValues: {
@@ -44,21 +42,20 @@ const AdminLogin = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      dispatch(startLoading())
+      dispatch(startLoading());
       const trimmedValues = {
         email: values.email.trim(),
         password: values.password,
       };
-      const result = await dispatch(loginUser(trimmedValues))
-      if(loginUser.fulfilled.match(result)){
-        toast.success(result.payload.message)
-        dispatch(endLoading())
-      }else if(loginUser.rejected.match(result)){
-      
-        toast.error(result.payload as string)
-        dispatch(endLoading())
+      const result = await dispatch(loginAdmin(trimmedValues));
+      if (loginAdmin.fulfilled.match(result)) {
+        toast.success(result.payload.message);
+        dispatch(endLoading());
+        navigate("/admin/dashboard");
+      } else if (loginAdmin.rejected.match(result)) {
+        toast.error(result.payload as string);
+        dispatch(endLoading());
       }
-      
     },
   });
 
@@ -66,11 +63,12 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">
+          Admin Login
+        </h2>
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
-            
             <input
               type="email"
               id="email"
@@ -93,7 +91,6 @@ const AdminLogin = () => {
 
           {/* Password Field */}
           <div className="mb-4 flex flex-col">
-            
             <input
               type={passwordVisible ? "text" : "password"}
               id="password"
@@ -125,7 +122,6 @@ const AdminLogin = () => {
               )}
             </button>
           </div>
-          
 
           {/* Submit Button */}
           <button
@@ -140,7 +136,6 @@ const AdminLogin = () => {
             )}
           </button>
         </form>
-        
       </div>
     </div>
   );

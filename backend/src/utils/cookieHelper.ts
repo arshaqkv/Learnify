@@ -7,9 +7,16 @@ interface ICookieOptions {
   maxAge: number;
 }
 
-export const cookieOptions: ICookieOptions = {
+export const accessCookieOptions: ICookieOptions = {
     httpOnly: true,
     secure: config.environment === 'production',
     sameSite: "strict",
-    maxAge: 60 * 60 * 1000
+    maxAge: 1 * 60 * 1000
+}
+
+export const resetCookieOptions: ICookieOptions = {
+  httpOnly: true,
+  secure: config.environment === 'production',
+  sameSite: "strict",
+  maxAge: 1 * 24* 60 * 60 * 1000
 }

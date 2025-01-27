@@ -1,7 +1,8 @@
 import axios from "axios";
 import { config } from "../../config/config";
+import { clearPersistData } from "../../utils/clearPersist";
 
-const API_URL = config.app.BASE_URL
+const API_URL = config.app.BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL: `${API_URL}/admin`,
@@ -30,18 +31,24 @@ axiosInstance.interceptors.response.use(
     // Handle Unauthorized errors (401) and retry logic
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // Avoid infinite loops
-
+      console.log("Access token expired. Attempting to refresh...");
       try {
         // Refresh the access token by calling the refresh endpoint
-        await axios.get(`${API_URL}/api/auth/refresh-token`, {
-          withCredentials: true, // Send cookies with the refresh request
-        });
+        const refreshResponse = await axios.post(
+          `${API_URL}/admin/refresh-token`,
+          {},
+          {
+            withCredentials: true, // Send cookies with the refresh request
+          }
+        );
+
+        console.log("Refresh token successful", refreshResponse);
 
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // If the refresh fails, redirect to login
-        window.location.href = "/login";
+        clearPersistData('persist:admin')
+        window.location.href = "/admin/login";
         return Promise.reject(refreshError);
       }
     }
@@ -50,6 +57,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;

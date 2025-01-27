@@ -9,7 +9,7 @@ const generateAccessToken = (payload: {
   role: string;
 }): string => {
   const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "1m",
   });
   return accessToken;
 };

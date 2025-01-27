@@ -15,28 +15,28 @@ export const logoutAdminAPI = async () => {
 };
 
 //user management
-export const getAllUsers = async () => {
+export const getAllUsersAPI = async () => {
   const response = axios.get(`/get-students`);
   return response;
 };
 
-export const blockUser = async (id: string) => {
+export const blockUserAPI = async (id: string) => {
   const response = axios.patch(`/block-user${id}`);
   return response;
 };
 
-export const unblockUser = async (id: string) => {
+export const unblockUserAPI = async (id: string) => {
   const response = axios.patch(`/unblock-user${id}`);
   return response;
 };
 
 //category management
-export const getAllCategories = async () => {
+export const getAllCategoriesAPI = async () => {
   const response = axios.get("/categories");
   return response;
 };
 
-export const createCategory = async (data: {
+export const createCategoryAPI = async (data: {
   name: string;
   description: string;
 }) => {
@@ -44,7 +44,7 @@ export const createCategory = async (data: {
   return response;
 };
 
-export const editCategory = async (
+export const editCategoryAPI = async (
   id: string,
   data: { name: string; description: string }
 ) => {
@@ -52,7 +52,7 @@ export const editCategory = async (
   return response;
 };
 
-export const removeCategory = async (id: string) => {
+export const removeCategoryAPI = async (id: string) => {
   const response = axios.put(`/category/remove/${id}`);
   return response;
 };

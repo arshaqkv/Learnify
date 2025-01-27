@@ -17,7 +17,6 @@ export const isAuthenticated = (
       throw new CustomError("Unauthorized", 401);
     }
     req.user = decoded;
-    console.log("###########", req.user);
     next();
   } catch (error) {
     next(error);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleLogin } from "../features/auth/authThunk";
 import toast from "react-hot-toast";
@@ -7,7 +7,6 @@ import { endLoading, startLoading } from "../features/auth/authSlice";
 
 const GoogleLoginButton: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { error } = useAppSelector((state) => state.auth);
 
   const login = useGoogleLogin({
     onSuccess: async (response) => {
@@ -28,12 +27,10 @@ const GoogleLoginButton: React.FC = () => {
       }
     },
     onError: () => {
-      console.log("Login failed");
+      console.log("Login failed")
     },
   });
-  if (error) {
-    console.log(error);
-  }
+  
   return (
     <div className="flex items-center justify-center dark:bg-gray-800 mt-4">
       <button
