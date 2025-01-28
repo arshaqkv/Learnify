@@ -30,7 +30,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async getAllUsers(): Promise<User[]> {
-    const users = await UserModel.find({ role: { $ne: "admin" } });
+    const users = await UserModel.find({ role: { $eq: "student" } });
     return users;
   }
 

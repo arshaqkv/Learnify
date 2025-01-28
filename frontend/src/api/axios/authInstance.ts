@@ -1,7 +1,8 @@
 import axios from "axios";
 import { config } from "../../config/config";
+import { clearPersistData } from "../../utils/clearPersist";
 
-const API_URL = config.app.PORT
+const API_URL = config.app.PORT;
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -33,18 +34,16 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Call the refresh token endpoint
-        const refreshResponse = await axios.post(
+        await axios.post(
           `${API_URL}/auth/refresh-token`,
           {},
           { withCredentials: true }
         );
 
-        console.log("Refresh token successful", refreshResponse);
-
         // Retry the original request after refreshing the access token
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.log("Refresh failed:", refreshError);
+        clearPersistData("persist:auth");
         window.location.href = "/login"; // Redirect to login if refresh fails
         return Promise.reject(refreshError);
       }
@@ -54,6 +53,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;

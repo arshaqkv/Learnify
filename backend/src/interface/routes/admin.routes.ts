@@ -16,6 +16,7 @@ adminRouter.post('/refresh-token', (req, res, next) => studentController.adminRe
 //category
 adminRouter.use(isAuthenticated, authorizeRole(["admin"]))
   .get("/categories", (req, res, next) => categoryController.getAllCategories(req, res, next))
+  .get('/category/:id', (req, res, next) => categoryController.getCategory(req, res, next))
   .post("/category/add", (req, res, next) => categoryController.createCategory(req, res, next))
   .put("/category/edit/:id", (req, res, next) => categoryController.updateCategory(req, res, next))
   .patch("/category/remove/:id", (req, res, next) => categoryController.deleteCategory(req, res, next))

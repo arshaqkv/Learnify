@@ -3,6 +3,7 @@ import { CreateCategory } from "../../../application/use-cases/admin/category/Cr
 import { GetAllCategories } from "../../../application/use-cases/admin/category/GetAllCategories";
 import { UpdateCategory } from "../../../application/use-cases/admin/category/UpdateCategory";
 import { DeleteCategory } from "../../../application/use-cases/admin/category/DeleteCategory";
+import { GetCategory } from "../../../application/use-cases/admin/category/GetCategory";
 
 class CategoryDIContainer {
   static getCategoryRepository() {
@@ -15,6 +16,10 @@ class CategoryDIContainer {
 
   static getAllCategoriesUseCase() {
     return new GetAllCategories(this.getCategoryRepository());
+  }
+
+  static getCategoryUseCase() {
+    return new GetCategory(this.getCategoryRepository());
   }
 
   static getUpdateCategoryUseCase() {

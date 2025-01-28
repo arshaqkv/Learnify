@@ -5,10 +5,19 @@ export class CategoryController {
   async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const createCategory = CategoryDIContainer.getCreateCategoryUseCase();
-      const category = await createCategory.execute(req.body);
-      res
-        .status(201)
-        .json({ message: "Category created successfully", category });
+      await createCategory.execute(req.body);
+      res.status(201).json({ message: "New category created" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const getCategory = CategoryDIContainer.getCategoryUseCase();
+      const category = await getCategory.execute(id);
+      res.status(200).json({ category });
     } catch (error: any) {
       next(error);
     }
@@ -18,7 +27,7 @@ export class CategoryController {
     try {
       const getAllCategories = CategoryDIContainer.getAllCategoriesUseCase();
       const categories = await getAllCategories.execute();
-      res.status(200).json(categories);
+      res.status(200).json({ categories });
     } catch (error: any) {
       next(error);
     }

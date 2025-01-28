@@ -63,7 +63,7 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">
+        <h2 className="text-2xl font-bold text-center mb-6">
           Admin Login
         </h2>
         <form onSubmit={formik.handleSubmit}>

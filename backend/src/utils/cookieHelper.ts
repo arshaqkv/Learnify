@@ -8,15 +8,15 @@ interface ICookieOptions {
 }
 
 export const accessCookieOptions: ICookieOptions = {
-    httpOnly: true,
-    secure: config.environment === 'production',
-    sameSite: "strict",
-    maxAge: 1 * 60 * 1000
-}
+  httpOnly: true,
+  secure: config.environment === "production",
+  sameSite: "strict",
+  maxAge: 15 * 60 * 1000,
+};
 
 export const resetCookieOptions: ICookieOptions = {
   httpOnly: true,
-  secure: config.environment === 'production',
+  secure: config.environment === "production",
   sameSite: "strict",
-  maxAge: 1 * 24* 60 * 60 * 1000
-}
+  maxAge: 1 * 24 * 60 * 60 * 1000,
+};

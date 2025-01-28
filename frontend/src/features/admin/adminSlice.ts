@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getallUsers, loginAdmin, logoutAdmin } from "./adminThunk";
+import { loginAdmin, logoutAdmin } from "./adminThunk";
 
 interface AdminAuthState {
   user: {
@@ -59,13 +59,7 @@ const adminSlice = createSlice({
           state.message = action.payload.message;
         })
 
-        //get all students
-        .addCase(getallUsers.fulfilled, (state, action) =>{
-          state.loading = false
-          state.data = action.payload.students
-          state.isAuthenticated = true,
-          state.message = action.payload.message
-        })
+        
   }
 
 });

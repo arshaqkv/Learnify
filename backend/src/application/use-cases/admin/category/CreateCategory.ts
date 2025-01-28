@@ -1,5 +1,6 @@
 import { Category } from "../../../../domain/entities/category.entity";
 import { ICategoryRepository } from "../../../../domain/interfaces/category.repository";
+import { CustomError } from "../../../../interface/middlewares/error.middleware";
 import { CategoryDTO } from "../../../DTOs/CategoryDTO";
 
 export class CreateCategory {
@@ -12,7 +13,7 @@ export class CreateCategory {
       name
     );
     if (existingCategory) {
-      throw new Error("Category with this name already exists.");
+      throw new CustomError("Category with this name already exists", 400);
     }
 
     const newCategory = new Category(name, description);

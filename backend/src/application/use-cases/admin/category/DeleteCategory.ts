@@ -1,4 +1,5 @@
 import { ICategoryRepository } from "../../../../domain/interfaces/category.repository";
+import { CustomError } from "../../../../interface/middlewares/error.middleware";
 
 export class DeleteCategory{
     constructor( private categoryRepository: ICategoryRepository) {}
@@ -6,7 +7,7 @@ export class DeleteCategory{
     async execute(id: string): Promise<void>{
         const category = await this.categoryRepository.getCategoryById(id)
         if(!category){
-            throw new Error("Category not found.");
+            throw new CustomError("Category not found", 400);
         }
         await this.categoryRepository.deleteCategory(id)
     }

@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(
       console.log("Access token expired. Attempting to refresh...");
       try {
         // Refresh the access token by calling the refresh endpoint
-        const refreshResponse = await axios.post(
+        await axios.post(
           `${API_URL}/admin/refresh-token`,
           {},
           {
@@ -42,12 +42,10 @@ axiosInstance.interceptors.response.use(
           }
         );
 
-        console.log("Refresh token successful", refreshResponse);
-
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        clearPersistData('persist:admin')
+        clearPersistData("persist:admin");
         window.location.href = "/admin/login";
         return Promise.reject(refreshError);
       }

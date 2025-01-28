@@ -21,12 +21,12 @@ export const getAllUsersAPI = async () => {
 };
 
 export const blockUserAPI = async (id: string) => {
-  const response = axios.patch(`/block-user${id}`);
+  const response = axios.patch(`/block-user/${id}`);
   return response;
 };
 
 export const unblockUserAPI = async (id: string) => {
-  const response = axios.patch(`/unblock-user${id}`);
+  const response = axios.patch(`/unblock-user/${id}`);
   return response;
 };
 
@@ -35,6 +35,11 @@ export const getAllCategoriesAPI = async () => {
   const response = axios.get("/categories");
   return response;
 };
+
+export const getCategoryAPI = async (id: string) =>{
+  const response = axios.get(`/category/${id}`)
+  return response
+}
 
 export const createCategoryAPI = async (data: {
   name: string;
@@ -53,6 +58,6 @@ export const editCategoryAPI = async (
 };
 
 export const removeCategoryAPI = async (id: string) => {
-  const response = axios.put(`/category/remove/${id}`);
+  const response = axios.patch(`/category/remove/${id}`);
   return response;
 };
