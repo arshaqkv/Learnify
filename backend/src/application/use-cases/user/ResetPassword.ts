@@ -14,13 +14,6 @@ export class ResetPassword {
 
     const user = await this.userRepository.findByData(token);
 
-    if(user){
-        const existingPassword = await bcryptjs.compare(password, user.password)
-        if(existingPassword){
-            throw new CustomError("Can't use existing password", 400)
-        }
-    }
-
     if (!user) {
       throw new CustomError("Invalid or expire reset token", 400);
     }

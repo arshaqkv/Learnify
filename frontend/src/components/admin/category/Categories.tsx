@@ -18,7 +18,6 @@ import {
 import { Button } from "../../ui/button";
 import {
   FilePenLine,
-  Loader,
   Lock,
   LockOpen,
   Plus,
@@ -46,6 +45,7 @@ import {
   PaginationLink,
 } from "../../ui/pagination";
 import { endLoading, startLoading } from "../../../features/admin/adminSlice";
+import { Skeleton } from "../../ui/skeleton";
 
 const Categories = () => {
   const dispatch = useAppDispatch();
@@ -133,7 +133,53 @@ const Categories = () => {
         </div>
       </CardHeader>
       {loading ? (
-        <Loader className="w-6 h-6 animate-spin mb-10 mx-auto" />
+        <CardContent>
+        {/* Skeleton Table */}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Skeleton className="h-6 w-24" />
+              </TableHead>
+              <TableHead>
+                <Skeleton className="h-6 w-40" />
+              </TableHead>
+              <TableHead>
+                <Skeleton className="h-6 w-20" />
+              </TableHead>
+              <TableHead>
+                <Skeleton className="h-6 w-32" />
+              </TableHead>
+              <TableHead>
+                <Skeleton className="h-6 w-24" />
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({length:5}).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                  <Skeleton className="h-6 w-24" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-6 w-40" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-6 w-20" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-6 w-32" />
+                </TableCell>
+                <TableCell className="flex gap-2">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
       ) : categories.length > 0 ? (
         <CardContent>
           <div>

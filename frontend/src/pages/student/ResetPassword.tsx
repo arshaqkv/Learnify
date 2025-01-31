@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -11,11 +11,13 @@ import {
 import { Loader, Eye, EyeOff } from "lucide-react";
 import { resetPassword } from "../../features/auth/authThunk";
 import { formikPasswordValidation } from "../../utils/passwordValidation";
+import ExpiredLinkPage from "../../components/ExpiredLink";
 
 const ResetPassword = () => {
   const { loading } = useAppSelector((state) => state.auth);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [tokenExpired, setTokenExpired] = useState(false);
   const { token } = useParams<{ token: string }>();
 
   const dispatch = useAppDispatch();
@@ -56,11 +58,18 @@ const ResetPassword = () => {
         dispatch(endLoading());
         navigate('/login')
       } else if (resetPassword.rejected.match(result)) {
+        setTokenExpired(true)
         toast.error(result.payload as string);
         dispatch(endLoading());
       }
     },
   });
+
+  if(tokenExpired){
+    return (
+      <ExpiredLinkPage />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

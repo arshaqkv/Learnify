@@ -146,7 +146,7 @@ class UserController {
       await resetPassword.execute(token, password);
       res
         .status(200)
-        .json({ success: true, message: "Password changed successfully" });
+        .json({ success: true, message: "Password changed successfully",  });
     } catch (error: any) {
       next(error);
     }

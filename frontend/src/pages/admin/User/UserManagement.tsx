@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "../../../components/ui/table";
 import { Button } from "../../../components/ui/button";
-import { Loader, Search, UserRoundCheck, UserRoundX } from "lucide-react";
+import { Search, UserRoundCheck, UserRoundX } from "lucide-react";
 import { endLoading, startLoading } from "../../../features/admin/adminSlice";
 import toast from "react-hot-toast";
 import { Input } from "../../../components/ui/input";
@@ -32,10 +32,11 @@ import {
   PaginationLink,
 } from "../../../components/ui/pagination";
 import ResultNotFound from "../../../components/common/ResultNotFound";
+import { Skeleton } from "../../../components/ui/skeleton";
 
 const UserManagement = () => {
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.admin)
+  const { loading } = useAppSelector((state) => state.admin);
   const [users, setUsers] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -107,11 +108,59 @@ const UserManagement = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {
-          loading ? (<Loader className="w-6 h-6 animate-spin mb-10 mx-auto"/>)
-        :
-        
-        users.length > 0 ? (
+        {loading ? (
+          <CardContent>
+          {/* Skeleton Table */}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>
+                  <Skeleton className="h-6 w-24" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-6 w-40" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-6 w-20" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-6 w-32" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-6 w-24" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-6 w-30" />
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({length:5}).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <Skeleton className="h-6 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-40" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-24" />
+                  </TableCell>
+                  <TableCell className="flex justify-end">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+        ) : users.length > 0 ? (
           <Table>
             <TableCaption>Total Users: {pagination.totalUsers}</TableCaption>
             <TableHeader>

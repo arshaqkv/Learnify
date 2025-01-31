@@ -57,10 +57,8 @@ axiosInstance.interceptors.response.use(
         {},
         { withCredentials: true }
       );
-      toast.error("You are blocked by user")
-      setTimeout(() => {
-        window.location.href = "/login"; 
-      }, 500);
+      clearPersistData("persist:auth")
+      window.location.href = "/login"; 
     }
 
     // Handle other errors

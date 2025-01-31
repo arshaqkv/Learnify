@@ -26,7 +26,10 @@ const UserProfilePage = () => {
     fetchUser();
   }, [dispatch]); // Added `dispatch` as a dependency
   
-
+  useEffect(() => {
+    console.log("useEffect executed!");
+  }, []);
+  
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -55,7 +58,7 @@ const UserProfilePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-gray-600 mb-2">First Name</label>
-              <h1>{user?.firstname || "na"}</h1>
+              <h1>{user?.firstname}</h1>
             </div>
             <div>
               <label className="block text-gray-600 mb-2">Last Name</label>
