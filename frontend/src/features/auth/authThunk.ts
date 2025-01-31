@@ -3,12 +3,12 @@ import {
   signupUserAPI,
   loginUserAPI,
   logoutUserAPI,
-  getUserAPI,
   googleLoginAPI,
   forgotPasswordAPI,
   sendOtpAPI,
   verifyOtpAPI,
   resetPasswordAPI,
+  getUserAPI,
 } from "../../api/authApi";
 
 
@@ -47,9 +47,9 @@ export const loginUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
   "auth/profile",
-  async ({}, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await getUserAPI();
+      const response = await getUserAPI()
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

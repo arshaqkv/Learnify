@@ -18,7 +18,7 @@ import {
   editCategory,
   getCategory,
 } from "../../../features/admin/adminThunk";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useEffect } from "react";
 
 // Define interfaces for our data structures
@@ -43,16 +43,17 @@ const EditCategory = () => {
       name: Yup.string()
         .required("Category name is required")
         .matches(
-          /^[A-Za-z\s]+$/,
-          "Category name must contain only letters and spaces"
+          /^[A-Za-z].*$/,
+          "Category name must start with a letter"
         )
+        
         .min(3, "Name must be at least 3 characters"),
       description: Yup.string()
         .required("Description is required")
         .matches(/^[A-Za-z].*$/, "Description must start with a letter")
         .min(10, "Description must be at least 10 characters"),
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       dispatch(startLoading());
       if (!id) {
         toast.error("Invalid id");
@@ -61,8 +62,8 @@ const EditCategory = () => {
 
       // Create the update data object with proper typing
       const updateData: CategoryFormValues = {
-          name: values.name,
-          description: values.description
+          name: values.name.trim(),
+          description: values.description.trim()
       };
 
       const result = await dispatch(editCategory({id, data: updateData}));
@@ -73,7 +74,6 @@ const EditCategory = () => {
       } else if (editCategory.rejected.match(result)) {
         toast.error(result.payload as string);
         dispatch(endLoading());
-        resetForm();
       }
     },
   });
@@ -104,7 +104,6 @@ const EditCategory = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <Toaster />
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Edit Category</CardTitle>

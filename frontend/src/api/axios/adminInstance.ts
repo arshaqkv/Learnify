@@ -41,10 +41,11 @@ axiosInstance.interceptors.response.use(
             withCredentials: true, // Send cookies with the refresh request
           }
         );
-
+      
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
+        console.log("Refresh token failed, logging out...");
         clearPersistData("persist:admin");
         window.location.href = "/admin/login";
         return Promise.reject(refreshError);

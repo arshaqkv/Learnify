@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Login from "./pages/student/Login";
 import Home from "./pages/student/Home";
 import Signup from "./pages/student/Signup";
@@ -15,33 +15,56 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import UserManagement from "./pages/admin/User/UserManagement";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
+import UserProfilePage from "./pages/student/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
+  const Layout = ({ children }: { children: React.ReactNode }) => {
+    const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith("/admin");
+    return (
+      <>
+        {!isAdminRoute && <Navbar />}
+        {children}
+        {!isAdminRoute && <Footer />}
+      </>
+    );
+  };
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/verify-account" element={<VerifyAccount />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Layout>
+        <Toaster />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        <Route element={<AdminProtectedRoute role="admin" />}>
-          <Route path="/admin" element={<AdminDashboardPage />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="category/add" element={<CreateCategory />} />
-            <Route path="category/edit/:id" element={<EditCategory />} />
+          <Route element={<ProtectedRoute role="student" />}>
+            <Route path="/profile" element={<UserProfilePage />} />
           </Route>
-        </Route>
 
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route element={<AdminProtectedRoute role="admin" />}>
+            <Route path="/admin" element={<AdminDashboardPage />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<UserManagement />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="categories/add" element={<CreateCategory />} />
+              <Route path="categories/edit/:id" element={<EditCategory />} />
+            </Route>
+          </Route>
+
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Layout>
     </>
   );
 };

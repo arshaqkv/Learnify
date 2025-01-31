@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { loginUser } from "../../features/auth/authThunk";
 import { Loader, EyeOff, Eye } from "lucide-react";
@@ -65,7 +65,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         <form onSubmit={formik.handleSubmit}>

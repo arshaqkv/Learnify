@@ -2,12 +2,27 @@ import { Request, Response, NextFunction } from "express";
 import { AuthDIContainer } from "../../../../infrastructure/di/containers/authDIContainer";
 import { accessCookieOptions } from "../../../../utils/cookieHelper";
 
-export class StudentController {
+class StudentController {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = req.query.search as string;
       const getAllUsers = AuthDIContainer.getAllUserDataUseCase();
-      const students = await getAllUsers.execute();
-      res.status(200).json({ students });
+      const { users, totalUsers } = await getAllUsers.execute(
+        page,
+        limit,
+        search
+      );
+
+      res
+        .status(200)
+        .json({
+          success: true,
+          users,
+          pagination: { totalUsers, totalPages: Math.ceil(totalUsers / limit) },
+          currentPage: page
+        });
     } catch (error) {
       next(error);
     }
@@ -39,6 +54,7 @@ export class StudentController {
   async adminRefreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies;
+      console.log("########################3",refreshToken)
       const newAccessToken =
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
       res
@@ -50,3 +66,6 @@ export class StudentController {
     }
   }
 }
+
+const studentController = new StudentController();
+export { studentController };

@@ -29,9 +29,23 @@ export class MongoUserRepository implements IUserRepository {
     await UserModel.findOneAndUpdate({ email }, data, { new: true });
   }
 
-  async getAllUsers(): Promise<User[]> {
-    const users = await UserModel.find({ role: { $eq: "student" } });
-    return users;
+  async getAllUsers(
+    page: number,
+    limit: number,
+    search?: string
+  ): Promise<{ users: any[]; totalUsers: number }> {
+    const skip = (page - 1) * limit;
+    const regex = new RegExp(`^${search}`, "i");
+    const query = search
+      ? { firstname: { $regex: regex }, role: "student" }
+      : { role: "student" };
+
+    const users = await UserModel.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+    const totalUsers = await UserModel.countDocuments(query);
+    return { users, totalUsers };
   }
 
   async blockUser(id: string): Promise<void> {
@@ -45,8 +59,8 @@ export class MongoUserRepository implements IUserRepository {
   async findByData(token: string): Promise<User | null> {
     const user = await UserModel.findOne({
       resetPasswordToken: token,
-      resetPasswordExpiresAt: { $gt: Date.now() }
+      resetPasswordExpiresAt: { $gt: Date.now() },
     });
-    return user
+    return user;
   }
 }

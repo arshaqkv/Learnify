@@ -9,6 +9,7 @@ import {
   loginAdminAPI,
   logoutAdminAPI,
   removeCategoryAPI,
+  toggleBlockCategoryAPI,
   unblockUserAPI,
 } from "../../api/adminApi";
 
@@ -38,9 +39,12 @@ export const logoutAdmin = createAsyncThunk(
 
 export const getallUsers = createAsyncThunk(
   "admin/getAllUsers",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page, limit, search }: { page: number; limit: number; search?: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await getAllUsersAPI();
+      const response = await getAllUsersAPI({ page, limit, search });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
@@ -75,9 +79,12 @@ export const unblockUser = createAsyncThunk(
 //category
 export const getAllCategories = createAsyncThunk(
   "admin/getAllCategories",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page, limit, search }: { page: number; limit: number; search?: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await getAllCategoriesAPI();
+      const response = await getAllCategoriesAPI({ page, limit, search });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
@@ -134,4 +141,16 @@ export const removeCategory = createAsyncThunk(
       return rejectWithValue(error.response?.data?.message);
     }
   }
-)
+);
+
+export const toggleBlockCategory = createAsyncThunk(
+  "admin/toggleBlockCategory",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await toggleBlockCategoryAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);

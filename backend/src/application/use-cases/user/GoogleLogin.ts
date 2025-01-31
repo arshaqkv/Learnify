@@ -31,6 +31,10 @@ export class GoogleLogin {
         throw new CustomError("User already exist", 400)
     }
 
+    if(user?.isBlocked){
+      throw new CustomError("You are blocked", 400)
+    }
+
     if (!user) {
       user = new User(
         given_name,

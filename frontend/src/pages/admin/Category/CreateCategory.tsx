@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { endLoading, startLoading } from "../../../features/auth/authSlice";
 import { createCategory } from "../../../features/admin/adminThunk";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 
 const CategoryAddPage = () => {
@@ -26,7 +26,10 @@ const CategoryAddPage = () => {
     validationSchema: Yup.object({
       name: Yup.string()
         .required("Category name is required")
-        .matches(/^[A-Za-z\s]+$/, "Category name must contain only letters and spaces")
+        .matches(
+          /^[A-Za-z].*$/,
+          "Category name must start with a letter"
+        )
         .min(3, "Name must be at least 3 characters"),
       description: Yup.string()
         .required("Description is required")
@@ -36,8 +39,8 @@ const CategoryAddPage = () => {
     onSubmit: async (values, {resetForm}) => {
       dispatch(startLoading())
       const trimmedValues = {
-        name: values.name,
-        description: values.description
+        name: values.name.trim(),
+        description: values.description.trim()
       }
       const result = await dispatch(createCategory(trimmedValues))
       if(createCategory.fulfilled.match(result)){
@@ -55,7 +58,6 @@ const CategoryAddPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <Toaster />
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Add New Category</CardTitle>

@@ -13,7 +13,7 @@ export class CreateCategory {
       name
     );
     if (existingCategory) {
-      throw new CustomError("Category with this name already exists", 400);
+      throw new CustomError("Category name already exists!", 400);
     }
 
     const newCategory = new Category(name, description);

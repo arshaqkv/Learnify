@@ -1,22 +1,21 @@
 import { Router } from "express";
-import { UserController } from "../controllers/auth.controller";
+import { userController } from "../controllers/auth.controller";
 import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-const userController = new UserController();
+router.post("/signup", userController.signup);
+router.post("/login", userController.login);
+router.post("/logout", userController.logout);
+router.post("/refresh-token", userController.refreshToken);
+router.put("/verify-otp", userController.verifyOtp);
+router.post("/send-otp", userController.sendOtp);
+router.post("/forgot-password", userController.forgotPassword);
+router.put("/reset-password/:token", userController.resetPassword);
+router.post("/google", userController.googleLogin);
 
-router.post("/signup", (req, res, next) => userController.signup(req, res, next));
-router.post('/login', (req, res, next) => userController.login(req, res, next))
-router.post('/logout', (req, res, next) => userController.logout(req, res, next))
-router.post('/refresh-token', (req, res, next) => userController.refreshToken(req, res, next))
-router.put('/verify-otp', (req, res, next) => userController.verifyOtp(req, res, next))
-router.post('/send-otp', (req, res, next) => userController.sendOtp(req, res, next))
-router.post('/forgot-password', (req, res, next) => userController.forgotPassword(req, res, next))
-router.put('/reset-password/:token', (req, res, next) => userController.resetPassword(req, res, next))
-router.post('/google', (req, res, next) => userController.googleLogin(req, res, next))
-
-router.use(isAuthenticated, authorizeRole(['student', 'instructor',]))
-    .get('/profile', (req, res, next) => userController.getUserData(req, res, next))
+router
+  .use(isAuthenticated, authorizeRole(["student", "instructor"]))
+  .get("/profile", userController.getUserData);
 
 export { router as authRoutes };

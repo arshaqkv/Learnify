@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthDIContainer } from "../../infrastructure/di/containers/authDIContainer";
-import { accessCookieOptions, resetCookieOptions } from "../../utils/cookieHelper";
+import {
+  accessCookieOptions,
+  resetCookieOptions,
+} from "../../utils/cookieHelper";
 import { config } from "../../config/config";
 
-export class UserController {
+class UserController {
   //user signup
   async signup(req: Request, res: Response, next: NextFunction) {
     try {
-      const { firstName, lastName, email, password, phone } = req.body;
       const signupUser = AuthDIContainer.getSignupUserUseCase();
       const user = await signupUser.execute(req.body);
       res
@@ -41,7 +43,7 @@ export class UserController {
   //get user data
   async getUserData(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.user;
+      const { id } = req.user; 
       const getUserData = AuthDIContainer.getUserDataUseCase();
       const user = await getUserData.execute(id);
       res.status(200).json({ success: true, user });
@@ -79,6 +81,7 @@ export class UserController {
   //refresh token
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("Cookies:", req.cookies);
       const { refreshToken } = req.cookies;
       const newAccessToken =
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
@@ -87,7 +90,7 @@ export class UserController {
         .status(200)
         .json({ message: "Token refreshed" });
     } catch (error: any) {
-      next(error)
+      next(error);
     }
   }
 
@@ -109,7 +112,7 @@ export class UserController {
   async verifyOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, otp } = req.body;
-      console.log(email, otp)
+      console.log(email, otp);
       const verifyOtp = AuthDIContainer.getVerifyOtpUseCase();
       await verifyOtp.execute({ email, otp });
       res
@@ -191,3 +194,5 @@ export class UserController {
   }
 }
 
+const userController = new UserController();
+export { userController };

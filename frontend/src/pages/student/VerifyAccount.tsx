@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
@@ -80,7 +80,6 @@ const VerifyAccount = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Verify OTP</h2>
         <p className="text-center text-gray-500 mb-4">

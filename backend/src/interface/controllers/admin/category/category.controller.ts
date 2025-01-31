@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CategoryDIContainer } from "../../../../infrastructure/di/containers/categoryDIContainer";
 
-export class CategoryController {
+class CategoryController {
   async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const createCategory = CategoryDIContainer.getCreateCategoryUseCase();
@@ -25,9 +25,22 @@ export class CategoryController {
 
   async getAllCategories(req: Request, res: Response, next: NextFunction) {
     try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = req.query.search as string;
       const getAllCategories = CategoryDIContainer.getAllCategoriesUseCase();
-      const categories = await getAllCategories.execute();
-      res.status(200).json({ categories });
+      const { categories, totalCategory } = await getAllCategories.execute(
+        page,
+        limit,
+        search
+      );
+      res
+        .status(200)
+        .json({
+          categories,
+          totalCategory,
+          totalPages: Math.ceil(totalCategory / limit),
+        });
     } catch (error: any) {
       next(error);
     }
@@ -47,8 +60,8 @@ export class CategoryController {
   }
 
   async deleteCategory(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
       const deleteCategory = CategoryDIContainer.getDeleteCategoryUseCase();
       await deleteCategory.execute(id);
       res
@@ -58,4 +71,23 @@ export class CategoryController {
       next(error);
     }
   }
+
+  async toggleCategoryBlock(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const toggleCategoryBlock =
+        CategoryDIContainer.getToggleCategoryBlockUseCase();
+      const category = await toggleCategoryBlock.execute(id);
+      res.status(200).json({
+        success: true,
+        message: category?.isDeleted
+          ? "Category blocked successfully"
+          : "Category unblocked successfully",
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
+const categoryController = new CategoryController();
+export { categoryController };

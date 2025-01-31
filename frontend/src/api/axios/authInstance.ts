@@ -1,6 +1,7 @@
 import axios from "axios";
 import { config } from "../../config/config";
 import { clearPersistData } from "../../utils/clearPersist";
+import toast from "react-hot-toast";
 
 const API_URL = config.app.PORT;
 
@@ -15,7 +16,7 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error); 
   }
 );
 
@@ -40,6 +41,7 @@ axiosInstance.interceptors.response.use(
           { withCredentials: true }
         );
 
+        await new Promise((resolve) => setTimeout(resolve, 100)); 
         // Retry the original request after refreshing the access token
         return axiosInstance(originalRequest);
       } catch (refreshError) {
@@ -47,6 +49,18 @@ axiosInstance.interceptors.response.use(
         window.location.href = "/login"; // Redirect to login if refresh fails
         return Promise.reject(refreshError);
       }
+    }
+    if (error.response.status === 403 ) {
+      
+      await axios.post(
+        `${API_URL}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      toast.error("You are blocked by user")
+      setTimeout(() => {
+        window.location.href = "/login"; 
+      }, 500);
     }
 
     // Handle other errors

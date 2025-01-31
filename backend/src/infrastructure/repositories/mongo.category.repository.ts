@@ -9,14 +9,34 @@ export class MongoCategoryRepository implements ICategoryRepository {
     return newCategory;
   }
 
-  async getAllCategories(): Promise<Category[]> {
-    const allCategories = await CategoryModel.find({ isDeleted: false });
-    return allCategories;
+  async getAllCategories(
+    page: number,
+    limit: number,
+    search?: string
+  ): Promise<{ categories: Category[]; totalCategory: number }> {
+    const skip: number = (page - 1) * limit;
+    const regex = new RegExp(`^${search}`, "i");
+    const query: any = search ? { name: { $regex: regex } } : {};
+    const categories = await CategoryModel.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalCategory = await CategoryModel.countDocuments(query);
+    return { categories, totalCategory };
   }
 
   async getCategoryByName(name: string): Promise<Category | null> {
     const getCategory = await CategoryModel.findOne({ name });
     return getCategory;
+  }
+
+  async findDuplicateCategory(
+    id: string,
+    name: string
+  ): Promise<Category | null> {
+    const category = await CategoryModel.findOne({ name, _id: { $ne: id } });
+    return category;
   }
 
   async getCategoryById(id: string): Promise<Category | null> {
@@ -30,6 +50,18 @@ export class MongoCategoryRepository implements ICategoryRepository {
   }
 
   async deleteCategory(id: string): Promise<void> {
-    await CategoryModel.findByIdAndUpdate(id, { isDeleted: true }, {new: true});
+    await CategoryModel.findByIdAndDelete(id);
+  }
+
+  async toggleBlockCategory(
+    id: string,
+    value: boolean
+  ): Promise<Category | null> {
+    const updatedCategory = await CategoryModel.findByIdAndUpdate(
+      id,
+      { isDeleted: value },
+      { new: true }
+    );
+    return updatedCategory;
   }
 }

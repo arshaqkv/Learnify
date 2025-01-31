@@ -1,22 +1,29 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../../config/verifyToken";
 import { CustomError } from "./error.middleware";
+import { UserModel } from "../../infrastructure/models/user.model";
 
-export const isAuthenticated = (
+export const isAuthenticated = async(
   req: Request,
-  res: Response,
+  res: Response,  
   next: NextFunction
-): void => {
+) => {
   const token = req.cookies.accessToken;
   if (!token) {
-    throw new CustomError("Unauthorized", 401);
+    return res.status(401).json({ message: "Unauthorized" });
   }
   try {
     const decoded = verifyAccessToken(token);
     if (!decoded) {
-      throw new CustomError("Unauthorized", 401);
+      return res.status(401).json({ message: "Unauthorized" });
     }
     req.user = decoded;
+
+    const user = await UserModel.findById(decoded.id)
+    if(user?.isBlocked){
+      return res.status(403).json({ message: "You are blocked" });    
+    }
+
     next();
   } catch (error) {
     next(error);

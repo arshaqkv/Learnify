@@ -1,36 +1,52 @@
-import toast, { Toaster } from "react-hot-toast"
-import { Button } from "../../components/ui/button"
-import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { logoutUser } from "../../features/auth/authThunk"
-import { endLoading } from "../../features/auth/authSlice"
-
+import { Link } from "react-router-dom"
 
 const Home = () => {
-  const dispatch = useAppDispatch()
-  const notify = ()=> toast.error('This is a hot toast')
-  const { user } = useAppSelector(state => state.auth)
-
-  const handleLogout = async() =>{
-    const result = await dispatch(logoutUser())
-    if(logoutUser.fulfilled.match(result)){
-      toast.success(result.payload.message)
-      dispatch(endLoading())
-    }else if(logoutUser.rejected.match(result)){
-      toast.error(result.payload as string)
-    }
-  }
-
   
   return (
-    <div>
-      <Toaster />
-      <h1>Home</h1>
-      {user? 'hello ' + user?.firstName: 'please login'}
-      <Button onClick={notify}>Click me</Button>
-      {user? <button onClick={handleLogout}>Logout</button>: ''}
-      <Toaster />
+    <div className="bg-gray-100 min-h-screen">
+      {/* Main Content */}
+      <main className="py-20">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-semibold mb-6">Welcome to Learnify</h2>
+          <p className="text-lg mb-10">
+            Your one-stop solution for managing and learning online courses.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 shadow-lg rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Courses</h3>
+              <p className="text-gray-600 mb-4">Browse through our wide range of courses and start learning today.</p>
+              <Link
+                to="/courses"
+                className="text-blue-600 hover:underline"
+              >
+                Explore Courses
+              </Link>
+            </div>
+            <div className="bg-white p-6 shadow-lg rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Instructors</h3>
+              <p className="text-gray-600 mb-4">Join our community of expert educators and teach students.</p>
+              <Link
+                to="/signup"
+                className="text-blue-600 hover:underline"
+              >
+                Become a Teacher
+              </Link>
+            </div>
+            <div className="bg-white p-6 shadow-lg rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Students</h3>
+              <p className="text-gray-600 mb-4">Access resources to help you succeed in your learning journey.</p>
+              <Link
+                to="/signup"
+                className="text-blue-600 hover:underline"
+              >
+                Join as a Student
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-  )
+  );
 }
 
 export default Home

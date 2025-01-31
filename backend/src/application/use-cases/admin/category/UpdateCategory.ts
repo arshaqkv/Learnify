@@ -8,10 +8,17 @@ export class UpdateCategory {
     id: string,
     data: { name?: string; description?: string }
   ): Promise<void> {
-    const category = await this.categoryRepository.getCategoryById(id);
-    if (!category) {
-      throw new CustomError("Category not found", 400);
+    const existingCategory = await this.categoryRepository.findDuplicateCategory(id, data.name)
+    
+    if(existingCategory){
+      throw new CustomError("Category name already exists!", 400)
     }
+
+    const validCategory = await this.categoryRepository.getCategoryById(id)
+    if(!validCategory){
+      throw new CustomError("Category not found", 404)
+    }
+    
     await this.categoryRepository.updateCategory(id, data);
   }
 }

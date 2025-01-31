@@ -1,31 +1,36 @@
-import { NavLink, Outlet } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAppDispatch } from "../../app/hooks";
 import { startLoading } from "../../features/admin/adminSlice";
 import { logoutAdmin } from "../../features/admin/adminThunk";
 import { endLoading } from "../../features/auth/authSlice";
-import { LayoutDashboard, ListPlus, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, ListPlus, LogOut, UserRoundCog, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
 const AdminDashboardPage = () => {
   const dispatch = useAppDispatch();
-
+  const location = useLocation();
   // Define menu items with their corresponding routes
   const menuItems = [
     {
       icon: LayoutDashboard,
       label: "Dashboard",
-      path: '/admin/dashboard',
+      path: "/admin/dashboard",
     },
     {
       icon: ListPlus,
       label: "Categories",
-      path: '/admin/categories',
+      path: "/admin/categories",
     },
     {
       icon: Users,
       label: "Users",
-      path: '/admin/users',
+      path: "/admin/users",
+    },
+    {
+      icon: UserRoundCog,
+      label: "Instructors",
+      path: "/admin/instructors"
     },
     {
       icon: LogOut,
@@ -45,26 +50,23 @@ const AdminDashboardPage = () => {
     dispatch(endLoading());
   };
 
- 
-
   return (
     <div className="flex h-full min-h-screen shadow-md bg-gray-100">
-      <Toaster />
       <aside className="w-64 bg-white shadow-md hidden md:block">
         <div className="p-4">
           <h1 className="text-3xl mb-2 font-bold text-center">Learnify.</h1>
           <p className="text-gray-500 text-center mb-4">Admin Dashboard</p>
           <nav className="space-y-2">
-            {menuItems.map((menuItem) => (
+            {menuItems.map((menuItem) =>
               menuItem.path ? (
                 <NavLink
                   key={menuItem.path}
                   to={menuItem.path}
-                  className={({ isActive }) =>
+                  className={() =>
                     `flex items-center w-full p-2 rounded-md transition-colors ${
-                      isActive
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50'
+                      location.pathname.includes(menuItem.path) // Match partial path for similar routes
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50"
                     }`
                   }
                 >
@@ -82,7 +84,7 @@ const AdminDashboardPage = () => {
                   {menuItem.label}
                 </Button>
               )
-            ))}
+            )}
           </nav>
         </div>
       </aside>

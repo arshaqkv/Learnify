@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   endLoading,
   startLoading,
@@ -13,7 +13,7 @@ import { resetPassword } from "../../features/auth/authThunk";
 import { formikPasswordValidation } from "../../utils/passwordValidation";
 
 const ResetPassword = () => {
-  const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const { token } = useParams<{ token: string }>();
@@ -33,11 +33,7 @@ const ResetPassword = () => {
       .required("Confirm password is required"),
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
+ 
 
   const formik = useFormik({
     initialValues: {
@@ -68,7 +64,6 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-2xl font-bold mb-6">Change password</h2>
         <p className="rounded-md font-thin text-sm flex h-12 items-center justify-center mb-8 bg-blue-50 border-yellow-700">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { formikPasswordValidation } from "../../utils/passwordValidation";
@@ -85,9 +85,8 @@ const Signup: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
-      <div className="bg-white p-8 rounded-lg shadow-md w-80">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center ">
+      <div className="bg-white p-8 rounded-lg shadow-md w-80 mt-10">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
         <form onSubmit={formik.handleSubmit}>
           {/* First Name */}

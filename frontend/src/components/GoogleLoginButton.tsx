@@ -43,7 +43,7 @@ const GoogleLoginButton: React.FC = () => {
           loading="lazy"
           alt="google logo"
         />
-        <span>Login with Google</span>
+        <span>Log in with Google</span>
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Loader, EyeOff, Eye } from "lucide-react";
 import { loginAdmin } from "../../features/admin/adminThunk";
 import { endLoading, startLoading } from "../../features/admin/adminSlice";
@@ -61,7 +61,6 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-2xl font-bold text-center mb-6">
           Admin Login

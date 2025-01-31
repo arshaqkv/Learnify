@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { Loader, ArrowLeft } from "lucide-react";
 import { forgotPassword } from "../../features/auth/authThunk";
@@ -49,9 +49,8 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 className="text-2xl font-bold mb-6">Password Reset</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Reset password</h2>
         <p className="rounded-md font-thin text-sm flex h-20 items-center justify-center mb-8 bg-blue-50 border-yellow-700">
           Forgotten your password? Enter your e-mail address below, and we'll
           send you an e-mail allowing you to reset it.

@@ -19,10 +19,10 @@ export const loginUserAPI = async (data: {
   return response;
 };
 
-export const getUserAPI = async () => {
-  const response = axios.get("/auth/profile");
-  return response;
-};
+export const getUserAPI = async() => {
+  const response = axios.get("/auth/profile")
+  return response
+}
 
 export const sendOtpAPI = async (email: string) => {
   const response = axios.post("/auth/send-otp", { email });
