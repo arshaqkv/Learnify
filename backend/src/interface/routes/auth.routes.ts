@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { userController } from "../controllers/auth.controller";
+import { instructorController } from "../controllers/instructor/instructor.controller";
 import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
 
 const router = Router();
@@ -14,8 +15,10 @@ router.post("/forgot-password", userController.forgotPassword);
 router.put("/reset-password/:token", userController.resetPassword);
 router.post("/google", userController.googleLogin);
 
+
 router
   .use(isAuthenticated, authorizeRole(["student", "instructor"]))
-  .get("/profile", userController.getUserData);
+  .get("/profile", userController.getUserData)
+  .post("/instructor-register", instructorController.RegisterInstructor)
 
 export { router as authRoutes };

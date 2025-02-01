@@ -3,6 +3,7 @@ import { categoryController } from "../controllers/admin/category/category.contr
 import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
 import { userController } from "../controllers/auth.controller";
 import { studentController } from "../controllers/admin/student/student.controller";
+import { instructorController } from "../controllers/instructor/instructor.controller";
 
 const adminRouter = Router();
 
@@ -27,5 +28,10 @@ adminRouter
   .get("/users", studentController.getAllUsers)
   .patch("/block-user/:id", studentController.blockUser)
   .patch("/unblock-user/:id", studentController.unBlockUser);
+
+//instructor
+
+adminRouter.use(isAuthenticated, authorizeRole(["admin"]))
+  .get('/instructors', instructorController.getAllInstructors)
 
 export { adminRouter as adminRoutes };
