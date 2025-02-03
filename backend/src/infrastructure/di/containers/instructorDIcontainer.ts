@@ -1,3 +1,5 @@
+import { GetInstructor } from "../../../application/use-cases/admin/instructor/GetInstructor";
+import { UpdateInstructorStatus } from "../../../application/use-cases/admin/instructor/UpdateInstructorStatus";
 import { GetAllInstructors } from "../../../application/use-cases/instructor/GetAllInstructors";
 import { RegisterInstructor } from "../../../application/use-cases/instructor/RegisterInstructor";
 import { MongoInstructorRepository } from "../../repositories/mongo.instructor.repository";
@@ -19,6 +21,14 @@ class InstructorDIContainer{
 
     static getAllInstructorUseCase(){
       return new GetAllInstructors(this.getInstructorRepository())
+    }
+
+    static getSingleInstructorUseCase(){
+        return new GetInstructor(this.getInstructorRepository())
+    }
+
+    static getUpdateInstructorStatusUseCase(){
+        return new UpdateInstructorStatus(this.getInstructorRepository(), this.getUserRepository())
     }
 }
 

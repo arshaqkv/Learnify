@@ -18,9 +18,16 @@ export class MongoInstructorRepository implements IInstructorRepository {
     });
   }
 
+  async findById(id: string): Promise<Instructor | null> {
+    return await InstructorModel.findById(id)
+  }
+
   async findInstructorById(id: string): Promise<Instructor | null> {
-    const instructor = await InstructorModel.findById(id).populate('instructorId')
-    return instructor
+    const instructor = await InstructorModel.findById(id).populate({
+      path: "instructorId",
+      select: "-password",
+    });
+    return instructor;
   }
 
   async getAllInstructorsRequest(
@@ -31,7 +38,9 @@ export class MongoInstructorRepository implements IInstructorRepository {
     const skip = (page - 1) * limit;
     const regex = new RegExp(`^${search}`, "i");
 
-    const matchQuery = search ? { "instructor.firstname": { $regex: regex } } : {};
+    const matchQuery = search
+      ? { "instructor.firstname": { $regex: regex } }
+      : {};
 
     const instructors = await InstructorModel.aggregate([
       {
@@ -44,10 +53,12 @@ export class MongoInstructorRepository implements IInstructorRepository {
       },
       { $unwind: "$instructor" },
       { $match: matchQuery },
-      { $project: {
-        "instructor.password": 0,
-        "instructor.__v": 0,
-      }},
+      {
+        $project: {
+          "instructor.password": 0,
+          "instructor.__v": 0,
+        },
+      },
       { $sort: { createdAt: -1 } },
       { $skip: skip },
       { $limit: limit },
@@ -68,5 +79,17 @@ export class MongoInstructorRepository implements IInstructorRepository {
     ]);
 
     return { instructors, total: total.length > 0 ? total[0]["total"] : 0 };
+  }
+
+  async updateInstructor(
+    id: string,
+    data: string
+  ): Promise<Instructor | null> {
+    const updatedInstructor = await InstructorModel.findByIdAndUpdate(
+      id,
+      { status: data },
+      { new: true }
+    );
+    return updatedInstructor;
   }
 }

@@ -17,9 +17,8 @@ export class MongoUserRepository implements IUserRepository {
     return await UserModel.findById(id);
   }
 
-  async findByIdAndUpdate(id: string): Promise<User | null> {
-    const newUser = await UserModel.findByIdAndUpdate(id);
-    return newUser;
+  async findByIdAndUpdate(id: string, data: Partial<User>): Promise<User | null> {
+    return await UserModel.findByIdAndUpdate(id, data, {new: true})
   }
 
   async findByEmailAndUpdate(

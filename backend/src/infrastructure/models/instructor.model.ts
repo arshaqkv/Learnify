@@ -38,7 +38,7 @@ const InstructorSchema: Schema = new Schema(
 );
 
 const InstructorModel = mongoose.model<IInstructor>(
-  "Intructor",
+  "Instructor",
   InstructorSchema
 );
 export { InstructorModel, IInstructor };

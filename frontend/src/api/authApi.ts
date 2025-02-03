@@ -19,10 +19,10 @@ export const loginUserAPI = async (data: {
   return response;
 };
 
-export const getUserAPI = async() => {
-  const response = axios.get("/auth/profile")
-  return response
-}
+export const getUserAPI = async () => {
+  const response = axios.get("/auth/profile");
+  return response;
+};
 
 export const sendOtpAPI = async (email: string) => {
   const response = axios.post("/auth/send-otp", { email });
@@ -52,4 +52,16 @@ export const logoutUserAPI = async () => {
 export const googleLoginAPI = async (token: string) => {
   const response = axios.post("/auth/google", { token });
   return response;
+};
+
+//instructor registration
+export const RegisterInstructorAPI = async (data: {
+  qualifications: string[];
+  skills: string[];
+  experience: number;
+  bio: string;
+  password: string
+}) => {
+  const response = axios.post("/auth/instructor-register", data)
+  return response
 };

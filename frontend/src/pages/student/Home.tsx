@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import Courses from "./Courses";
 
 const Home = () => {
   
@@ -44,6 +45,7 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <Courses />
       </main>
     </div>
   );

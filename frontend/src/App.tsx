@@ -20,6 +20,10 @@ import Footer from "./components/common/Footer";
 import UserProfilePage from "./pages/student/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
+import InstructorList from "./pages/admin/instructor/InstructorList";
+import InstructorApplication from "./pages/admin/instructor/InstructorApplication";
+import InstructorRegister from "./pages/instructor/InstructorRegister";
+
 
 const App = () => {
   const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -47,6 +51,7 @@ const App = () => {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           <Route element={<ProtectedRoute role="student" />}>
+            <Route path="/instructor-register" element={<InstructorRegister />}/>
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>
 
@@ -58,6 +63,9 @@ const App = () => {
               <Route path="categories" element={<Categories />} />
               <Route path="categories/add" element={<CreateCategory />} />
               <Route path="categories/edit/:id" element={<EditCategory />} />
+
+              <Route path="instructors" element={<InstructorList />}/>
+              <Route path="instructors/request/:id" element={<InstructorApplication />} />
             </Route>
           </Route>
 

@@ -20,18 +20,16 @@ adminRouter
   .post("/category/add", categoryController.createCategory)
   .put("/category/edit/:id", categoryController.updateCategory)
   .delete("/category/remove/:id", categoryController.deleteCategory)
-  .patch("/category/toggle-block/:id", categoryController.toggleCategoryBlock);
+  .patch("/category/toggle-block/:id", categoryController.toggleCategoryBlock)
 
 //user management
-adminRouter
-  .use(isAuthenticated, authorizeRole(["admin"]))
   .get("/users", studentController.getAllUsers)
   .patch("/block-user/:id", studentController.blockUser)
-  .patch("/unblock-user/:id", studentController.unBlockUser);
+  .patch("/unblock-user/:id", studentController.unBlockUser)
 
 //instructor
-
-adminRouter.use(isAuthenticated, authorizeRole(["admin"]))
   .get('/instructors', instructorController.getAllInstructors)
+  .get('/instructors/:id', instructorController.getSingleInstructor)
+  .patch('/instructors/:id', instructorController.updateInstructorStatus)
 
 export { adminRouter as adminRoutes };

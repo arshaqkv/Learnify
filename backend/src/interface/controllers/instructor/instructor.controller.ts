@@ -24,6 +24,7 @@ class InstructorController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
+      console.log(page, limit, search)
       const getAllInstructors = InstructorDIContainer.getAllInstructorUseCase();
       const { instructors, total } = await getAllInstructors.execute(
         page,
@@ -33,6 +34,39 @@ class InstructorController {
       res
         .status(200)
         .json({ instructors, total, totalPages: Math.ceil(total / limit) });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getSingleInstructor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const getInstructor = InstructorDIContainer.getSingleInstructorUseCase();
+      const instructor = await getInstructor.execute(id);
+      res.status(200).json({ success: true, instructor });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async updateInstructorStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const updateInstructor =
+        InstructorDIContainer.getUpdateInstructorStatusUseCase();
+      const { status } = req.body;
+      const instructor = await updateInstructor.execute(id, status);
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: `Instructor request ${instructor?.status}`,
+        });
     } catch (error: any) {
       next(error);
     }

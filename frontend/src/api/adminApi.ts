@@ -66,3 +66,19 @@ export const toggleBlockCategoryAPI = async(id: string) => {
   const response = axios.patch(`/category/toggle-block/${id}`)
   return response
 }
+
+//instructor management
+export const getAllInstructorsAPI = async({page, limit, search}: {page: number, limit: number, search?: string}) =>{
+  const response = axios.get(`/instructors?page=${page}&limit=${limit}&search=${search}`)
+  return response
+}
+
+export const getSingleInstructorAPI = async(id: string) =>{
+  const response = axios.get(`/instructors/${id}`)
+  return response
+}
+
+export const updateInstructorStatusAPI = async(id: string, status: string) =>{
+  const response = axios.patch(`/instructors/${id}`, {status})
+  return response
+}

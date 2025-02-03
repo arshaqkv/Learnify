@@ -4,13 +4,16 @@ import {
   createCategoryAPI,
   editCategoryAPI,
   getAllCategoriesAPI,
+  getAllInstructorsAPI,
   getAllUsersAPI,
   getCategoryAPI,
+  getSingleInstructorAPI,
   loginAdminAPI,
   logoutAdminAPI,
   removeCategoryAPI,
   toggleBlockCategoryAPI,
   unblockUserAPI,
+  updateInstructorStatusAPI,
 } from "../../api/adminApi";
 
 export const loginAdmin = createAsyncThunk(
@@ -154,3 +157,44 @@ export const toggleBlockCategory = createAsyncThunk(
     }
   }
 );
+
+//instructor management
+export const getallInstructors = createAsyncThunk(
+  "admin/getAllInstructors",
+  async (
+    { page, limit, search }: { page: number; limit: number; search?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAllInstructorsAPI({ page, limit, search });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getSingleInstructor = createAsyncThunk(
+  "admin/getSingleInstructor",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await getSingleInstructorAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+
+export const updateInstructorStatus = createAsyncThunk(
+  "admin/updateInstructorStatus",
+  async({id, status}: {id: string, status: string}, {rejectWithValue}) =>{
+    try {
+      const response = await updateInstructorStatusAPI(id, status)
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+)

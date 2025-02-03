@@ -9,6 +9,7 @@ import {
   verifyOtpAPI,
   resetPasswordAPI,
   getUserAPI,
+  RegisterInstructorAPI,
 } from "../../api/authApi";
 
 
@@ -128,3 +129,17 @@ export const googleLogin = createAsyncThunk(
     }
   }
 );
+
+
+//instructor registration
+export const RegisterInstructor = createAsyncThunk(
+  "auth/registerInstructor",
+  async(data: {qualifications: string[], skills: string[], experience: number, bio: string, password: string}, {rejectWithValue}) =>{
+    try {
+      const response = await RegisterInstructorAPI(data)
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+)

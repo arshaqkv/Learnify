@@ -17,41 +17,53 @@ import toast from "react-hot-toast";
 import { endLoading } from "../../features/auth/authSlice";
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const dispatch = useAppDispatch()
-  const { user } = useAppSelector(state => state.auth)
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
 
-  const handleLogout = async() =>{
-    const result = await dispatch(logoutUser())
-    if(logoutUser.fulfilled.match(result)){
-      toast.success(result.payload.message)
-      navigate('/login')
-    }else if(logoutUser.rejected.match(result)){
-      toast.error(result.payload as string)
+  const handleLogout = async () => {
+    const result = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(result)) {
+      toast.success(result.payload.message);
+      navigate("/login");
+    } else if (logoutUser.rejected.match(result)) {
+      toast.error(result.payload as string);
     }
-    dispatch(endLoading())
-  }
+    dispatch(endLoading());
+  };
   return (
     <div className="h-16 bg-white border-b p-4 ">
       <div className="max-w-7xl mx-auto md:flex justify-between items-center">
         <div className="flex items-center gap-2 justify-center">
           <GraduationCap size={"30"} />
-          <h1 className="font-extrabold text-2xl "><Link to={'/'}>Learnify.</Link></h1>
+          <h1 className="font-extrabold text-2xl ">
+            <Link to={"/"}>Learnify.</Link>
+          </h1>
         </div>
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline"><Menu /></Button>
+              <Button variant="outline">
+                <Menu />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Welcome {user.lastName}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
-                <Link to={'/profile'}>Profile</Link>
+                  <Link to={"/profile"}>Profile</Link>
                   <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
+                {user.role === "student" ? (
+                  <DropdownMenuItem onClick={()=> navigate('/instructor-register')}>
+                    Want to be an instructor?
+                    <DropdownMenuShortcut>⌘W</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                ) : (
+                  ""
+                )}
                 <DropdownMenuItem>
                   My Courses
                   <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
@@ -70,8 +82,10 @@ const Navbar = () => {
           </DropdownMenu>
         ) : (
           <div className="flex items-center gap-2">
-            <Button onClick={() => navigate('/login')} variant="outline">Login</Button>
-            <Button onClick={() => navigate('/signup')}>Sign up</Button>
+            <Button onClick={() => navigate("/login")} variant="outline">
+              Login
+            </Button>
+            <Button onClick={() => navigate("/signup")}>Sign up</Button>
           </div>
         )}
       </div>
