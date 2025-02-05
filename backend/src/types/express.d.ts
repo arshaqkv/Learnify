@@ -7,6 +7,8 @@ declare global {
         id: string;
         role: string;
       };
+      file?: Express.Multer.File;  // For single file upload
+      files?: Express.Multer.File[];
     }
   }
 }

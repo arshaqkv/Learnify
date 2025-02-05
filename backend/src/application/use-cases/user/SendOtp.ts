@@ -1,6 +1,6 @@
 import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
 import { generateOtp } from "../../../utils/generateOtp";
-import { sendVerificationEmail } from "../../../infrastructure/services/EmailService";
+import { sendVerificationEmail } from "../../../infrastructure/services/email/EmailService";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 
 export class SendOtp {

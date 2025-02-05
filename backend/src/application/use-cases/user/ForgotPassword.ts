@@ -1,6 +1,6 @@
 import { config } from "../../../config/config";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
-import { sendPasswordResetEmail } from "../../../infrastructure/services/EmailService";
+import { sendPasswordResetEmail } from "../../../infrastructure/services/email/EmailService";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 import { generatePasswordToken } from "../../../utils/resetPasswordToken";
 

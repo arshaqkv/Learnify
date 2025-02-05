@@ -4,8 +4,8 @@ import { loginAdmin, logoutAdmin } from "./adminThunk";
 interface AdminAuthState {
   user: {
     _id: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     role: string;
     profileImage?: string;

@@ -6,15 +6,15 @@ interface ProtectedRouteProps {
   role?: string
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ role }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  if(role && user?.role !== role) {
-    return <Navigate to='/unauthorized'/>
+  if (user?.role !== 'student' && user?.role !== 'instructor') {
+    return <Navigate to="/unauthorized" />;
   }
 
   return <Outlet />

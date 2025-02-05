@@ -4,8 +4,8 @@ import { forgotPassword, googleLogin, loginUser, logoutUser, resetPassword } fro
 interface UserAuthState {
   user: {
     _id: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     phone: string;
     email: string;
     role: string;

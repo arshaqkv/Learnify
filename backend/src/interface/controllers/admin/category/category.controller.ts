@@ -46,6 +46,16 @@ class CategoryController {
     }
   }
 
+  async getAllActiveCategories(req: Request, res: Response, next: NextFunction){
+    try {
+      const getAllActiveCategories = CategoryDIContainer.getAllActiveCategoriesUseCase()
+      const categories = await getAllActiveCategories.execute()
+      res.status(200).json({success: true, categories})
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async updateCategory(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     try {

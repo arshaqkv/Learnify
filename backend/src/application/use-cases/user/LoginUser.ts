@@ -40,12 +40,13 @@ export class LoginUser {
       accessToken,
       refreshToken,
       user: {
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         phone: user.phone,
         profileImage: user.profileImage,
         role: user.role,
+        googleId: user.googleId,
         createdAt: user.createdAt,
       },
     };

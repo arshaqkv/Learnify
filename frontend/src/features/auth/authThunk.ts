@@ -10,8 +10,14 @@ import {
   resetPasswordAPI,
   getUserAPI,
   RegisterInstructorAPI,
+  getAllPublishedCoursesAPI,
+  getCourseAPI,
 } from "../../api/authApi";
-
+import {
+  createCourseAPI,
+  getAllActiveCategoriesAPI,
+  getAllCoursesAPI,
+} from "../../api/instructorApi";
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
@@ -50,7 +56,7 @@ export const getUser = createAsyncThunk(
   "auth/profile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await getUserAPI()
+      const response = await getUserAPI();
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
@@ -75,7 +81,7 @@ export const verifyOtp = createAsyncThunk(
   async (data: { email: string; otp: string }, { rejectWithValue }) => {
     try {
       const response = await verifyOtpAPI(data);
-      return response.data
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
     }
@@ -96,10 +102,13 @@ export const forgotPassword = createAsyncThunk(
 
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
-  async ({token, password}: {token: string; password: string}, { rejectWithValue }) => {
+  async (
+    { token, password }: { token: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await resetPasswordAPI(token, password);
-      return response.data
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
     }
@@ -130,16 +139,88 @@ export const googleLogin = createAsyncThunk(
   }
 );
 
-
-//instructor registration
+//instructor
 export const RegisterInstructor = createAsyncThunk(
   "auth/registerInstructor",
-  async(data: {qualifications: string[], skills: string[], experience: number, bio: string, password: string}, {rejectWithValue}) =>{
+  async (
+    data: {
+      qualifications: string[];
+      skills: string[];
+      experience: number;
+      bio: string;
+      password: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await RegisterInstructorAPI(data)
-      return response.data
+      const response = await RegisterInstructorAPI(data);
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
     }
   }
-)
+);
+
+export const getAllActiveCategories = createAsyncThunk(
+  "auth/categories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllActiveCategoriesAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+//courses
+export const createCourse = createAsyncThunk(
+  "auth/createCourse",
+  async (formData: any, { rejectWithValue }) => {
+    try {
+      const response = await createCourseAPI(formData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getAllCourses = createAsyncThunk(
+  "auth/getAllcourses",
+  async (
+    { page, limit, search }: { page: number; limit: number; search?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAllCoursesAPI({ page, limit, search });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getAllPublishedCourses = createAsyncThunk(
+  "auth/getAllPublishedCourses",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllPublishedCoursesAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getCourse = createAsyncThunk(
+  "auth/getCourse",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await getCourseAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);

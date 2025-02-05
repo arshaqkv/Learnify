@@ -2,7 +2,7 @@ import axios from "axios";
 import { config } from "../../config/config";
 import { clearPersistData } from "../../utils/clearPersist";
 
-const API_URL = config.app.BASE_URL;
+const API_URL = config.app.PORT;
 
 const axiosInstance = axios.create({
   baseURL: `${API_URL}/admin`,

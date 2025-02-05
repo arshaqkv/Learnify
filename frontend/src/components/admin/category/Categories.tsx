@@ -25,7 +25,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -38,14 +38,9 @@ import {
 } from "../../ui/alert-dialog";
 import ResultNotFound from "../../common/ResultNotFound";
 import { Input } from "../../ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "../../ui/pagination";
 import { endLoading, startLoading } from "../../../features/admin/adminSlice";
 import { Skeleton } from "../../ui/skeleton";
+import Pagination from "../../common/Pagination";
 
 const Categories = () => {
   const dispatch = useAppDispatch();
@@ -104,7 +99,6 @@ const Categories = () => {
 
   return (
     <Card>
-      <Toaster />
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">
           All Categories
@@ -182,15 +176,14 @@ const Categories = () => {
       </CardContent>
       ) : categories.length > 0 ? (
         <CardContent>
-          <div>
             <Table>
               <TableCaption>Total Categories {totalCategory}</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead>Category Name</TableHead>
                   <TableHead>Category Desc</TableHead>
-                  <TableHead>Status</TableHead>
                   <TableHead>Added</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -200,8 +193,11 @@ const Categories = () => {
                     <TableCell className="font-medium">
                       {category.name}
                     </TableCell>
-                    <TableCell className="w[200px] overflow-hidden">
+                    <TableCell className="max-w-1 overflow-hidden">
                       {category.description}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(category.createdAt).toDateString()}
                     </TableCell>
                     <TableCell
                       className={
@@ -209,9 +205,6 @@ const Categories = () => {
                       }
                     >
                       {category.isDeleted === true ? "Inactive" : "Active"}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(category.createdAt).toDateString()}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
@@ -251,44 +244,7 @@ const Categories = () => {
                 ))}
               </TableBody>
             </Table>
-
-            {/* pagination */}
-            <Pagination className="mt-4">
-              <PaginationContent>
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === 1}
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  >
-                    Previous
-                  </Button>
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      size="sm"
-                      onClick={() => setPage(i + 1)}
-                      isActive={page === i + 1}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === totalPages}
-                    onClick={() =>
-                      setPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                  >
-                    Next
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+            <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage}/>
         </CardContent>
       ) : (
         <ResultNotFound />

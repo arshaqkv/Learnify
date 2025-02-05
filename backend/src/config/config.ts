@@ -8,6 +8,12 @@ interface CorsConfig {
   CREDENTIALS : boolean
 }
 
+interface CloudinaryConfig{
+  CLOUDINARY_NAME: string,
+  CLOUDINARY_API: string, 
+  CLOUDINARY_SECRET: string
+}
+
 interface Config {
   client_url: string,
   port: number;
@@ -19,6 +25,7 @@ interface Config {
   pass: string
   cors: CorsConfig,
   googleclientId: string
+  cloudinary: CloudinaryConfig 
 }
 
 export const config: Config = {
@@ -36,5 +43,10 @@ export const config: Config = {
     ALLOWED_METHODS: ["GET", "POST", "DELETE", "PUT","PATCH"],
     CREDENTIALS: true
   },
-  googleclientId: process.env.CLIENT_ID as string
+  googleclientId: process.env.CLIENT_ID as string,
+  cloudinary: {
+    CLOUDINARY_NAME: process.env.CLOUDINARY_NAME as string,
+    CLOUDINARY_API: process.env.CLOUDINARY_API as string,
+    CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET as string
+  }
 };

@@ -23,6 +23,12 @@ import { Toaster } from "react-hot-toast";
 import InstructorList from "./pages/admin/instructor/InstructorList";
 import InstructorApplication from "./pages/admin/instructor/InstructorApplication";
 import InstructorRegister from "./pages/instructor/InstructorRegister";
+import InstructorDashboardPage from "./pages/instructor/InstructorDashboardPage";
+import InstructorDashboard from "./components/instructor/InstructorDashboard";
+import CourseList from "./pages/instructor/course/CourseList";
+import CreateCourse from "./pages/instructor/course/CreateCourse";
+import CourseDetails from "./pages/student/CourseDetails";
+
 
 
 const App = () => {
@@ -49,10 +55,19 @@ const App = () => {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/courses/course-details/:id" element={<CourseDetails />} />
 
           <Route element={<ProtectedRoute role="student" />}>
             <Route path="/instructor-register" element={<InstructorRegister />}/>
             <Route path="/profile" element={<UserProfilePage />} />
+          </Route>
+
+          <Route element={<ProtectedRoute role="instructor"/>}>
+            <Route path="/instructor" element={<InstructorDashboardPage />}>
+              <Route path="dashboard" element={<InstructorDashboard />}/>
+              <Route path="courses" element={<CourseList />}/>
+              <Route path="courses/add" element={<CreateCourse />}/>
+            </Route>
           </Route>
 
           <Route element={<AdminProtectedRoute role="admin" />}>

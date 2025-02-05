@@ -26,8 +26,13 @@ export class MongoCategoryRepository implements ICategoryRepository {
     return { categories, totalCategory };
   }
 
+  async getAllActiveCategories(): Promise<Category[]> {
+    const categories = await CategoryModel.find({ isDeleted: false });
+    return categories 
+  }
+
   async getCategoryByName(name: string): Promise<Category | null> {
-    const getCategory = await CategoryModel.findOne({ name });
+    const getCategory = await CategoryModel.findOne({ name: {$regex: `^${name}$`, $options: "i"} });
     return getCategory;
   }
 
@@ -35,7 +40,7 @@ export class MongoCategoryRepository implements ICategoryRepository {
     id: string,
     name: string
   ): Promise<Category | null> {
-    const category = await CategoryModel.findOne({ name, _id: { $ne: id } });
+    const category = await CategoryModel.findOne({ name: {$regex: `^${name}$`, $options: "i"}, _id: { $ne: id } });
     return category;
   }
 

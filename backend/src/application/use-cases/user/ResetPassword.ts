@@ -1,5 +1,5 @@
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
-import { sendPasswordChangedEmail } from "../../../infrastructure/services/EmailService";
+import { sendPasswordChangedEmail } from "../../../infrastructure/services/email/EmailService";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 import bcryptjs from "bcryptjs";
 

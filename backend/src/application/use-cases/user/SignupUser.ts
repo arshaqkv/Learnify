@@ -3,7 +3,7 @@ import { User } from "../../../domain/entities/user.entity";
 import { SignUpDTO } from "../../DTOs/UserDTO";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { generateOtp } from "../../../utils/generateOtp";
-import { sendVerificationEmail } from "../../../infrastructure/services/EmailService";
+import { sendVerificationEmail } from "../../../infrastructure/services/email/EmailService";
 import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 

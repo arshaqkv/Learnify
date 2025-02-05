@@ -6,9 +6,9 @@ import { getUser } from "../../features/auth/authThunk";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 
 const UserProfilePage = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -19,17 +19,17 @@ const UserProfilePage = () => {
           setUser(result.payload.user);
         }
       } finally {
-        dispatch(endLoading()); 
+        dispatch(endLoading());
       }
     };
-    
+
     fetchUser();
   }, [dispatch]); // Added `dispatch` as a dependency
-  
+
   useEffect(() => {
     console.log("useEffect executed!");
   }, []);
-  
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -38,7 +38,13 @@ const UserProfilePage = () => {
           <button className="flex items-center w-full p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
             <FaUser className="mr-2" /> Profile
           </button>
-
+          {user?.role === "instructor" ? (
+            <button onClick={() => navigate("/instructor/dashboard")} className="flex items-center w-full p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
+              <FaUser className="mr-2" /> Dashboard
+            </button>
+          ) : (
+            ""
+          )}
           <button
             onClick={() => navigate("/")}
             className="flex items-center w-full p-2 text-red-600 hover:bg-red-100 rounded-lg"
@@ -59,6 +65,7 @@ const UserProfilePage = () => {
             <div>
               <label className="block text-gray-600 mb-2">First Name</label>
               <h1>{user?.firstname}</h1>
+              <p className="text-gray-400">{user?.role}</p>
             </div>
             <div>
               <label className="block text-gray-600 mb-2">Last Name</label>
@@ -74,7 +81,7 @@ const UserProfilePage = () => {
             </div>
             <div>
               <label htmlFor="">Joined at</label>
-              {/* <h2>{new Date(user?.createdAt).toDateString()}</h2> */}
+              <h2>{new Date(user?.createdAt).toDateString()}</h2>
             </div>
           </div>
         </div>

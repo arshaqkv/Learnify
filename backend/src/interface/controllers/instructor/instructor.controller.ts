@@ -24,7 +24,6 @@ class InstructorController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
-      console.log(page, limit, search)
       const getAllInstructors = InstructorDIContainer.getAllInstructorUseCase();
       const { instructors, total } = await getAllInstructors.execute(
         page,

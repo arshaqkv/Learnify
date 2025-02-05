@@ -20,6 +20,6 @@ const errorHandler = (
   const message = error.message || "Internal Server Error";
   console.error(`[ERROR]: ${message}`);
   res.status(statusCode).json({ success: false, message });
-};
+}; 
 
 export { CustomError, errorHandler };

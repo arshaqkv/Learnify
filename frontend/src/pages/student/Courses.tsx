@@ -1,11 +1,28 @@
-import { useAppSelector } from "../../app/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Skeleton } from "../../components/ui/skeleton";
 import Course from "./Course";
+import { getAllPublishedCourses } from "../../features/auth/authThunk";
+import { endLoading, startLoading } from "../../features/auth/authSlice";
 
 const Courses = () => {
-  //   const { loading } = useAppSelector((state) => state.auth);
-  const courses = [1, 2, 3, 4, 5, 6];
-  const loading = false;
+  const { loading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch()
+  const [courses, setCourses] = useState([])
+  
+  useEffect(()=> {
+    const fetchCourses = async() =>{
+      dispatch(startLoading())
+      const result = await dispatch(getAllPublishedCourses())
+      if(getAllPublishedCourses.fulfilled.match(result)){
+        const { courses } = result.payload
+        setCourses(courses)
+      }
+      dispatch(endLoading())
+    }
+    fetchCourses()
+  }, [dispatch])
+
   return (
     <div className="bg-gray-50 ">
       <div className="max-w-7xl mx-auto p-6 ">
@@ -14,10 +31,10 @@ const Courses = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {loading
-            ? Array.from({ length: 8 }).map((_, index) => (
+            ? Array.from({ length: courses.length | 4 }).map((_, index) => (
                 <CourseSkelton key={index} />
               ))
-            : courses.map((_, index) => <Course key={index} />)}
+            : courses.map((course, index) => <Course course={course} key={index}/>)}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "../../config/config";
 import { clearPersistData } from "../../utils/clearPersist";
-import toast from "react-hot-toast";
+
 
 const API_URL = config.app.PORT;
 

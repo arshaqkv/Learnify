@@ -1,10 +1,12 @@
 import nodeMailer from "nodemailer";
 import {
+  INSTRUCTOR_APPROVAL_TEMPLATE,
+  INSTRUCTOR_REJECTION_TEMPLATE,
   PASSWORD_RESET_REQUEST_TEMPLATE,
   PASSWORD_RESET_SUCCESS_TEMPLATE,
   VERIFICATION_EMAIL_TEMPLATE,
 } from "./EmailTemplate";
-import { config } from "../../config/config";
+import { config } from "../../../config/config";
 
 export const mailTransporter = nodeMailer.createTransport({
   service: "gmail",
@@ -60,15 +62,55 @@ export const sendPasswordResetEmail = async (
   });
 };
 
-
 export const sendPasswordChangedEmail = async (
-  email: string,
+  email: string
 ): Promise<void> => {
-  const message = PASSWORD_RESET_SUCCESS_TEMPLATE
+  const message = PASSWORD_RESET_SUCCESS_TEMPLATE;
   const mailOptions = {
     from: config.user,
     to: email,
     subject: "Learnify | Reset password successfull",
+    html: message,
+  };
+  await mailTransporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log("Failed to send OTP. Try again.", err.message);
+    } else {
+      console.log("Email has been send to " + info.response);
+    }
+  });
+};
+
+
+export const sendInstructorApprovalEmail = async (
+  email: string,
+  name: string
+): Promise<void> => {
+  const message = INSTRUCTOR_APPROVAL_TEMPLATE.replace("{instructorName}", name)
+  const mailOptions = {
+    from: config.user,
+    to: email,
+    subject: "Learnify | Instructor request application approved",
+    html: message,
+  };
+  await mailTransporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log("Failed to send OTP. Try again.", err.message);
+    } else {
+      console.log("Email has been send to " + info.response);
+    }
+  });
+};
+
+export const sendInstructorRejectionEmail = async (
+  email: string,
+  name: string
+): Promise<void> => {
+  const message = INSTRUCTOR_REJECTION_TEMPLATE.replace("{instructorName}", name)
+  const mailOptions = {
+    from: config.user,
+    to: email,
+    subject: "Learnify | Instructor request application rejected",
     html: message,
   };
   await mailTransporter.sendMail(mailOptions, (err, info) => {

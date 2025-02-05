@@ -5,6 +5,7 @@ import { UpdateCategory } from "../../../application/use-cases/admin/category/Up
 import { DeleteCategory } from "../../../application/use-cases/admin/category/DeleteCategory";
 import { GetCategory } from "../../../application/use-cases/admin/category/GetCategory";
 import { ToggleCategoryBlock } from "../../../application/use-cases/admin/category/ToggleCategoryBlock";
+import { GetAllActiveCategories } from "../../../application/use-cases/admin/category/GetAllActiveCategories";
 
 class CategoryDIContainer {
   static getCategoryRepository() {
@@ -17,6 +18,10 @@ class CategoryDIContainer {
 
   static getAllCategoriesUseCase() {
     return new GetAllCategories(this.getCategoryRepository());
+  }
+
+  static getAllActiveCategoriesUseCase(){
+    return new GetAllActiveCategories(this.getCategoryRepository())
   }
 
   static getCategoryUseCase() {

@@ -25,14 +25,9 @@ import { Search, UserRoundCheck, UserRoundX } from "lucide-react";
 import { endLoading, startLoading } from "../../../features/admin/adminSlice";
 import toast from "react-hot-toast";
 import { Input } from "../../../components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "../../../components/ui/pagination";
 import ResultNotFound from "../../../components/common/ResultNotFound";
 import { Skeleton } from "../../../components/ui/skeleton";
+import Pagination from "../../../components/common/Pagination";
 
 const UserManagement = () => {
   const dispatch = useAppDispatch();
@@ -107,9 +102,8 @@ const UserManagement = () => {
           />
         </div>
       </CardHeader>
-      <CardContent>
-        {loading ? (
-          <CardContent>
+      {loading ? (
+        <CardContent>
           {/* Skeleton Table */}
           <Table>
             <TableHeader>
@@ -135,7 +129,7 @@ const UserManagement = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.from({length:5}).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell>
                     <Skeleton className="h-6 w-24" />
@@ -160,7 +154,8 @@ const UserManagement = () => {
             </TableBody>
           </Table>
         </CardContent>
-        ) : users.length > 0 ? (
+      ) : users.length > 0 ? (
+        <CardContent>
           <Table>
             <TableCaption>Total Users: {pagination.totalUsers}</TableCaption>
             <TableHeader>
@@ -216,51 +211,16 @@ const UserManagement = () => {
               ))}
             </TableBody>
           </Table>
-        ) : (
-          <ResultNotFound />
-        )}
-
-        {/* Pagination */}
-        {users.length ? (
-          <Pagination className="mt-4">
-            <PaginationContent>
-              <PaginationItem>
-                <Button
-                  variant="outline"
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={page === 1}
-                >
-                  Previous
-                </Button>
-              </PaginationItem>
-              {Array.from({ length: pagination.totalPages }, (_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    size="sm"
-                    onClick={() => setPage(i + 1)}
-                    isActive={page === i + 1}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setPage((prev) => Math.min(prev + 1, pagination.totalPages))
-                  }
-                  disabled={page === pagination.totalPages}
-                >
-                  Next
-                </Button>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        ) : (
-          <></>
-        )}
-      </CardContent>
+          {/* Pagination */}
+          <Pagination
+            totalPages={pagination.totalPages}
+            currentPage={page}
+            onPageChange={setPage}
+          />
+        </CardContent>
+      ) : (
+        <ResultNotFound />
+      )}
     </Card>
   );
 };

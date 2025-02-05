@@ -21,14 +21,9 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { endLoading, startLoading } from "../../../features/admin/adminSlice";
 import { useNavigate } from "react-router-dom";
 import { getallInstructors } from "../../../features/admin/adminThunk";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "../../../components/ui/pagination";
 import ResultNotFound from "../../../components/common/ResultNotFound";
 import { Skeleton } from "../../../components/ui/skeleton";
+import Pagination from "../../../components/common/Pagination";
 
 const InstructorList = () => {
   const dispatch = useAppDispatch();
@@ -123,7 +118,6 @@ const InstructorList = () => {
       </CardContent>): 
       instructors.length > 0 ? (
         <CardContent>
-          <div>
             <Table>
               <TableCaption>Total Instructors {totalInstructors}</TableCaption>
               <TableHeader>
@@ -181,42 +175,7 @@ const InstructorList = () => {
             </Table>
 
             {/* pagination */}
-            <Pagination className="mt-4">
-              <PaginationContent>
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === 1}
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  >
-                    Previous
-                  </Button>
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      size="sm"
-                      onClick={() => setPage(i + 1)}
-                      isActive={page === i + 1}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === totalPages}
-                    onClick={() =>
-                      setPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                  >
-                    Next
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+            <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage}/>
         </CardContent>
       ) : (
         <ResultNotFound />

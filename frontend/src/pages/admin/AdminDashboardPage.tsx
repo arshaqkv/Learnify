@@ -76,7 +76,7 @@ const AdminDashboardPage = () => {
               ) : (
                 <Button
                   key="logout"
-                  className="w-full justify-start"
+                  className="w-full justify-start hover:bg-gray-900 hover:text-white   "
                   variant="outline"
                   onClick={handleLogout}
                 >

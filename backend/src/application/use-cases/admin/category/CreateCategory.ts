@@ -12,9 +12,11 @@ export class CreateCategory {
     const existingCategory = await this.categoryRepository.getCategoryByName(
       name
     );
+
     if (existingCategory) {
       throw new CustomError("Category name already exists!", 400);
     }
+
 
     const newCategory = new Category(name, description);
     return await this.categoryRepository.createCategory(newCategory);

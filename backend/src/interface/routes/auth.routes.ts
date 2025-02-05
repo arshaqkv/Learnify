@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { userController } from "../controllers/auth.controller";
 import { instructorController } from "../controllers/instructor/instructor.controller";
-import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
+import { authorizeRole, isAuthenticated, isBlocked } from "../middlewares/auth.middleware";
+import { courseController } from "../controllers/instructor/course/course.controller";
 
 const router = Router();
 
@@ -15,10 +16,14 @@ router.post("/forgot-password", userController.forgotPassword);
 router.put("/reset-password/:token", userController.resetPassword);
 router.post("/google", userController.googleLogin);
 
+router.get("/courses", courseController.getAllPublishedCourses)
+router.get("/courses/:id", courseController.getCourse)
+
 
 router
-  .use(isAuthenticated, authorizeRole(["student", "instructor"]))
+  .use(isAuthenticated, isBlocked ,authorizeRole(["student", "instructor"]))
   .get("/profile", userController.getUserData)
   .post("/instructor-register", instructorController.RegisterInstructor)
+  
 
 export { router as authRoutes };
