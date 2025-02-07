@@ -9,6 +9,7 @@ interface UserAuthState {
     phone: string;
     email: string;
     role: string;
+    googleId?: string;
     createdAt?: Date;
     profileImage?: string;
   } | null;
@@ -39,6 +40,11 @@ const authSlice = createSlice({
       state.error = null;
       state.message = null
     },
+    updateProfileImage(state, action){
+      if(state.user){
+        state.user.profileImage = action.payload
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -117,5 +123,5 @@ const authSlice = createSlice({
 });
 
 
-export const { startLoading, endLoading } = authSlice.actions
+export const { startLoading, endLoading, updateProfileImage } = authSlice.actions
 export default authSlice.reducer

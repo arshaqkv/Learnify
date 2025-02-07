@@ -112,9 +112,9 @@ const ResetPassword = () => {
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
-                <Eye className="w-5 h-5 text-gray-400" />
-              ) : (
                 <EyeOff className="w-5 h-5 text-gray-400" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-400" />
               )}
             </button>
           </div>

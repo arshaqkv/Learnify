@@ -3,6 +3,7 @@ import { userController } from "../controllers/auth.controller";
 import { instructorController } from "../controllers/instructor/instructor.controller";
 import { authorizeRole, isAuthenticated, isBlocked } from "../middlewares/auth.middleware";
 import { courseController } from "../controllers/instructor/course/course.controller";
+import { upload } from "../../infrastructure/middleware/multer";
 
 const router = Router();
 
@@ -23,7 +24,12 @@ router.get("/courses/:id", courseController.getCourse)
 router
   .use(isAuthenticated, isBlocked ,authorizeRole(["student", "instructor"]))
   .get("/profile", userController.getUserData)
+  .patch("/profile/edit", userController.editUser)
   .post("/instructor-register", instructorController.RegisterInstructor)
+  .post("/email-change-otp", userController.sendChangeEmailOtp)
+  .patch("/edit-email", userController.editEmail)
+  .patch("/change-password", userController.changePassword)
+  .patch("/change-profileImage", upload.single('profileImage'), userController.updateProfilePicture)
   
 
 export { router as authRoutes };

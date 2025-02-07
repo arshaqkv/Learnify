@@ -6,6 +6,7 @@ import {
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Link } from "react-router-dom";
+import avatar from '../../assets/60111.jpg'
 
 interface CourseProps {
   course: any
@@ -28,9 +29,11 @@ const Course = ({ course }: CourseProps) => {
           </h1>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+              <Avatar>
+                <AvatarImage src="" />
+                <AvatarFallback className=" object-cover">
+                  <img src={course?.creator?.profileImage ? course?.creator?.profileImage: avatar} alt=""/>
+                </AvatarFallback>
               </Avatar>
               <h1 className="font-medium text-sm">{`${course?.creator.firstname} ${course?.creator.lastname}`}</h1>
             </div>

@@ -119,9 +119,9 @@ const Login = () => {
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
-                <Eye className="size-5 text-gray-400" />
-              ) : (
                 <EyeOff className="size-5 text-gray-400" />
+              ) : (
+                <Eye className="size-5 text-gray-400" />
               )}
             </button>
           </div>

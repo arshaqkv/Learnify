@@ -8,18 +8,40 @@ cloudinary.config({
 });
 
 export interface ICloudinaryService {
-  uploadImage(fileBuffer: Buffer): Promise<{ url: string; publicId: string }>;
+  uploadCourseImage(fileBuffer: Buffer): Promise<{ url: string; publicId: string }>;
+  uploadProfileImage(fileBuffer: Buffer): Promise<{ url: string; publicId: string }>
   deleteImage(publicId: string): Promise<void>;
 }
 
 // Cloudinary Service Implementation
 export class CloudinaryService implements ICloudinaryService {
-  async uploadImage(
+  async uploadCourseImage(
     fileBuffer: Buffer
   ): Promise<{ url: string; publicId: string }> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { resource_type: "image", folder: "course_images" },
+        (error, result) => {
+          if (error || !result) {
+            console.error("Cloudinary upload failed:", error);
+            return reject(new Error("Failed to upload image to Cloudinary"));
+          }
+          resolve({ url: result.secure_url, publicId: result.public_id });
+        }
+      );
+
+      import("streamifier").then(({ default: streamifier }) => {
+        streamifier.createReadStream(fileBuffer).pipe(uploadStream);
+      });
+    });
+  }
+
+  async uploadProfileImage(
+    fileBuffer: Buffer
+  ): Promise<{ url: string; publicId: string }> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { resource_type: "image", folder: "user_images" },
         (error, result) => {
           if (error || !result) {
             console.error("Cloudinary upload failed:", error);

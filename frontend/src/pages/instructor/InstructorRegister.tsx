@@ -10,11 +10,17 @@ import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { RegisterInstructor } from "../../features/auth/authThunk";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 const InstructorRegistration = () => {
   const [step, setStep] = useState(1);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
 
   // Formik Hook
   const formik = useFormik({
@@ -53,135 +59,160 @@ const InstructorRegistration = () => {
           experience: parseInt(values.experience),
         })
       );
-      if(RegisterInstructor.fulfilled.match(result)){
-        toast.success(result.payload.message)
-        navigate('/')
-      }else if(RegisterInstructor.rejected.match(result)){
-        toast.error(result.payload as string)
+      if (RegisterInstructor.fulfilled.match(result)) {
+        toast.success(result.payload.message);
+        navigate("/");
+      } else if (RegisterInstructor.rejected.match(result)) {
+        toast.error(result.payload as string);
       }
-      dispatch(endLoading())
+      dispatch(endLoading());
     },
   });
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-md">
-      <h2 className="text-2xl font-bold mb-4">
-        {step === 1 ? "Instructor Registration" : "Set Password"}
-      </h2>
+    <div className="h-screen">
+      <div className="max-w-md mx-auto my-10 p-7 border-2 bg-white shadow-lg rounded-md">
+        <h2 className="text-2xl font-bold mb-4">
+          {step === 1 ? "Instructor Registration" : "Set Password"}
+        </h2>
 
-      <form onSubmit={formik.handleSubmit}>
-        {step === 1 ? (
-          <>
-            {/* Qualifications */}
-            <ArrayField
-              name="qualifications"
-              label="Qualifications"
-              values={formik.values.qualifications}
-              onChange={(newValues) =>
-                formik.setFieldValue("qualifications", newValues)
-              }
-            />
-            {formik.touched.qualifications && formik.errors.qualifications && (
-              <p className="text-red-500 text-sm">
-                {formik.errors.qualifications}
-              </p>
-            )}
-
-            {/* Skills */}
-            <ArrayField
-              name="skills"
-              label="Skills"
-              values={formik.values.skills}
-              onChange={(newValues) =>
-                formik.setFieldValue("skills", newValues)
-              }
-            />
-            {formik.touched.skills && formik.errors.skills && (
-              <p className="text-red-500 text-sm">{formik.errors.skills}</p>
-            )}
-
-            {/* Experience */}
-            <div>
-              <label className="font-bold">Experience (Years)</label>
-              <Input
-                type="number"
-                name="experience"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "" || Number(value) >= 0) {
-                    formik.handleChange(e);
-                  }
-                }}
-                onBlur={formik.handleBlur}
-                value={formik.values.experience}
-                className="dark:bg-slate-800"
+        <form onSubmit={formik.handleSubmit}>
+          {step === 1 ? (
+            <>
+              {/* Qualifications */}
+              <ArrayField
+                name="qualifications"
+                label="Qualifications"
+                values={formik.values.qualifications}
+                onChange={(newValues) =>
+                  formik.setFieldValue("qualifications", newValues)
+                }
               />
-              {formik.touched.experience && formik.errors.experience && (
-                <p className="text-red-500 text-sm">
-                  {formik.errors.experience}
-                </p>
-              )}
-            </div>
+              {formik.touched.qualifications &&
+                formik.errors.qualifications && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.qualifications}
+                  </p>
+                )}
 
-            {/* Bio */}
-            <div>
-              <label className="font-bold">Bio</label>
-              <Textarea
-                name="bio"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.bio}
-                placeholder="Tell us about yourself..."
-                className="dark:bg-slate-800"
+              {/* Skills */}
+              <ArrayField
+                name="skills"
+                label="Skills"
+                values={formik.values.skills}
+                onChange={(newValues) =>
+                  formik.setFieldValue("skills", newValues)
+                }
               />
-              {formik.touched.bio && formik.errors.bio && (
-                <p className="text-red-500 text-sm">{formik.errors.bio}</p>
+              {formik.touched.skills && formik.errors.skills && (
+                <p className="text-red-500 text-sm">{formik.errors.skills}</p>
               )}
-            </div>
 
-            {/* Next Button */}
-            <Button
-              type="button"
-              className="w-full mt-4"
-              onClick={() => setStep(2)}
-              disabled={!formik.isValid || formik.isSubmitting}
-            >
-              Next
-            </Button>
-            <Button type="button" className="w-full mt-4" variant='outline' onClick={() => navigate('/')}>Cancel</Button>
-          </>
-        ) : (
-          <>
-            {/* Password */}
-            <div>
-              <label className="font-bold">Password</label>
-              <Input
-                type="password"
-                name="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                className="dark:bg-slate-800"
-              />
-              {formik.touched.password && formik.errors.password && (
-                <p className="text-red-500 text-sm">{formik.errors.password}</p>
-              )}
-            </div>
+              {/* Experience */}
+              <div>
+                <label className="font-bold">Experience (Years)</label>
+                <Input
+                  type="number"
+                  name="experience"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "" || Number(value) >= 0) {
+                      formik.handleChange(e);
+                    }
+                  }}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.experience}
+                  className="dark:bg-slate-800"
+                />
+                {formik.touched.experience && formik.errors.experience && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.experience}
+                  </p>
+                )}
+              </div>
 
-            {/* Submit & Back Buttons */}
-            <div className="flex gap-2 mt-4">
+              {/* Bio */}
+              <div>
+                <label className="font-bold">Bio</label>
+                <Textarea
+                  name="bio"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.bio}
+                  placeholder="Tell us about yourself..."
+                  className="dark:bg-slate-800"
+                />
+                {formik.touched.bio && formik.errors.bio && (
+                  <p className="text-red-500 text-sm">{formik.errors.bio}</p>
+                )}
+              </div>
+
+              {/* Next Button */}
               <Button
                 type="button"
-                variant="outline"
-                onClick={() => setStep(1)}
+                className="w-full mt-4"
+                onClick={() => setStep(2)}
+                disabled={!formik.isValid || formik.isSubmitting}
               >
-                Back
+                Next
               </Button>
-              <Button type="submit">Submit</Button>
-            </div>
-          </>
-        )}
-      </form>
+              <Button
+                type="button"
+                className="w-full mt-4"
+                variant="outline"
+                onClick={() => navigate("/")}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              {/* Password */}
+              <div>
+                <label className="font-bold">Password</label>
+                <div className="mb-4 flex flex-col">
+                  <Input
+                    type={passwordVisible ? "text" : "password"}
+                    name="password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    className="dark:bg-slate-800 max-w-xs"
+                  />
+                  {formik.touched.password && formik.errors.password && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.password}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    className="absolute mt-2 ml-72"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {passwordVisible ? (
+                      <Eye className="size-5 text-gray-400" />
+                    ) : (
+                      <EyeOff className="size-5 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit & Back Buttons */}
+              <div className="flex gap-2 mt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(1)}
+                >
+                  Back
+                </Button>
+                <Button type="submit">Submit</Button>
+              </div>
+            </>
+          )}
+        </form>
+      </div>
     </div>
   );
 };

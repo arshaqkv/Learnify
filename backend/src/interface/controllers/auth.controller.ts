@@ -43,7 +43,7 @@ class UserController {
   //get user data
   async getUserData(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.user; 
+      const { id } = req.user;
       const getUserData = AuthDIContainer.getUserDataUseCase();
       const user = await getUserData.execute(id);
       res.status(200).json({ success: true, user });
@@ -81,7 +81,7 @@ class UserController {
   //refresh token
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("Cookies:", req.cookies);
+      console.log("#################Cookies refreshed");
       const { refreshToken } = req.cookies;
       const newAccessToken =
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
@@ -146,7 +146,7 @@ class UserController {
       await resetPassword.execute(token, password);
       res
         .status(200)
-        .json({ success: true, message: "Password changed successfully",  });
+        .json({ success: true, message: "Password changed successfully" });
     } catch (error: any) {
       next(error);
     }
@@ -189,6 +189,73 @@ class UserController {
         .status(200)
         .json({ message: "Logged in succussfully", user });
     } catch (error) {
+      next(error);
+    }
+  }
+
+  async editUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const editUser = AuthDIContainer.getEditUserUseCase();
+      await editUser.execute(id, req.body);
+      res
+        .status(200)
+        .json({ success: true, message: "User updated successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async sendChangeEmailOtp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      const { id } = req.user;
+      const sendChangeEmailOtp = AuthDIContainer.getSendEmailChangeUseCase();
+      await sendChangeEmailOtp.execute(id, email);
+      res.status(200).json({ message: "Otp send to mail" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async editEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const { email, otp } = req.body;
+      const editEmail = AuthDIContainer.getEditEmailUseCase();
+      await editEmail.execute(id, email, otp);
+      res.status(200).json({ message: "Email updated successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const { oldPassword, newPassword } = req.body;
+      const changePassword = AuthDIContainer.getChangePasswordUseCase();
+      await changePassword.execute(id, oldPassword, newPassword);
+      res.status(200).json({ message: "Password changed succussfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async updateProfilePicture(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const fileBuffer = req.file ? req.file.buffer : undefined;
+      if (!fileBuffer) {
+        return;
+      }
+      const updateProfilePicture =
+        AuthDIContainer.getUpdateProfilePictureUseCase();
+      const profileImage = await updateProfilePicture.execute(id, fileBuffer);
+      res
+        .status(200)
+        .json({ message: "Profile picture updated", profileImage });
+    } catch (error: any) {
       next(error);
     }
   }

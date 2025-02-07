@@ -8,7 +8,6 @@ class CourseController {
       let { title, description, category, price, level } = req.body;
       let courseData = { title, description, category, price, level, id };
       const fileBuffer = req.file ? req.file.buffer : undefined;
-      console.log(req.body);
       const createCourse = CourseDIContainer.getCreateCourseUseCase();
       const newCourse = await createCourse.execute(courseData, fileBuffer);
       res.status(201).json({

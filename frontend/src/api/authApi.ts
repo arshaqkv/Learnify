@@ -24,6 +24,38 @@ export const getUserAPI = async () => {
   return response;
 };
 
+export const editUserAPI = async (data: {
+  firstname: string;
+  lastname: string;
+  phone: string;
+}) => {
+  const response = axios.patch("/auth/profile/edit", data);
+  return response;
+};
+
+export const changePasswordAPI = async (data: {
+  oldPassword: string;
+  newPassword: string;
+}) => {
+  const response = axios.patch("/auth/change-password", data);
+  return response;
+};
+
+export const sendChangeEmailOtpAPI = async (email: string) => {
+  const response = axios.post("/auth/email-change-otp", { email });
+  return response;
+};
+
+export const editEmailAPI = async (data: { email: string; otp: string }) => {
+  const response = axios.patch("/auth/edit-email", data);
+  return response;
+};
+
+export const updateProfilePictureAPI = async (formData: FormData) => {
+  const response = axios.patch("/auth/change-profileImage", formData);
+  return response;
+};
+
 export const sendOtpAPI = async (email: string) => {
   const response = axios.post("/auth/send-otp", { email });
   return response;
@@ -61,9 +93,9 @@ export const getAllPublishedCoursesAPI = async () => {
 };
 
 export const getCourseAPI = async (id: string) => {
-  const response = axios.get(`/auth/courses/${id}`)
-  return response
-}
+  const response = axios.get(`/auth/courses/${id}`);
+  return response;
+};
 
 //instructor registration
 export const RegisterInstructorAPI = async (data: {
@@ -71,8 +103,8 @@ export const RegisterInstructorAPI = async (data: {
   skills: string[];
   experience: number;
   bio: string;
-  password: string
+  password: string;
 }) => {
-  const response = axios.post("/auth/instructor-register", data)
-  return response
+  const response = axios.post("/auth/instructor-register", data);
+  return response;
 };

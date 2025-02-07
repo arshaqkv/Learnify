@@ -4,11 +4,9 @@ import {
   SquareLibrary,
 } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
 
 const InstructorDashboardPage = () => {
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
   const menuItems = [
     {
       icon: LayoutDashboard,
@@ -23,7 +21,7 @@ const InstructorDashboardPage = () => {
     {
       icon: ArrowLeftCircleIcon,
       label: "Back to profile",
-      path: "/profile",
+      path: "/profile/dashboard",
     },
   ];
   return (

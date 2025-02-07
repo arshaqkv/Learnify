@@ -1,90 +1,110 @@
-import { FaUser, FaSignOutAlt } from "react-icons/fa";
-import { useAppDispatch } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getUser } from "../../features/auth/authThunk";
-import { endLoading, startLoading } from "../../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { logoutUser } from "../../features/auth/authThunk";
+import toast from "react-hot-toast";
+import {
+  BadgeCheck,
+  Bookmark,
+  CircleUserRound,
+  LockKeyhole,
+  LogOut,
+  UserRoundCog,
+} from "lucide-react";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 
 const UserProfilePage = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { user } = useAppSelector(state => state.auth)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      dispatch(startLoading());
-      try {
-        const result: any = await dispatch(getUser());
-        if (result.payload.user) {
-          setUser(result.payload.user);
-        }
-      } finally {
-        dispatch(endLoading());
-      }
-    };
+  const menuItems = [
+    {
+      icon: CircleUserRound,
+      label: "Dashboard",
+      path: "/profile/dashboard",
+    },
+    {
+      icon: UserRoundCog,
+      label: "Edit Profile",
+      path: "/profile/edit",
+    },
+    {
+      icon: Bookmark,
+      label: "My Courses",
+      path: "/profile/courses",
+    },
+    {
+      icon: LockKeyhole,
+      label: "Change Password",
+      path: "/profile/change-password",
+    },
+    {
+      icon: LogOut,
+      label: "Logout",
+      path: null,
+    },
+  ];
 
-    fetchUser();
-  }, [dispatch]); // Added `dispatch` as a dependency
-
-  useEffect(() => {
-    console.log("useEffect executed!");
-  }, []);
+  const handleLogout = async () => {
+    const result = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(result)) {
+      toast.success(result.payload.message);
+      navigate("/login");
+    } else if (logoutUser.rejected.match(result)) {
+      toast.error(result.payload as string);
+    }
+  };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-full min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg mt-6 rounded-sm">
-        <nav className="p-4 space-y-4">
-          <button className="flex items-center w-full p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
-            <FaUser className="mr-2" /> Profile
-          </button>
-          {user?.role === "instructor" ? (
-            <button onClick={() => navigate("/instructor/dashboard")} className="flex items-center w-full p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
-              <FaUser className="mr-2" /> Dashboard
-            </button>
-          ) : (
-            ""
-          )}
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center w-full p-2 text-red-600 hover:bg-red-100 rounded-lg"
-          >
-            <FaSignOutAlt className="mr-2" /> Back
-          </button>
-        </nav>
+      <aside className="w-72 bg-white shadow-lg border-r hidden md:block">
+        <div className="p-6">
+          <nav className="space-y-4">
+            {user?.role === 'instructor' && (
+              <NavLink to={'/instructor/dashboard'} className="flex border items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg hover:bg-gray-100 hover:text-blue-600">
+                <BadgeCheck className="mr-3 h-6 w-6"/>
+                Instructor Menu
+              </NavLink>
+            )}
+            {menuItems.map((menuItem) =>
+              menuItem.path ? (
+                <NavLink
+                  key={menuItem.path}
+                  to={menuItem.path}
+                  className={({ isActive }) =>
+                    `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                    }`
+                  }
+                >
+                  <menuItem.icon className="mr-3 h-6 w-6" />
+                  {menuItem.label}
+                </NavLink>
+              ) : (
+                <Button
+                  key="logout"
+                  className="w-full justify-start px-5 py-4 text-lg text-gray-700 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white"
+                  variant="ghost"
+                  onClick={handleLogout}
+                >
+                  <menuItem.icon className="mr-3 h-6 w-6" />
+                  {menuItem.label}
+                </Button>
+              )
+            )}
+          </nav>
+        </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Your Profile
-          </h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-600 mb-2">First Name</label>
-              <h1>{user?.firstname}</h1>
-              <p className="text-gray-400">{user?.role}</p>
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-2">Last Name</label>
-              <h1>{user?.lastname}</h1>
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-2">Email</label>
-              <h2>{user?.email}</h2>
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-2">Phone</label>
-              <h2>{user?.phone}</h2>
-            </div>
-            <div>
-              <label htmlFor="">Joined at</label>
-              <h2>{new Date(user?.createdAt).toDateString()}</h2>
-            </div>
-          </div>
-        </div>
+      {/* Content Area */}
+      <main className="flex-1 p-10 overflow-y-auto">
+        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6">
+          <Outlet />
+        </Card>
       </main>
     </div>
   );

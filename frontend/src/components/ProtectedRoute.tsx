@@ -1,23 +1,22 @@
-
 import { useAppSelector } from "../app/hooks";
 import { Navigate, Outlet } from "react-router-dom";
 
 interface ProtectedRouteProps {
-  role?: string
+  role?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ role }) => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  if (user?.role !== 'student' && user?.role !== 'instructor') {
+  if (role && user?.role !== role) {
     return <Navigate to="/unauthorized" />;
   }
 
-  return <Outlet />
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

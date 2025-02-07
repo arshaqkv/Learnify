@@ -6,6 +6,7 @@ export class User {
     public password: string ,
     public phone: string,
     public profileImage: string = "",
+    public profileImagePublicId?: string,
     public googleId?: string,
     public isVerified: boolean = false,
     public role: string = "student",

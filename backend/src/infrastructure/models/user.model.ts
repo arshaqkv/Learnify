@@ -11,6 +11,7 @@ interface IUser extends Document {
   isVerified: boolean;
   isBlocked: boolean;
   profileImage: string;
+  profileImagePublicId: string;
   googleId?: string;
   resetPasswordToken: string;
   resetPasswordExpiresAt: Date;
@@ -55,6 +56,9 @@ const UserSchema: Schema = new Schema(
     profileImage: {
       type: String,
       default: "",
+    },
+    profileImagePublicId: {
+      type: String
     },
     googleId: {
       type: String,

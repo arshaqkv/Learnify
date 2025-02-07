@@ -58,8 +58,8 @@ export class GoogleLogin {
       accessToken,
       refreshToken,
       user: {
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         phone: user.phone,
         profileImage: user.profileImage,

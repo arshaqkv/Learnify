@@ -12,6 +12,11 @@ import {
   RegisterInstructorAPI,
   getAllPublishedCoursesAPI,
   getCourseAPI,
+  editUserAPI,
+  changePasswordAPI,
+  editEmailAPI,
+  sendChangeEmailOtpAPI,
+  updateProfilePictureAPI,
 } from "../../api/authApi";
 import {
   createCourseAPI,
@@ -57,6 +62,72 @@ export const getUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getUserAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const editUser = createAsyncThunk(
+  "auth/editUser",
+  async (
+    data: { firstname: string; lastname: string; phone: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await editUserAPI(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (
+    data: { oldPassword: string; newPassword: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await changePasswordAPI(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const sendChangeEmailOtp = createAsyncThunk(
+  "auth/sendChangeEmailOtp",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await sendChangeEmailOtpAPI(email);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const editEmail = createAsyncThunk(
+  "auth/editEmail",
+  async (data: { email: string; otp: string }, { rejectWithValue }) => {
+    try {
+      const response = await editEmailAPI(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const updateProfilePicture = createAsyncThunk(
+  "auth/updateProfileImg",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const response = await updateProfilePictureAPI(formData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

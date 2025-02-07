@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Login from "./pages/student/Login";
 import Home from "./pages/student/Home";
 import Signup from "./pages/student/Signup";
@@ -19,7 +20,6 @@ import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import UserProfilePage from "./pages/student/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Toaster } from "react-hot-toast";
 import InstructorList from "./pages/admin/instructor/InstructorList";
 import InstructorApplication from "./pages/admin/instructor/InstructorApplication";
 import InstructorRegister from "./pages/instructor/InstructorRegister";
@@ -28,8 +28,11 @@ import InstructorDashboard from "./components/instructor/InstructorDashboard";
 import CourseList from "./pages/instructor/course/CourseList";
 import CreateCourse from "./pages/instructor/course/CreateCourse";
 import CourseDetails from "./pages/student/CourseDetails";
-
-
+import EditCourse from "./pages/instructor/course/EditCourse";
+import EditProfile from "./pages/student/EditProfile";
+import ProfileDashboard from "./pages/student/ProfileDashboard";
+import ChangePassword from "./pages/student/ChangePassword";
+import EnrolledCourses from "./pages/student/EnrolledCourses";
 
 const App = () => {
   const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -55,18 +58,30 @@ const App = () => {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/courses/course-details/:id" element={<CourseDetails />} />
+          <Route
+            path="/courses/course-details/:id"
+            element={<CourseDetails />}
+          />
 
-          <Route element={<ProtectedRoute role="student" />}>
-            <Route path="/instructor-register" element={<InstructorRegister />}/>
-            <Route path="/profile" element={<UserProfilePage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/instructor-register"
+              element={<InstructorRegister />}
+            />
+            <Route path="/profile" element={<UserProfilePage />}>
+              <Route path="dashboard" element={<ProfileDashboard />} />
+              <Route path="courses" element={<EnrolledCourses />}/>
+              <Route path="edit" element={<EditProfile />} />
+              <Route path="change-password" element={<ChangePassword />} />
+            </Route>
           </Route>
 
-          <Route element={<ProtectedRoute role="instructor"/>}>
+          <Route element={<ProtectedRoute role="instructor" />}>
             <Route path="/instructor" element={<InstructorDashboardPage />}>
-              <Route path="dashboard" element={<InstructorDashboard />}/>
-              <Route path="courses" element={<CourseList />}/>
-              <Route path="courses/add" element={<CreateCourse />}/>
+              <Route index path="dashboard" element={<InstructorDashboard />} />
+              <Route path="courses" element={<CourseList />} />
+              <Route path="courses/add" element={<CreateCourse />} />
+              <Route path="courses/edit/:id" element={<EditCourse />} />
             </Route>
           </Route>
 
@@ -79,8 +94,11 @@ const App = () => {
               <Route path="categories/add" element={<CreateCategory />} />
               <Route path="categories/edit/:id" element={<EditCategory />} />
 
-              <Route path="instructors" element={<InstructorList />}/>
-              <Route path="instructors/request/:id" element={<InstructorApplication />} />
+              <Route path="instructors" element={<InstructorList />} />
+              <Route
+                path="instructors/request/:id"
+                element={<InstructorApplication />}
+              />
             </Route>
           </Route>
 

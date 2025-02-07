@@ -13,6 +13,12 @@ import { GoogleLogin } from "../../../application/use-cases/user/GoogleLogin";
 import { SendOtp } from "../../../application/use-cases/user/SendOtp";
 import { ForgotPassword } from "../../../application/use-cases/user/ForgotPassword";
 import { ResetPassword } from "../../../application/use-cases/user/ResetPassword";
+import { EditUser } from "../../../application/use-cases/user/EditUser";
+import { EditEmail } from "../../../application/use-cases/user/EditEmail";
+import { ChangePassword } from "../../../application/use-cases/user/ChangePassword";
+import { SendChangeEmailOtp } from "../../../application/use-cases/user/SendChangeEmailOtp";
+import { UpdateProfilePicture } from "../../../application/use-cases/user/UpdateProfilePicture";
+import { CloudinaryService } from "../../services/cloudinary/Cloudinary";
 
 class AuthDIContainer {
   static getUserRepository() {
@@ -21,6 +27,10 @@ class AuthDIContainer {
 
   static getOtpRepository() {
     return new MongoOtpRepository();
+  }
+
+  static getCloudinaryService() {
+    return new CloudinaryService();
   }
 
   static getSignupUserUseCase() {
@@ -74,6 +84,32 @@ class AuthDIContainer {
 
   static getResetPasswordUseCase() {
     return new ResetPassword(this.getUserRepository());
+  }
+
+  static getEditUserUseCase() {
+    return new EditUser(this.getUserRepository());
+  }
+
+  static getEditEmailUseCase() {
+    return new EditEmail(this.getUserRepository(), this.getOtpRepository());
+  }
+
+  static getChangePasswordUseCase() {
+    return new ChangePassword(this.getUserRepository());
+  }
+
+  static getSendEmailChangeUseCase() {
+    return new SendChangeEmailOtp(
+      this.getOtpRepository(),
+      this.getUserRepository()
+    );
+  }
+
+  static getUpdateProfilePictureUseCase() {
+    return new UpdateProfilePicture(
+      this.getUserRepository(),
+      this.getCloudinaryService()
+    );
   }
 }
 
