@@ -12,16 +12,26 @@ export class RegisterInstructor {
     private userRepository: IUserRepository
   ) {}
 
-  async execute(id: string, data: InstructorDTO): Promise<Instructor> {
+  async execute(id: string, data: InstructorDTO): Promise<void> {
     const { qualifications, skills, experience, bio, password } = data;
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new CustomError("User not found", 400);
     }
 
-    const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new CustomError("Invalid credentials", 400); 
+    if (!user.googleId) {
+      if (!password) {
+        throw new CustomError("Password is required", 400);
+      }
+
+      if (!user.password) {
+        throw new CustomError("Password is missing", 400);
+      }
+
+      const isPasswordValid = await bcryptjs.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new CustomError("Invalid credentials", 400);
+      }
     }
 
     if (user.role === "instructor") {
@@ -34,10 +44,14 @@ export class RegisterInstructor {
       throw new CustomError("You are already applied for instructor", 400);
     }
 
-    const instructorId = new mongoose.Types.ObjectId(id)
-    const newInstructor = new Instructor(instructorId, qualifications, skills, experience, bio)
-    const instructorDocument = await this.instructorRepository.createInstructor(newInstructor);
-
-    return instructorDocument
+    const instructorId = new mongoose.Types.ObjectId(id);
+    const newInstructor = new Instructor(
+      instructorId,
+      qualifications,
+      skills,
+      experience,
+      bio
+    );
+    await this.instructorRepository.createInstructor(newInstructor);
   }
 }

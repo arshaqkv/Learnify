@@ -11,6 +11,7 @@ export class GetUser {
     if(!user){
         throw new CustomError("User not found", 400)
     }
+
     return user
   }
 }

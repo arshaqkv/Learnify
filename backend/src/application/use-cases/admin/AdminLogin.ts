@@ -15,6 +15,10 @@ export class AdminLogin {
       throw new CustomError("Invalid Credentials", 400);
     }
 
+    if(!user.password){
+      throw new CustomError("Password not found", 400)
+    }
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -32,8 +36,8 @@ export class AdminLogin {
       accessToken,
       refreshToken,
       user: {
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         role: user.role,
         phone: user.phone,

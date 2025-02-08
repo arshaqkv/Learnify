@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { endLoading, startLoading } from "../../features/auth/authSlice";
+import { endLoading, startLoading, updateUser } from "../../features/auth/authSlice";
 import { getUser } from "../../features/auth/authThunk";
 import avatar from "../../assets/avatar.jpg";
 import { Calendar, Mail, PhoneCall } from "lucide-react";
@@ -14,8 +14,9 @@ const ProfileDashboard = () => {
       dispatch(startLoading());
       try {
         const result: any = await dispatch(getUser());
-        if (result.payload.user) {
-          setUser(result.payload.user);
+        if(getUser.fulfilled.match(result)){
+          setUser(result.payload.user)
+          dispatch(updateUser(result.payload.user))
         }
       } finally {
         dispatch(endLoading());

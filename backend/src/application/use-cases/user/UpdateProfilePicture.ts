@@ -1,3 +1,4 @@
+import { User } from "../../../domain/entities/user.entity";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { ICloudinaryService } from "../../../infrastructure/services/cloudinary/Cloudinary";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
@@ -8,7 +9,7 @@ export class UpdateProfilePicture {
     private cloudinaryService: ICloudinaryService
   ) {}
 
-  async execute(id: string, fileBuffer: Buffer): Promise<string> {
+  async execute(id: string, fileBuffer: Buffer): Promise<User | null> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new CustomError("User not found", 400);
@@ -26,11 +27,11 @@ export class UpdateProfilePicture {
       fileBuffer
     );
 
-    await this.userRepository.findByIdAndUpdate(id, {
+    const updatedUser = await this.userRepository.findByIdAndUpdate(id, {
       profileImage: url,
       profileImagePublicId: publicId,
     });
 
-    return url
+    return updatedUser
   }
 }

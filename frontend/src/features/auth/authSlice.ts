@@ -3,7 +3,6 @@ import { forgotPassword, googleLogin, loginUser, logoutUser, resetPassword } fro
 
 interface UserAuthState {
   user: {
-    _id: string;
     firstname: string;
     lastname: string;
     phone: string;
@@ -40,9 +39,9 @@ const authSlice = createSlice({
       state.error = null;
       state.message = null
     },
-    updateProfileImage(state, action){
+    updateUser(state, action){
       if(state.user){
-        state.user.profileImage = action.payload
+        state.user = action.payload
       }
     }
   },
@@ -123,5 +122,5 @@ const authSlice = createSlice({
 });
 
 
-export const { startLoading, endLoading, updateProfileImage } = authSlice.actions
+export const { startLoading, endLoading, updateUser } = authSlice.actions
 export default authSlice.reducer

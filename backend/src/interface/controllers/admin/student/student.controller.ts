@@ -54,7 +54,7 @@ class StudentController {
   async adminRefreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies;
-      console.log("########################3",refreshToken)
+      console.log("###############token refreshed")
       const newAccessToken =
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
       res

@@ -16,7 +16,7 @@ import { Card } from "../../components/ui/card";
 const UserProfilePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user } = useAppSelector(state => state.auth)
+  const { user } = useAppSelector((state) => state.auth);
 
   const menuItems = [
     {
@@ -62,10 +62,21 @@ const UserProfilePage = () => {
       <aside className="w-72 bg-white shadow-lg border-r hidden md:block">
         <div className="p-6">
           <nav className="space-y-4">
-            {user?.role === 'instructor' && (
-              <NavLink to={'/instructor/dashboard'} className="flex border items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg hover:bg-gray-100 hover:text-blue-600">
-                <BadgeCheck className="mr-3 h-6 w-6"/>
+            {user?.role === "instructor" && (
+              <NavLink
+                to={"/instructor/dashboard"}
+                className="flex border items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg hover:bg-gray-100 hover:text-blue-600"
+              >
+                <BadgeCheck className="mr-3 h-6 w-6" />
                 Instructor Menu
+              </NavLink>
+            )}
+            {user?.role === "student" && (
+              <NavLink
+                to="/instructor-register"
+                className="block text-center mt-6 px-6 py-3 border-2 border-blue-500 text-blue-500 font-semibold rounded-lg transition-all duration-300 hover:bg-blue-500 hover:text-white"
+              >
+                Want to become an Instructor?
               </NavLink>
             )}
             {menuItems.map((menuItem) =>
@@ -87,7 +98,7 @@ const UserProfilePage = () => {
               ) : (
                 <Button
                   key="logout"
-                  className="w-full justify-start px-5 py-4 text-lg text-gray-700 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white"
+                  className="w-full justify-start px-5 py-4 text-lg text-gray-700 rounded-lg transition-all duration-300 hover:bg-slate-800 hover:text-white"
                   variant="ghost"
                   onClick={handleLogout}
                 >
@@ -96,6 +107,8 @@ const UserProfilePage = () => {
                 </Button>
               )
             )}
+
+            
           </nav>
         </div>
       </aside>

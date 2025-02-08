@@ -193,6 +193,7 @@ class UserController {
     }
   }
 
+  //edit user
   async editUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
@@ -206,6 +207,7 @@ class UserController {
     }
   }
 
+  //send otp for email change
   async sendChangeEmailOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;
@@ -251,10 +253,8 @@ class UserController {
       }
       const updateProfilePicture =
         AuthDIContainer.getUpdateProfilePictureUseCase();
-      const profileImage = await updateProfilePicture.execute(id, fileBuffer);
-      res
-        .status(200)
-        .json({ message: "Profile picture updated", profileImage });
+      const user = await updateProfilePicture.execute(id, fileBuffer);
+      res.status(200).json({ message: "Profile picture updated", user });
     } catch (error: any) {
       next(error);
     }

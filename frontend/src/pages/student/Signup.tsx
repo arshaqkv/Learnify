@@ -33,10 +33,16 @@ const Signup: React.FC = () => {
   const validationSchema = Yup.object({
     firstname: Yup.string()
       .required("First name is required")
-      .matches(/^[A-Za-z]+$/, "First name must only contain letters"),
+      .matches(
+        /^[A-Za-z\s]+$/,
+        "First name must only contain letters and spaces"
+      ),
     lastname: Yup.string()
       .required("Last name is required")
-      .matches(/^[A-Za-z]+$/, "Last name must only contain letters"),
+      .matches(
+        /^[A-Za-z\s]+$/,
+        "Last name must only contain letters and spaces"
+      ),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),

@@ -3,5 +3,5 @@ export interface InstructorDTO {
   skills: string[];
   experience: number;
   bio: string;
-  password: string
+  password?: string
 }

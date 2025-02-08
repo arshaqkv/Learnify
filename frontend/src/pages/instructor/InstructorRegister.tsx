@@ -5,18 +5,20 @@ import ArrayField from "../../components/common/ArrayField";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Textarea } from "../../components/ui/textarea";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { RegisterInstructor } from "../../features/auth/authThunk";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 
 const InstructorRegistration = () => {
   const [step, setStep] = useState(1);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { user, loading } = useAppSelector((state) => state.auth);
+  const hasGoogleId = user?.googleId; // Check if user is Google authenticated
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
@@ -44,12 +46,11 @@ const InstructorRegistration = () => {
       bio: Yup.string()
         .min(20, "Bio must be at least 20 characters long")
         .required("Bio is required"),
-      password:
-        step === 2
-          ? Yup.string()
-              .min(6, "Password must be at least 6 characters")
-              .required("Password is required")
-          : Yup.string(),
+      password: !hasGoogleId
+        ? Yup.string()
+            .min(6, "Password must be at least 6 characters")
+            .required("Password is required")
+        : Yup.string(),
     }),
     onSubmit: async (values) => {
       dispatch(startLoading());
@@ -69,11 +70,22 @@ const InstructorRegistration = () => {
     },
   });
 
+  // Check if step 1 fields are filled
+  const isStep1Valid =
+    formik.values.qualifications.length > 0 &&
+    formik.values.skills.length > 0 &&
+    formik.values.experience &&
+    formik.values.bio.length >= 20 &&
+    !formik.errors.qualifications &&
+    !formik.errors.skills &&
+    !formik.errors.experience &&
+    !formik.errors.bio;
+
   return (
-    <div className="h-screen">
-      <div className="max-w-md mx-auto my-10 p-7 border-2 bg-white shadow-lg rounded-md">
-        <h2 className="text-2xl font-bold mb-4">
-          {step === 1 ? "Instructor Registration" : "Set Password"}
+    <div className="h-screen flex justify-center items-center">
+      <div className="max-w-md w-full p-7 border-2 bg-white shadow-lg rounded-md">
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {step === 1 ? "Instructor Registration" : "Enter Password"}
         </h2>
 
         <form onSubmit={formik.handleSubmit}>
@@ -147,15 +159,17 @@ const InstructorRegistration = () => {
                 )}
               </div>
 
-              {/* Next Button */}
+              {/* Next or Submit Button */}
               <Button
-                type="button"
+                type={hasGoogleId ? "submit" : "button"}
                 className="w-full mt-4"
-                onClick={() => setStep(2)}
-                disabled={!formik.isValid || formik.isSubmitting}
+                onClick={() => !hasGoogleId && setStep(2)}
+                disabled={!isStep1Valid || formik.isSubmitting}
               >
-                Next
+                {hasGoogleId ? "Submit" : "Next"}
               </Button>
+
+              {/* Cancel Button */}
               <Button
                 type="button"
                 className="w-full mt-4"
@@ -170,32 +184,32 @@ const InstructorRegistration = () => {
               {/* Password */}
               <div>
                 <label className="font-bold">Password</label>
-                <div className="mb-4 flex flex-col">
+                <div className="mb-4 relative flex flex-col">
                   <Input
                     type={passwordVisible ? "text" : "password"}
                     name="password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
-                    className="dark:bg-slate-800 max-w-xs"
+                    className="dark:bg-slate-800 max-w-md"
                   />
-                  {formik.touched.password && formik.errors.password && (
-                    <p className="text-red-500 text-sm">
-                      {formik.errors.password}
-                    </p>
-                  )}
                   <button
                     type="button"
-                    className="absolute mt-2 ml-72"
+                    className="absolute top-2 right-5"
                     onClick={togglePasswordVisibility}
                   >
                     {passwordVisible ? (
-                      <Eye className="size-5 text-gray-400" />
-                    ) : (
                       <EyeOff className="size-5 text-gray-400" />
+                    ) : (
+                      <Eye className="size-5 text-gray-400" />
                     )}
                   </button>
                 </div>
+                {formik.touched.password && formik.errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.password}
+                  </p>
+                )}
               </div>
 
               {/* Submit & Back Buttons */}
@@ -207,7 +221,13 @@ const InstructorRegistration = () => {
                 >
                   Back
                 </Button>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={!formik.values.password}>
+                  {loading ? (
+                    <Loader className="w-6 h-6 animate-spin  mx-auto" />
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
               </div>
             </>
           )}

@@ -2,7 +2,6 @@ import { useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
-import { Suspense } from "react";
 import AppRoutes from "./routes/Routes";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -21,9 +20,7 @@ const App = () => {
     <>
       <Layout>
         <Toaster />
-        <Suspense fallback={<div className="flex h-screen items-center justify-center text-lg">Loading...</div>}>
-          <AppRoutes />
-        </Suspense>
+        <AppRoutes />
       </Layout>
     </>
   );

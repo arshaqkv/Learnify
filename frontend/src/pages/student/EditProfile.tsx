@@ -4,12 +4,12 @@ import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { UploadCloud, Pencil, Camera } from "lucide-react";
-import { useAppDispatch } from "../../app/hooks";
+import { UploadCloud, Pencil, Camera, Loader } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   endLoading,
   startLoading,
-  updateProfileImage,
+  updateUser,
 } from "../../features/auth/authSlice";
 import {
   editEmail,
@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { loading } = useAppSelector((state) => state.auth);
   const [profilePic, setProfilePic] = useState<string>("");
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditing, setIsEditing] = useState<{
@@ -34,30 +34,32 @@ const EditProfile = () => {
     lastname: false,
     phone: false,
   });
+  const [initialValues, setInitialValues] = useState({
+    firstname: "",
+    lastname: "",
+    phone: "",
+    email: ""
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
-      dispatch(startLoading());
-      try {
-        const result: any = await dispatch(getUser());
-        if (getUser.fulfilled.match(result)) {
-          const { user } = result.payload;
-          if (user) {
-            setProfilePic(user.profileImage || "");
-            formik.setValues({
-              firstname: user.firstname || "",
-              lastname: user.lastname || "",
-              phone: user.phone || "",
-              email: user.email || "",
-            });
-          }
+      const result: any = await dispatch(getUser());
+      if (getUser.fulfilled.match(result)) {
+        const { user } = result.payload;
+        if (user) {
+          setProfilePic(user.profileImage || "");
+          setInitialValues({
+            firstname: user.firstname || "",
+            lastname: user.lastname || "",
+            phone: user.phone || "",
+            email: user.email || ""
+          });
         }
-      } finally {
-        dispatch(endLoading());
       }
     };
 
     fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleProfilePicChange = async (
@@ -79,13 +81,18 @@ const EditProfile = () => {
       }
 
       const maxSize = 5 * 1024 * 1024;
-      if(file.size > maxSize){
-        toast.error("Images must be less than 5mb")
-        return
+      if (file.size > maxSize) {
+        toast.error("Images must be less than 5mb");
+        return;
       }
 
       formData.append("profileImage", file);
-      setProfilePic(URL.createObjectURL(file));
+      if (profilePic) {
+        URL.revokeObjectURL(profilePic);
+      }
+
+      const objectUrl = URL.createObjectURL(file);
+      setProfilePic(objectUrl);
 
       const toastId = toast.loading("Uploading image...");
       const result = await dispatch(updateProfilePicture(formData));
@@ -93,7 +100,7 @@ const EditProfile = () => {
 
       if (updateProfilePicture.fulfilled.match(result)) {
         toast.success(result.payload.message);
-        dispatch(updateProfileImage(result.payload.profileImage));
+        dispatch(updateUser(result.payload.user));
       } else {
         toast.error(result.payload as string);
       }
@@ -101,8 +108,18 @@ const EditProfile = () => {
   };
 
   const validationSchema = Yup.object({
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string().required("Last name is required"),
+    firstname: Yup.string()
+      .required("First name is required")
+      .matches(
+        /^[A-Za-z\s]+$/,
+        "First name must only contain letters and spaces"
+      ),
+    lastname: Yup.string()
+      .required("Last name is required")
+      .matches(
+        /^[A-Za-z\s]+$/,
+        "Last name must only contain letters and spaces"
+      ),
     phone: Yup.string()
       .matches(/^[0-9]+$/, "Phone must be only digits")
       .min(10, "Phone must be at least 10 digits")
@@ -110,14 +127,11 @@ const EditProfile = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
-      firstname: "",
-      lastname: "",
-      phone: "",
-      email: "",
-    },
+    enableReinitialize: true,
+    initialValues,
     validationSchema,
     onSubmit: async (values) => {
+      dispatch(startLoading());
       const trimmedValues = {
         firstname: values.firstname.trim(),
         lastname: values.lastname.trim(),
@@ -126,10 +140,11 @@ const EditProfile = () => {
       const result = await dispatch(editUser(trimmedValues));
       if (editUser.fulfilled.match(result)) {
         toast.success(result.payload.message);
-        navigate("/profile/dashboard");
+        setIsEditing({ firstname: false, lastname: false, phone: false });
       } else {
         toast.error(result.payload as string);
       }
+      dispatch(endLoading());
     },
   });
 
@@ -179,7 +194,9 @@ const EditProfile = () => {
               />
               <Pencil
                 className="w-5 h-5 text-gray-500 cursor-pointer"
-                onClick={() => setIsEditing({ ...isEditing, [field]: true })}
+                onClick={() =>
+                  setIsEditing((prev) => ({ ...prev, [field]: true }))
+                }
               />
             </div>
             {formik.touched[field as keyof typeof formik.touched] &&
@@ -208,8 +225,17 @@ const EditProfile = () => {
           <EmailUpdate onComplete={() => setIsEditingEmail(false)} />
         )}
 
-        <Button type="submit" className="w-full" variant={"outline"}>
-          Save Changes
+        <Button
+          type="submit"
+          className="w-full"
+          variant={"outline"}
+          disabled={!formik.dirty || !formik.isValid}
+        >
+          {loading ? (
+            <Loader className="w-6 h-6 animate-spin  mx-auto" />
+          ) : (
+            "Save Changes"
+          )}
         </Button>
       </form>
     </div>
@@ -229,6 +255,7 @@ const EmailUpdate: React.FC<EmailUpdateProps> = ({
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const emailSchema = Yup.string()
@@ -283,7 +310,11 @@ const EmailUpdate: React.FC<EmailUpdateProps> = ({
             className="flex-1"
           />
           <Button onClick={verifyOtp} type="button" className="w-auto px-4">
-            Verify
+            {loading ? (
+              <Loader className="w-6 h-6 animate-spin  mx-auto" />
+            ) : (
+              "Verify"
+            )}
           </Button>
         </div>
       )}
