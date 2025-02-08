@@ -19,6 +19,10 @@ export class LoginUser {
       throw new CustomError("User registered with social login", 400)
     } 
 
+    if(!user.password){
+      throw new CustomError("Password missing", 400)
+    }
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {

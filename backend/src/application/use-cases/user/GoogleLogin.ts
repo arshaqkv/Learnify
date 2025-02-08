@@ -23,16 +23,17 @@ export class GoogleLogin {
         },
       }
     );
-    const { sub, given_name, family_name, picture, email, email_verified } = googleUserResponse.data;
+    const { sub, given_name, family_name, picture, email, email_verified } =
+      googleUserResponse.data;
 
     let user = await this.userRepository.findByEmail(email);
 
-    if(user && user.googleId === undefined){
-        throw new CustomError("User already exist", 400)
-    }
+    // if(user && user.googleId === undefined){
+    //     throw new CustomError("User already exist", 400)
+    // }
 
-    if(user?.isBlocked){
-      throw new CustomError("You are blocked", 400)
+    if (user?.isBlocked) {
+      throw new CustomError("You are blocked", 400);
     }
 
     if (!user) {
@@ -40,13 +41,15 @@ export class GoogleLogin {
         given_name,
         family_name,
         email,
-        '',
-        '',
+        undefined,
+        undefined,
         picture,
         sub,
+        undefined,
         email_verified
       );
-      await this.userRepository.createUser(user);
+      user = await this.userRepository.createUser(user);
+       
     }
 
     const accessToken = generateAccessToken({ id: user._id, role: user.role });
@@ -64,6 +67,7 @@ export class GoogleLogin {
         phone: user.phone,
         profileImage: user.profileImage,
         role: user.role,
+        googleId: user.googleId,
         createdAt: user.createdAt,
       },
     };

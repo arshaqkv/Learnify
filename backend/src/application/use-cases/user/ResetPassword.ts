@@ -23,7 +23,7 @@ export class ResetPassword {
     const hashedPassword = await bcryptjs.hash(password, 10);
     await this.userRepository.findByEmailAndUpdate(email, {
       password: hashedPassword,
-      resetPasswordToken: "",
+      resetPasswordToken: undefined,
       resetPasswordExpiresAt: undefined,
     });
 
