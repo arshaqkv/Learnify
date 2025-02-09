@@ -158,9 +158,16 @@ const InstructorApplication = () => {
                       </Button>
                       <Button
                         className="bg-red-500 hover:bg-red-600"
+                        disabled={!rejectReason.trim()}
                         onClick={() => {
-                          handleAction("rejected", rejectReason);
+                          if (rejectReason.trim().length < 10) {
+                            toast.error("Rejection reason must be at least 10 characters.");
+                            return;
+                          }
+
+                          handleAction("rejected", rejectReason.trim());
                           setRejectModalOpen(false);
+                          setRejectReason(""); 
                         }}
                       >
                         Submit

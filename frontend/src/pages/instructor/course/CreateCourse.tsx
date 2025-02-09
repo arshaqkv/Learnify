@@ -46,11 +46,7 @@ const validationSchema = yup.object().shape({
     .oneOf(["beginner", "intermediate", "advanced"], "Invalid level")
     .required("Level is required"),
   category: yup.string().required("Category is required"),
-  thumbnail: yup.mixed()
-    .test("fileSize", "File size should be less than 5MB", (file) => {
-      return file && file.size <= 5 * 1024 * 1024; // 5MB limit
-    })
-    .required("Thumbnail is required"),
+  thumbnail: yup.mixed().required("Thumbnail is required"),
 });
 
 const CreateCourse = () => {
@@ -80,7 +76,6 @@ const CreateCourse = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      
       try {
         const formData = new FormData();
         formData.append("title", values.title);
@@ -226,12 +221,11 @@ const CreateCourse = () => {
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (file) {
-
                   if (!["image/png", "image/jpeg"].includes(file.type)) {
                     toast.error("Only JPG and PNG images are allowed");
                     return;
                   }
-            
+
                   // Validate file size
                   if (file.size > 5 * 1024 * 1024) {
                     toast.error("File size should be less than 5MB");
@@ -249,7 +243,7 @@ const CreateCourse = () => {
               <img
                 src={thumbnailPreview}
                 alt="Thumbnail Preview"
-                className="mt-4 w-32 h-32 object-cover rounded-lg border"
+                className="mt-4 max-w-lg max-h-40 object-cover rounded-lg border"
               />
             )}
           </Card>

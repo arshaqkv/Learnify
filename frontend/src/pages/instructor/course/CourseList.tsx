@@ -18,11 +18,22 @@ import {
 } from "../../../components/ui/table";
 import { useAppDispatch } from "../../../app/hooks";
 import { useEffect, useState } from "react";
-import { getAllCourses } from "../../../features/auth/authThunk";
+import { deleteCourse, getAllCourses } from "../../../features/auth/authThunk";
 import Pagination from "../../../components/common/Pagination";
 import { Input } from "../../../components/ui/input";
 import { endLoading, startLoading } from "../../../features/auth/authSlice";
 import ResultNotFound from "../../../components/common/ResultNotFound";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "../../../components/ui/alert-dialog";
+import toast from "react-hot-toast";
 
 const CourseList = () => {
   const navigate = useNavigate();
@@ -32,6 +43,8 @@ const CourseList = () => {
   const [search, setSearch] = useState<string>("");
   const [totalPages, setTotalPages] = useState(1);
   const [totalCourses, setTotalCourses] = useState(0);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -47,6 +60,22 @@ const CourseList = () => {
     };
     fetchCourses();
   }, [dispatch, page, search]);
+
+  const handleRemoveCourse = async ()=>{
+    if(!selectedCourse) return
+    dispatch(startLoading())
+    const result = await dispatch(deleteCourse(selectedCourse))
+    if (deleteCourse.fulfilled.match(result)) {
+      toast.success(result.payload.message);
+      setCourses((prev: any) =>
+        prev.filter((category: any) => category._id !== selectedCourse)
+      );
+      setShowDialog(false);
+    } else if (deleteCourse.rejected.match(result)) {
+      toast.error(result.payload as string);
+    }
+    dispatch(endLoading());
+  }
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
@@ -84,7 +113,7 @@ const CourseList = () => {
                 <TableHead>Course Category</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Created at</TableHead>
-                <TableHead className="text-center">Published</TableHead>
+                <TableHead className="text-center">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,7 +144,10 @@ const CourseList = () => {
                       size="sm"
                       className="hover:text-red-500"
                       title="Delete"
-                      onClick={() => {}}
+                      onClick={() => {
+                        setSelectedCourse(course._id)
+                        setShowDialog(true)
+                      }}
                     >
                       <X className="h-6 w-6" />
                     </Button>
@@ -133,6 +165,24 @@ const CourseList = () => {
       ) : (
         <ResultNotFound />
       )}
+
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will permanently delete the category. This cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemoveCourse}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };

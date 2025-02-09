@@ -10,7 +10,9 @@ router
   .use(isAuthenticated, authorizeRole(["instructor"]))
   .get("/categories", categoryController.getAllActiveCategories)
   .get("/courses-all", courseController.getAllCourses)
-  .post("/courses/add", upload.single('thumbnail'), courseController.createCourse)
+  .post("/course/add", upload.single('thumbnail'), courseController.createCourse)
+  .put("/course/edit/:id", upload.single('thumbnail') ,courseController.editCourse)
+  .delete("/course/remove/:id", courseController.deleteCourse)
   
   
 

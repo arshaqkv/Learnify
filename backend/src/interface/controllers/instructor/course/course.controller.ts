@@ -65,6 +65,29 @@ class CourseController {
       next(error);
     }
   }
+
+  async editCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const editCourse = CourseDIContainer.getEditCourseUseCase();
+      const fileBuffer = req.file ? req.file.buffer : undefined;
+      await editCourse.execute(id, req.body, fileBuffer);
+      res.status(200).json({ message: "Course updated successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async deleteCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const deleteCourse = CourseDIContainer.getDeleteCourseUseCase();
+      await deleteCourse.execute(id);
+      res.status(200).json({ message: "Course deleted successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
 
 const courseController = new CourseController();

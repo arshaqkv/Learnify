@@ -9,7 +9,8 @@ interface ICourse extends Document {
   creator: mongoose.Types.ObjectId;
   category: mongoose.Types.ObjectId;
   thumbnail: string;
-  level?: string;
+  thumbnailPublicId: string;
+  level: string;
   isPublished?: boolean;
   isDeleted?: boolean;
   lectures: [];
@@ -55,6 +56,9 @@ const CourseSchema: Schema = new Schema(
     },
     thumbnail: {
       type: String,
+    },
+    thumbnailPublicId: {
+      type: String
     },
     lectures: [
       {

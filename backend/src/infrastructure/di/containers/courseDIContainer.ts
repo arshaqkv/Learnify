@@ -1,4 +1,6 @@
 import { CreateCourse } from "../../../application/use-cases/instructor/course/CreateCourse";
+import { DeleteCourse } from "../../../application/use-cases/instructor/course/DeleteCourse";
+import { EditCourse } from "../../../application/use-cases/instructor/course/EditCourse";
 import { GetAllCourses } from "../../../application/use-cases/instructor/course/GetAllCourses";
 import { GetAllPublishedCourses } from "../../../application/use-cases/instructor/course/GetAllPublishedCourses";
 import { GetCourse } from "../../../application/use-cases/instructor/course/GetCourse";
@@ -31,6 +33,20 @@ class CourseDIContainer {
 
   static getCourseUseCase() {
     return new GetCourse(this.getCourseRepository());
+  }
+
+  static getEditCourseUseCase() {
+    return new EditCourse(
+      this.getCourseRepository(),
+      this.getCloudinaryService()
+    );
+  }
+
+  static getDeleteCourseUseCase() {
+    return new DeleteCourse(
+      this.getCourseRepository(),
+      this.getCloudinaryService()
+    );
   }
 }
 

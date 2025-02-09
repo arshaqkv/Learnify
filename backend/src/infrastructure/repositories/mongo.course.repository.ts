@@ -23,9 +23,6 @@ export class MonogoCourseRepository implements ICourseRepository {
   ): Promise<{ courses: Course[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    // const regex = new RegExp(`^${search}`, "i");
-    // const query = search ? { title: { $regex: regex } } : {};
-
     const regex = search ? new RegExp(`^${search}`, "i") : null;
     const query: any = { creator };
 

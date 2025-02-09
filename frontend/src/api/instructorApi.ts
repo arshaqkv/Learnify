@@ -6,7 +6,7 @@ export const getAllActiveCategoriesAPI = async () => {
 };
 
 export const createCourseAPI = async (formData: any) => {
-  const response = axios.post("/instructor/courses/add", formData);
+  const response = axios.post("/instructor/course/add", formData);
   return response;
 };
 
@@ -25,5 +25,12 @@ export const getAllCoursesAPI = async ({
   return response;
 };
 
+export const editCourseAPI = async (id: string, formData: any) => {
+  const response = axios.put(`/instructor/course/edit/${id}`, formData);
+  return response;
+};
 
-
+export const deleteCourseAPI = async (id: string) => {
+  const response = axios.delete(`/instructor/course/remove/${id}`);
+  return response;
+};

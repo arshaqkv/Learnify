@@ -37,13 +37,14 @@ export class CreateCourse {
         throw new CustomError("Course with same title already available", 400)
     }
 
-    const uploadedImage = await this.cloudinaryService.uploadCourseImage(fileBuffer)
-    console.log(uploadedImage)
-    const thumbnail = uploadedImage.url
+    const {url, publicId} = await this.cloudinaryService.uploadCourseImage(fileBuffer)
+    
+    const thumbnail = url
+    const thumbnailPublicId = publicId
     const creator = new mongoose.Types.ObjectId(id)
     const categoryId = new mongoose.Types.ObjectId(category)
 
-    const newCourse = new Course(title, description, price, creator, categoryId, thumbnail, level)
+    const newCourse = new Course(title, description, price, creator, categoryId, thumbnail, thumbnailPublicId, level)
     
 
     const course = this.courseRepository.createNewCourse(newCourse)

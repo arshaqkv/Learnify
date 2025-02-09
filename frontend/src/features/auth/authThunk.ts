@@ -20,6 +20,8 @@ import {
 } from "../../api/authApi";
 import {
   createCourseAPI,
+  deleteCourseAPI,
+  editCourseAPI,
   getAllActiveCategoriesAPI,
   getAllCoursesAPI,
 } from "../../api/instructorApi";
@@ -289,6 +291,33 @@ export const getCourse = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await getCourseAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const editCourse = createAsyncThunk(
+  "auth/editCourse",
+  async (
+    { id, formData }: { id: string; formData: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await editCourseAPI(id, formData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const deleteCourse = createAsyncThunk(
+  "auth/deleteCourse",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await deleteCourseAPI(id);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
