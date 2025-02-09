@@ -21,11 +21,13 @@ class CourseController {
 
   async getAllCourses(req: Request, res: Response, next: NextFunction) {
     try {
+      const { id } = req.user;
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
       const getAllCourses = CourseDIContainer.getAllCoursesUseCase();
       const { courses, total } = await getAllCourses.execute(
+        id,
         page,
         limit,
         search

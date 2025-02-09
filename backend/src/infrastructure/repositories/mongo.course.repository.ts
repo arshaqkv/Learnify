@@ -16,17 +16,25 @@ export class MonogoCourseRepository implements ICourseRepository {
   }
 
   async getAllCourses(
+    creator: string,
     page: number,
     limit: number,
     search?: string
   ): Promise<{ courses: Course[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    const regex = new RegExp(`^${search}`, "i");
-    const query = search ? { title: { $regex: regex } } : {};
+    // const regex = new RegExp(`^${search}`, "i");
+    // const query = search ? { title: { $regex: regex } } : {};
+
+    const regex = search ? new RegExp(`^${search}`, "i") : null;
+    const query: any = { creator };
+
+    if (search) {
+      query.title = { $regex: regex };
+    }
 
     const courses = await CourseModel.find(query)
-      .populate('category')
+      .populate("category")
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -36,12 +44,14 @@ export class MonogoCourseRepository implements ICourseRepository {
   }
 
   async getAllPublishedcourses(): Promise<Course[]> {
-    const courses = await CourseModel.find().populate('creator');
+    const courses = await CourseModel.find().populate("creator");
     return courses;
   }
 
   async getCourseById(id: string): Promise<Course | null> {
-    const course = CourseModel.findById(id).populate('category').populate('creator')
+    const course = CourseModel.findById(id)
+      .populate("category")
+      .populate("creator");
     return course;
   }
 

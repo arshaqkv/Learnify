@@ -78,7 +78,7 @@ export const getSingleInstructorAPI = async(id: string) =>{
   return response
 }
 
-export const updateInstructorStatusAPI = async(id: string, status: string) =>{
-  const response = axios.patch(`/instructors/${id}`, {status})
+export const updateInstructorStatusAPI = async({id, status, rejectionReason}: {id: string, status: string, rejectionReason?: string}) =>{
+  const response = axios.patch(`/instructors/${id}`, {status, rejectionReason})
   return response
 }

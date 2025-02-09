@@ -105,9 +105,10 @@ export const sendInstructorApprovalEmail = async (
 
 export const sendInstructorRejectionEmail = async (
   email: string,
-  name: string
+  name: string,
+  rejectionReason: string
 ): Promise<void> => {
-  const message = INSTRUCTOR_REJECTION_TEMPLATE.replace("{instructorName}", name)
+  const message = INSTRUCTOR_REJECTION_TEMPLATE.replace("{instructorName}", name).replace("{rejectionReason}", rejectionReason)
   const mailOptions = {
     from: config.user,
     to: email,

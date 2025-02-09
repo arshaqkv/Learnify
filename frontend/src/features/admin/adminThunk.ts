@@ -189,9 +189,9 @@ export const getSingleInstructor = createAsyncThunk(
 
 export const updateInstructorStatus = createAsyncThunk(
   "admin/updateInstructorStatus",
-  async({id, status}: {id: string, status: string}, {rejectWithValue}) =>{
+  async({id, status, rejectionReason}: {id: string, status: string, rejectionReason?: string}, {rejectWithValue}) =>{
     try {
-      const response = await updateInstructorStatusAPI(id, status)
+      const response = await updateInstructorStatusAPI({id, status, rejectionReason})
       return response.data
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

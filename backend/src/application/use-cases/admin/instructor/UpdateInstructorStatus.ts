@@ -13,7 +13,7 @@ export class UpdateInstructorStatus {
     private userRepository: IUserRepository
   ) {}
 
-  async execute(id: string, status: string): Promise<Instructor | null> {
+  async execute(id: string, status: string, rejectionReason?: string): Promise<Instructor | null> {
     if (!status) {
       throw new CustomError("Status not provided", 400);
     }
@@ -47,7 +47,7 @@ export class UpdateInstructorStatus {
       }
     } else if(status === 'rejected'){
       sendInstructorRejectionEmail(user?.email,
-        `${user?.firstname} ${user?.lastname}`);
+        `${user?.firstname} ${user?.lastname}`, rejectionReason || "No specific reason provided");
     }
     const instructorDoc = await this.instructorRepository.updateInstructor(
       id,

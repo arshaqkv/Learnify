@@ -57,8 +57,8 @@ class InstructorController {
       const { id } = req.params;
       const updateInstructor =
         InstructorDIContainer.getUpdateInstructorStatusUseCase();
-      const { status } = req.body;
-      const instructor = await updateInstructor.execute(id, status);
+      const { status, rejectionReason } = req.body;
+      const instructor = await updateInstructor.execute(id, status, rejectionReason);
       res
         .status(200)
         .json({
