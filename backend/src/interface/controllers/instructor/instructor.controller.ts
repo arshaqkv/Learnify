@@ -8,7 +8,7 @@ class InstructorController {
       const { id } = req.user;
       const registerInstructor = InstructorDIContainer.getRegisterInstructorUseCase();
       await registerInstructor.execute(id, req.body);
-      res.status(201).json({
+      res.status(20).json({
         success: true,
         message: "Successfully applied for Instructor role",
       });

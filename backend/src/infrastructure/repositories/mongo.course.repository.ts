@@ -41,7 +41,7 @@ export class MonogoCourseRepository implements ICourseRepository {
   }
 
   async getAllPublishedcourses(): Promise<Course[]> {
-    const courses = await CourseModel.find().populate("creator");
+    const courses = await CourseModel.find().populate("creator").populate("category");
     return courses;
   }
 

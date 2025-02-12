@@ -19,11 +19,6 @@ export const isAuthenticated = (
     }
     req.user = decoded;
 
-    // const user = await UserModel.findById(decoded.id);
-    // if (user?.isBlocked) {
-    //   return res.status(403).json({ message: "You are blocked" });
-    // }
-
     next();
   } catch (error) {
     next(error);

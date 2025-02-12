@@ -22,6 +22,8 @@ const Navbar = () => {
           </h1>
         </div>
 
+        <div>
+          {/* <Link to={'/courses/search'}>Courses</Link> */}
         {user ? (
           <Link to={'/profile/dashboard'} >
             <Avatar className="hover:border-2">
@@ -39,6 +41,7 @@ const Navbar = () => {
             <Button onClick={() => navigate("/signup")}>Sign up</Button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

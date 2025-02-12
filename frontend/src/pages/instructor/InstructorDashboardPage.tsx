@@ -30,17 +30,16 @@ const InstructorDashboardPage = () => {
         <div className="p-4 mt-5">
           <p className="text-gray-500 text-center mb-4">Instructor Dashboard</p>
 
-          
           <nav className="space-y-2">
             {menuItems.map((menuItem) => (
               <NavLink
                 key={menuItem.path}
                 to={menuItem.path}
                 className={() =>
-                  `flex items-center w-full p-2 rounded-md transition-colors ${
-                    location.pathname.includes(menuItem.path) // Match partial path for similar routes
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50"
+                  `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg ${
+                    location.pathname.includes(menuItem.path)
+                      ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"
                   }`
                 }
               >

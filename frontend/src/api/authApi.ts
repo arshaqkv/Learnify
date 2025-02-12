@@ -86,6 +86,11 @@ export const googleLoginAPI = async (token: string) => {
   return response;
 };
 
+export const getActiveCategoriesAPI = async() =>{
+  const response = axios.get('/auth/get-categories')
+  return response
+}
+
 //get courses
 export const getAllPublishedCoursesAPI = async () => {
   const response = axios.get("/auth/courses");

@@ -4,6 +4,7 @@ import { instructorController } from "../controllers/instructor/instructor.contr
 import { authorizeRole, isAuthenticated, isBlocked } from "../middlewares/auth.middleware";
 import { courseController } from "../controllers/instructor/course/course.controller";
 import { upload } from "../../infrastructure/middleware/multer";
+import { categoryController } from "../controllers/admin/category/category.controller";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.post("/forgot-password", userController.forgotPassword);
 router.put("/reset-password/:token", userController.resetPassword);
 router.post("/google", userController.googleLogin);
 
+router.get('/get-categories', categoryController.getAllActiveCategories)
 router.get("/courses", courseController.getAllPublishedCourses)
 router.get("/courses/:id", courseController.getCourse)
 

@@ -17,6 +17,7 @@ import {
   editEmailAPI,
   sendChangeEmailOtpAPI,
   updateProfilePictureAPI,
+  getActiveCategoriesAPI,
 } from "../../api/authApi";
 import {
   createCourseAPI,
@@ -267,6 +268,18 @@ export const getAllCourses = createAsyncThunk(
   ) => {
     try {
       const response = await getAllCoursesAPI({ page, limit, search });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getActiveCategories = createAsyncThunk(
+  "auth/getCategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getActiveCategoriesAPI()
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
