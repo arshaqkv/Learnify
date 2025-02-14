@@ -4,7 +4,7 @@ export interface ICourseRepository {
   createNewCourse(course: Partial<Course>): Promise<Course>;
   getCourseByTitle(title: string): Promise<Course | null>;
   getAllCourses(creator: string, page: number, limit: number, search?: string): Promise<{courses: Course[], total: number}>
-  getAllPublishedcourses(): Promise<Course[]>
+  getAllPublishedcourses(page: number, limit: number, search?: string, category?: string, level?: string, sort?: string): Promise<{courses: Course[], total: number}>
   getCourseById(id: string): Promise<Course | null>
   updateCourse(id: string, data: Partial<Course>): Promise<void>
   deleteCourse(id: string): Promise<void>

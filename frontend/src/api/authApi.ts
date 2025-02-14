@@ -86,14 +86,30 @@ export const googleLoginAPI = async (token: string) => {
   return response;
 };
 
-export const getActiveCategoriesAPI = async() =>{
-  const response = axios.get('/auth/get-categories')
-  return response
-}
+export const getActiveCategoriesAPI = async () => {
+  const response = axios.get("/auth/get-categories");
+  return response;
+};
 
 //get courses
-export const getAllPublishedCoursesAPI = async () => {
-  const response = axios.get("/auth/courses");
+export const getAllPublishedCoursesAPI = async ({
+  page,
+  limit,
+  search,
+  category,
+  level,
+  sort,
+}: {
+  page: number;
+  limit: number;
+  search: string;
+  category: string[];
+  level: string;
+  sort: string;
+}) => {
+  const response = axios.get(
+    `/auth/courses?page=${page}&limit=${limit}&search=${search}&category=${category}&level=${level}&sort=${sort}`
+  );
   return response;
 };
 

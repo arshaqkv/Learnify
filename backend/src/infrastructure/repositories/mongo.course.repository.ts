@@ -40,9 +40,61 @@ export class MonogoCourseRepository implements ICourseRepository {
     return { courses, total };
   }
 
-  async getAllPublishedcourses(): Promise<Course[]> {
-    const courses = await CourseModel.find().populate("creator").populate("category");
-    return courses;
+  async getAllPublishedcourses(
+    page: number,
+    limit: number,
+    search?: string,
+    category?: string,
+    level?: string,
+    sort?: string
+  ): Promise<{ courses: Course[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    const regex = search ? new RegExp(`^${search}`, "i") : null;
+    const query: any = { isPublished: false };
+
+    // 🔍 Search by title
+    if (search) {
+      query.title = { $regex: regex };
+    }
+
+    // 🏷 Filter by category
+    if (category) {
+      const categoriesArray = category.split(",").filter(Boolean);
+      query.category = { $in: categoriesArray };
+    }
+
+    //filter by level
+    if (level) {
+      query.level = level;
+    }
+
+    // 🔽 Sorting logic
+    let sortOption: any = {};
+    switch (sort) {
+      case "low":
+        sortOption.price = 1;
+        break;
+      case "high":
+        sortOption.price = -1;
+        break;
+      case "a-z":
+        sortOption.title = 1;
+        break;
+      case "z-a":
+        sortOption.title = -1;
+        break;
+    }
+
+    const courses = await CourseModel.find(query)
+      .populate("category")
+      .populate("creator")
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
+
+    const total = await CourseModel.countDocuments(query);
+    return { courses, total };
   }
 
   async getCourseById(id: string): Promise<Course | null> {

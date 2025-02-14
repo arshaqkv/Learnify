@@ -14,27 +14,56 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
-const Filter = () => {
-  const [categories, setCategories] = useState<any[]>([]);
+interface SearchAndSortOptions {
+  onCategoryChange: (checkedCategories: string[]) => void
+  onDifficultyChange: (value: string) => void;
+  onSortChange: (value: string) => void;
+}
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+const Filter: React.FC<SearchAndSortOptions> = ({
+  onCategoryChange,
+  onDifficultyChange,
+  onSortChange,
+}) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const result = await dispatch(getActiveCategories());
-      if (getActiveCategories.fulfilled.match(result)) {
-        setCategories(result.payload.categories);
+      try {
+        const result = await dispatch(getActiveCategories());
+        if (getActiveCategories.fulfilled.match(result)) {
+          setCategories(result.payload.categories || []);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
       }
     };
+
     fetchCategories();
   }, [dispatch]);
 
+  const handleCategoryChange = (categoryId: string, checked: boolean) => {
+    let updatedCategories = checked
+      ? [...selectedCategories, categoryId] // Add category if checked
+      : selectedCategories.filter((id) => id !== categoryId); // Remove category if unchecked
+
+    setSelectedCategories(updatedCategories);
+    onCategoryChange(updatedCategories); // Pass updated list to parent component
+  };
+
   return (
     <div className="w-full md:w-[20%]">
-      <div className="flex items-center justify-between flex-col">
-        <h1 className="font-semibold text-lg md:text-xl mb-3">
-          Filter Options
-        </h1>
-        <Select>
+      <div className="flex flex-col items-center justify-between">
+        <h1 className="mb-3 text-lg font-semibold md:text-xl">Filter Options</h1>
+        
+        <Select onValueChange={onSortChange}>
           <SelectTrigger>
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
@@ -53,18 +82,26 @@ const Filter = () => {
           </SelectContent>
         </Select>
       </div>
+
       <Separator className="my-4" />
+
       <div>
-        <h1 className="font-semibold mb-2 mt-3">CATEGORY</h1>
+        <h1 className="mt-3 mb-2 font-semibold">CATEGORY</h1>
         {categories.map((category) => (
-          <div className="flex items-center space-x-2 my-2" key={category._id}>
-            <Checkbox id={category?._id} />
-            <Label>{category.name}</Label>
+          <div className="flex items-center my-2 space-x-2" key={category._id}>
+            <Checkbox
+              id={category._id}
+              checked={selectedCategories.includes(category._id)}
+              onCheckedChange={(checked) => handleCategoryChange(category._id, checked as boolean)}
+            />
+            <Label>{category?.name}</Label>
           </div>
         ))}
       </div>
+
       <Separator className="my-4" />
-      <Select>
+
+      <Select onValueChange={onDifficultyChange}>
         <SelectTrigger>
           <SelectValue placeholder="Difficulty" />
         </SelectTrigger>

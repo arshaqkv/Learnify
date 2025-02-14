@@ -279,7 +279,7 @@ export const getActiveCategories = createAsyncThunk(
   "auth/getCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await getActiveCategoriesAPI()
+      const response = await getActiveCategoriesAPI();
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
@@ -289,9 +289,33 @@ export const getActiveCategories = createAsyncThunk(
 
 export const getAllPublishedCourses = createAsyncThunk(
   "auth/getAllPublishedCourses",
-  async (_, { rejectWithValue }) => {
+  async (
+    {
+      page,
+      limit,
+      search,
+      category,
+      level,
+      sort,
+    }: {
+      page: number;
+      limit: number;
+      search: string;
+      category: string[];
+      level: string;
+      sort: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await getAllPublishedCoursesAPI();
+      const response = await getAllPublishedCoursesAPI({
+        page,
+        limit,
+        search,
+        category,
+        level,
+        sort,
+      });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

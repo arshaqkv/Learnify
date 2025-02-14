@@ -126,7 +126,7 @@ const InstructorList = () => {
                   <TableHead>Email</TableHead>
 
                   <TableHead>Applied Date</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Application Status</TableHead>
                   <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>

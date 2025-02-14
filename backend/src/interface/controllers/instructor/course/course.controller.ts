@@ -22,7 +22,6 @@ class CourseController {
   async getAllCourses(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      console.log(req.user)
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
@@ -47,10 +46,24 @@ class CourseController {
     next: NextFunction
   ) {
     try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = req.query.search as string;
+      const category = req.query.category as string;
+      const level = req.query.level as string;
+      const sort = req.query.sort as string;
+
       const getAllPublishedCourses =
         CourseDIContainer.getAllPublishedCoursesUseCase();
-      const courses = await getAllPublishedCourses.execute();
-      res.status(200).json({ courses });
+      const { courses, total } = await getAllPublishedCourses.execute(
+        page,
+        limit,
+        search,
+        category,
+        level,
+        sort
+      );
+      res.status(200).json({ courses, totalPages: Math.ceil(total / limit), totalCourses: total });
     } catch (error: any) {
       next(error);
     }
