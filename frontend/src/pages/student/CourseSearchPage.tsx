@@ -7,6 +7,7 @@ import { Skeleton } from "../../components/ui/skeleton";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import Pagination from "../../components/common/Pagination";
 import ResultNotFound from "../../components/common/ResultNotFound";
+import CourseSkeleton from "../../components/common/CourseSkeleton";
 
 const CourseSearchPage = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -130,26 +131,6 @@ const CourseSearchPage = () => {
 
 export default CourseSearchPage;
 
-const CourseSkeleton = () => {
-  return (
-    <div className="flex flex-col rounded-sm md:flex-row justify-between mt-2">
-      <div className="h-32 w-full md:w-64">
-        <Skeleton className="h-full w-full object-cover" />
-      </div>
-      <div className="flex flex-col gap-2 flex-1 px-4">
-        <Skeleton className="h-6 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-4 w-1/3" />
-        </div>
-        <Skeleton className="h-6 w-20 mt-2" />
-      </div>
-      <div className="flex flex-col items-end justify-between mt-4">
-        <Skeleton className="h-6 w-12" />
-      </div>
-    </div>
-  );
-};
 
 const CourseNotFound = () => {
   return <ResultNotFound />;

@@ -35,7 +35,7 @@ export class MongoWishlistRepository implements IWishlistRepository {
             }
         ]
     })
-    console.log(wishlist)
+ 
     return wishlist ? wishlist.courses : [];
   }
 }

@@ -26,6 +26,11 @@ import {
   getAllActiveCategoriesAPI,
   getAllCoursesAPI,
 } from "../../api/instructorApi";
+import {
+  addToWishlistAPI,
+  getWsihlistAPI,
+  removeFromWishlistAPI,
+} from "../../api/studentApi";
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
@@ -240,6 +245,43 @@ export const getAllActiveCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAllActiveCategoriesAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+//wishlist
+export const addToWishlist = createAsyncThunk(
+  "auth/addToWishlist",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await addToWishlistAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const removeFromWishlist = createAsyncThunk(
+  "auth/addToWishlist",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await removeFromWishlistAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getWishlist = createAsyncThunk(
+  "auth/addToWishlist",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getWsihlistAPI();
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

@@ -13,17 +13,21 @@ const ResetPassword = lazy(() => import("../pages/student/ResetPassword"));
 const CourseDetails = lazy(() => import("../pages/student/CourseDetails"));
 const CourseSearchPage = lazy(() => import("../pages/student/CourseSearchPage"))
 const AdminLogin = lazy(() => import("../pages/admin/AdminLogin"));
+
 const InstructorRegister = lazy(() => import("../pages/instructor/InstructorRegister"));
 const UserProfilePage = lazy(() => import("../pages/student/Profile"));
 const ProfileDashboard = lazy(() => import("../pages/student/ProfileDashboard"));
 const EnrolledCourses = lazy(() => import("../pages/student/EnrolledCourses"));
 const EditProfile = lazy(() => import("../pages/student/EditProfile"));
 const ChangePassword = lazy(() => import("../pages/student/ChangePassword"));
+const Wishlist = lazy(() => import("../pages/student/Wishlist"))
+
 const InstructorDashboardPage = lazy(() => import("../pages/instructor/InstructorDashboardPage"));
 const InstructorDashboard = lazy(() => import("../pages/instructor/InstructorDashboard"));
 const CourseList = lazy(() => import("../pages/instructor/course/CourseList"));
 const CreateCourse = lazy(() => import("../pages/instructor/course/CreateCourse"));
 const EditCourse = lazy(() => import("../pages/instructor/course/EditCourse"));
+
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboardPage"));
 const AdminDashboard = lazy(() => import("../pages/admin/AdminDashboard"));
 const UserManagement = lazy(() => import("../pages/admin/User/UserManagement"));
@@ -32,6 +36,7 @@ const CreateCategory = lazy(() => import("../pages/admin/Category/CreateCategory
 const EditCategory = lazy(() => import("../pages/admin/Category/EditCategory"));
 const InstructorList = lazy(() => import("../pages/admin/instructor/InstructorList"));
 const InstructorApplication = lazy(() => import("../pages/admin/instructor/InstructorApplication"));
+
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Unauthorized = lazy(() => import("../pages/Unauthorized"));
 
@@ -57,6 +62,7 @@ const AppRoutes = () => {
             <Route path="edit" element={<EditProfile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
+          <Route path="/wishlist" element={<Wishlist />} />
         </Route>
 
         {/* intructor */}
