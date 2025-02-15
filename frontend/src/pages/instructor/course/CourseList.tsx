@@ -171,7 +171,7 @@ const CourseList = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will permanently delete the category. This cannot be
+              This action will permanently delete the course. This cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

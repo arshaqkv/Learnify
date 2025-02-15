@@ -9,6 +9,7 @@ import { errorHandler } from "../interface/middlewares/error.middleware";
 import { authRoutes } from "../interface/routes/auth.routes";
 import { adminRoutes } from "../interface/routes/admin.routes";
 import { instructorRoutes } from "../interface/routes/instructor.routes";
+import { studentRoutes } from "../interface/routes/student.routes";
 
 const app: Application = express();
 const PORT = config.port;
@@ -27,19 +28,14 @@ app.use(cors({
   credentials: config.cors.CREDENTIALS
 }))
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world guys");
-});
-
-
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/instructor", instructorRoutes)
+app.use("/api/student", studentRoutes)
 
 //Error handling middleware
 app.use(errorHandler);
-
 
 app.listen(PORT, () => {
   connectDB();
