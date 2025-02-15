@@ -18,9 +18,10 @@ router.post("/forgot-password", userController.forgotPassword);
 router.put("/reset-password/:token", userController.resetPassword);
 router.post("/google", userController.googleLogin);
 
-router.get('/get-categories', categoryController.getAllActiveCategories)
+router.get("/get-categories", categoryController.getAllActiveCategories)
+router.get("/courses/:courseId", courseController.getCourse)
 router.get("/courses", courseController.getAllPublishedCourses)
-router.get("/courses/:id", courseController.getCourse)
+
 
 
 router

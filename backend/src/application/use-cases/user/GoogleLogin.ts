@@ -57,10 +57,12 @@ export class GoogleLogin {
       id: user._id,
       role: user.role,
     });
+
     return {
       accessToken,
       refreshToken,
       user: {
+        id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,

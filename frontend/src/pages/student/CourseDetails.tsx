@@ -1,57 +1,68 @@
 import { BadgeInfo, Heart, HeartOff } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { addToWishlist, getCourse, getWishlist, removeFromWishlist } from "../../features/auth/authThunk";
-import { useAppDispatch } from "../../app/hooks";
+import {
+  addToWishlist,
+  getCourse,
+  removeFromWishlist,
+} from "../../features/auth/authThunk";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 const CourseDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  const { courseId } = useParams<{ courseId: string }>();
+  const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [course, setCourse] = useState<any>({});
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  if (!id) {
+  if (!courseId) {
     toast.error("Course not found");
     return;
   }
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const [courseResult, wishlistResult] = await Promise.all([
-        dispatch(getCourse(id)),
-        dispatch(getWishlist()),
-      ]);
-      const { course } = courseResult.payload;
-      const { wishlist } = wishlistResult.payload;
-      setCourse(course);
-      const Wishlisted = wishlist.some((course: any) => course._id === id)
-      setIsWishlisted(Wishlisted)
+      const courseResult = await dispatch(getCourse({courseId, userId: user?.id}));
+      if (getCourse.fulfilled.match(courseResult)) {
+        const { course, isWishlisted } = courseResult.payload;
+        setCourse(course);
+        setIsWishlisted(isWishlisted);
+      } else {
+        toast.error(courseResult.payload as string);
+      }
     };
 
     fetchCourse();
   }, [dispatch]);
 
-  const toggleWishlist = async () =>{
+
+  const toggleWishlist = async () => {
     try {
-      if(!isWishlisted){
-        const result = await dispatch(addToWishlist(id))
-        if(addToWishlist.fulfilled.match(result)){
-          toast.success(result.payload.message)
+      if (!isWishlisted) {
+        if (!user) {
+          toast.error("Please Login to continue");
+          navigate("/login");
+          return;
         }
-      }else{
-        const result = await dispatch(removeFromWishlist(id))
-        if(removeFromWishlist.fulfilled.match(result)){
-          toast.success(result.payload.message)
+        const result = await dispatch(addToWishlist(courseId));
+        if (addToWishlist.fulfilled.match(result)) {
+          toast.success(result.payload.message);
+        }
+      } else {
+        const result = await dispatch(removeFromWishlist(courseId));
+        if (removeFromWishlist.fulfilled.match(result)) {
+          toast.success(result.payload.message);
         }
       }
       setIsWishlisted((prev) => !prev);
     } catch (error) {
       toast.error("Error updating wishlist");
     }
-  }
+  };
 
   return (
     <div className="mt-10 h-screen mb-10">
@@ -71,14 +82,16 @@ const CourseDetails = () => {
             <BadgeInfo size={18} />
             <p>Last updated: {new Date(course.updatedAt).toDateString()}</p>
           </div>
-          <p className="text-lg">Students enrolled: <span className="font-semibold">0</span></p>
+          <p className="text-lg">
+            Students enrolled: <span className="font-semibold">0</span>
+          </p>
           <p className="text-xl font-semibold">
             Course Price: <span className="text-white">₹{course?.price}</span>
           </p>
 
           {/* Buttons */}
           <div className="flex gap-4 mt-5">
-            <Button  className="bg-blue-600 hover:bg-blue-500 text-white text-lg px-10 py-5 rounded-lg shadow-md">
+            <Button className="bg-blue-600 hover:bg-blue-500 text-white text-lg px-10 py-5 rounded-lg shadow-md">
               Purchase Course
             </Button>
             <Button
@@ -94,13 +107,19 @@ const CourseDetails = () => {
 
         {/* Course Thumbnail */}
         <div className="mt-8 md:mt-0">
-          <img src={course.thumbnail} className="max-w-sm rounded-lg shadow-md border border-gray-700" alt="" />
+          <img
+            src={course.thumbnail}
+            className="max-w-sm rounded-lg shadow-md border border-gray-700"
+            alt=""
+          />
         </div>
       </div>
 
       {/* Course Description Section */}
       <div className="max-w-4xl my-10 px-6 md:px-10">
-        <h1 className="font-bold text-2xl md:text-3xl border-b-2 border-gray-300 pb-3">Course Description</h1>
+        <h1 className="font-bold text-2xl md:text-3xl border-b-2 border-gray-300 pb-3">
+          Course Description
+        </h1>
         <p className="text-lg text-gray-700 mt-4">{course?.description}</p>
       </div>
     </div>

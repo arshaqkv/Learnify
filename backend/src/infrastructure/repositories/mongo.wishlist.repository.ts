@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IWishlistRepository } from "../../domain/interfaces/wishlist.repository";
 import { IWishlist, WishlistModel } from "../models/wishlist.model";
 
@@ -38,4 +39,12 @@ export class MongoWishlistRepository implements IWishlistRepository {
  
     return wishlist ? wishlist.courses : [];
   }
+
+  async getWishlistedCourseById(userId: string, courseId: string): Promise<boolean> {
+      const userObjectId = new mongoose.Types.ObjectId(userId)
+      const courseObjectId = new mongoose.Types.ObjectId(courseId)
+      const wishlist = await WishlistModel.findOne({user: userObjectId, courses: {$in: [courseObjectId]}})
+      return wishlist ? true : false
+  }
 }
+

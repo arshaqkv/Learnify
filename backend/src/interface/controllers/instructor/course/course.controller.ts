@@ -63,7 +63,11 @@ class CourseController {
         level,
         sort
       );
-      res.status(200).json({ courses, totalPages: Math.ceil(total / limit), totalCourses: total });
+      res.status(200).json({
+        courses,
+        totalPages: Math.ceil(total / limit),
+        totalCourses: total,
+      });
     } catch (error: any) {
       next(error);
     }
@@ -71,10 +75,11 @@ class CourseController {
 
   async getCourse(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { courseId } = req.params;
+      const userId = req.query.userId as string
       const getCourse = CourseDIContainer.getCourseUseCase();
-      const course = await getCourse.execute(id);
-      res.status(200).json({ course });
+      const { course, isWishlisted } = await getCourse.execute(courseId, userId)
+      res.status(200).json({ course, isWishlisted });
     } catch (error: any) {
       next(error);
     }

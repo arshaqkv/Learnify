@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Filter from "../../components/common/Filter";
 import SearchResult from "../../components/common/SearchResult";
 import { getAllPublishedCourses } from "../../features/auth/authThunk";
-import { Skeleton } from "../../components/ui/skeleton";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import Pagination from "../../components/common/Pagination";
 import ResultNotFound from "../../components/common/ResultNotFound";

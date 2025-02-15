@@ -21,6 +21,7 @@ export interface LoginResponseDTO {
     phone?: string;
     profileImage: string;
     role: string;
+    id?: string;
     googleId?: string;
     createdAt?: Date;
   };

@@ -367,9 +367,9 @@ export const getAllPublishedCourses = createAsyncThunk(
 
 export const getCourse = createAsyncThunk(
   "auth/getCourse",
-  async (id: string, { rejectWithValue }) => {
+  async ({courseId, userId}: {courseId: string, userId?: string}, { rejectWithValue }) => {
     try {
-      const response = await getCourseAPI(id);
+      const response = await getCourseAPI(courseId, userId);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

@@ -5,6 +5,7 @@ import { GetAllCourses } from "../../../application/use-cases/instructor/course/
 import { GetAllPublishedCourses } from "../../../application/use-cases/instructor/course/GetAllPublishedCourses";
 import { GetCourse } from "../../../application/use-cases/instructor/course/GetCourse";
 import { MonogoCourseRepository } from "../../repositories/mongo.course.repository";
+import { MongoWishlistRepository } from "../../repositories/mongo.wishlist.repository";
 import { CloudinaryService } from "../../services/cloudinary/Cloudinary";
 
 class CourseDIContainer {
@@ -14,6 +15,10 @@ class CourseDIContainer {
 
   static getCloudinaryService() {
     return new CloudinaryService();
+  }
+
+  static getWishlistRepository() {
+    return new MongoWishlistRepository();
   }
 
   static getCreateCourseUseCase() {
@@ -32,7 +37,10 @@ class CourseDIContainer {
   }
 
   static getCourseUseCase() {
-    return new GetCourse(this.getCourseRepository());
+    return new GetCourse(
+      this.getCourseRepository(),
+      this.getWishlistRepository()
+    );
   }
 
   static getEditCourseUseCase() {

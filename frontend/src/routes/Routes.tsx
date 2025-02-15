@@ -50,7 +50,7 @@ const AppRoutes = () => {
         <Route path="/verify-account" element={<VerifyAccount />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/courses/course-details/:id" element={<CourseDetails />} />
+        <Route path="/courses/course-details/:courseId" element={<CourseDetails />} />
         <Route path="/courses/search" element={<CourseSearchPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 
