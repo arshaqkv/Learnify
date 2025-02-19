@@ -55,6 +55,7 @@ const CourseSearchPage = () => {
   ]);
 
   const handleCategoryChange = (updatedCategories: string[]) => {
+    setSearchTerm('')
     setSelectedCategories(updatedCategories);
   };
 
@@ -82,18 +83,20 @@ const CourseSearchPage = () => {
           </button>
         </div>
       </form>
-      <div className="my-6">
-        {searchTerm ? (
-          <p>
-            Showing result for
-            <span className="text-blue-800 font-bold italic ml-1">
-              {searchTerm}
-            </span>
-          </p>
-        ) : (
-          ""
-        )}
-        <p>Total Courses: {totalCourses}</p>
+      <div className="my-6 flex justify-between">
+        <p>
+          {searchTerm ? (
+            <p>
+              Showing result for
+              <span className="text-blue-800 font-bold italic ml-1">
+                {searchTerm}
+              </span>
+            </p>
+          ) : (
+            ""
+          )}
+        </p>
+        <p className="font-semibold text-gray-500">{totalCourses} {totalCourses < 2 ? "Result": "Results"}</p>
       </div>
       <div className="flex flex-col md:flex-row gap-10">
         <Filter
@@ -129,7 +132,6 @@ const CourseSearchPage = () => {
 };
 
 export default CourseSearchPage;
-
 
 const CourseNotFound = () => {
   return <ResultNotFound />;

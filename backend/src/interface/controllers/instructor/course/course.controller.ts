@@ -76,9 +76,12 @@ class CourseController {
   async getCourse(req: Request, res: Response, next: NextFunction) {
     try {
       const { courseId } = req.params;
-      const userId = req.query.userId as string
+      const userId = req.query.userId as string;
       const getCourse = CourseDIContainer.getCourseUseCase();
-      const { course, isWishlisted } = await getCourse.execute(courseId, userId)
+      const { course, isWishlisted } = await getCourse.execute(
+        courseId,
+        userId
+      );
       res.status(200).json({ course, isWishlisted });
     } catch (error: any) {
       next(error);
@@ -106,6 +109,70 @@ class CourseController {
     } catch (error: any) {
       next(error);
     }
+  }
+
+  async toggleCoursePublish(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const toggleCoursePublish = CourseDIContainer.getToggleCoursePublish();
+      const course = await toggleCoursePublish.execute(id);
+      res.status(200).json({
+        message: course?.isPublished
+          ? "Course published"
+          : "Course Unpublished",
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async createLecture(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const fileBuffer = req.file ? req.file.buffer : undefined;
+      const createLecture = CourseDIContainer.getCreateLectureUseCase();
+      const course = await createLecture.execute(id, req.body, fileBuffer);
+      res
+        .status(200)
+        .json({ message: "Lecture uploaded successfully", course });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async editLecture(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const fileBuffer = req.file ? req.file.buffer : undefined;
+      const editCourse = CourseDIContainer.getEditLectureUseCase();
+      await editCourse.execute(id, req.body, fileBuffer);
+      res.status(200).json({ message: "Lecture updated successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async deleteLecture(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId, id } = req.params;
+      console.log(courseId, id)
+      const deleteLecture = CourseDIContainer.getDeleteLectureUseCase();
+      await deleteLecture.execute(id, courseId);
+      res.status(200).json({ message: "Lecture removed successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getLecture(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const getLecture = CourseDIContainer.getLectureUseCase();
+      const lecture = await getLecture.execute(id);
+      res.status(200).json({ lecture });   
+    } catch (error: any) {
+      next(error);   
+    }  
   }
 }
 

@@ -27,6 +27,9 @@ const InstructorDashboard = lazy(() => import("../pages/instructor/InstructorDas
 const CourseList = lazy(() => import("../pages/instructor/course/CourseList"));
 const CreateCourse = lazy(() => import("../pages/instructor/course/CreateCourse"));
 const EditCourse = lazy(() => import("../pages/instructor/course/EditCourse"));
+const CourseOverview = lazy(() => import("../pages/instructor/course/CourseOverview"))
+const CreateLecture = lazy(()=> import("../pages/instructor/lecture/CreateLecture"))
+const EditLecture = lazy(()=> import("../pages/instructor/lecture/EditLecture"))
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboardPage"));
 const AdminDashboard = lazy(() => import("../pages/admin/AdminDashboard"));
@@ -71,7 +74,10 @@ const AppRoutes = () => {
             <Route index path="dashboard" element={<InstructorDashboard />} />
             <Route path="courses" element={<CourseList />} />
             <Route path="courses/add" element={<CreateCourse />} />
-            <Route path="courses/edit/:id" element={<EditCourse />} />
+            <Route path="courses/edit/:courseId" element={<EditCourse />} />
+            <Route path="courses/:courseId/overview" element={<CourseOverview />} />
+            <Route path="courses/add/:courseId/lecture" element={<CreateLecture />} />
+            <Route path="courses/edit/:courseId/lecture/edit/:id" element={<EditLecture />} />
           </Route>
         </Route>
 

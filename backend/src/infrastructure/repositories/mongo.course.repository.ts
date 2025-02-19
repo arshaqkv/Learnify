@@ -1,4 +1,5 @@
 import { Course } from "../../domain/entities/course.entity";
+import { Lecture } from "../../domain/entities/lecture.entity";
 import { ICourseRepository } from "../../domain/interfaces/course.repository";
 import { CourseModel } from "../models/course.model";
 
@@ -51,7 +52,7 @@ export class MonogoCourseRepository implements ICourseRepository {
     const skip = (page - 1) * limit;
 
     const regex = search ? new RegExp(`^${search}`, "i") : null;
-    const query: any = { isPublished: false };
+    const query: any = { isPublished: true };
 
     // 🔍 Search by title
     if (search) {
@@ -100,15 +101,34 @@ export class MonogoCourseRepository implements ICourseRepository {
   async getCourseById(id: string): Promise<Course | null> {
     const course = CourseModel.findById(id)
       .populate("category")
-      .populate("creator");
+      .populate("creator")
+      .populate({
+        path: "lectures"
+      })
     return course;
   }
 
-  async updateCourse(id: string, data: Partial<Course>): Promise<void> {
-    await CourseModel.findByIdAndUpdate(id, data, { new: true });
+  async updateCourse(id: string, data: Partial<Course>): Promise<Course | null> {
+    return await CourseModel.findByIdAndUpdate(id, data, { new: true });
   }
 
   async deleteCourse(id: string): Promise<void> {
     await CourseModel.findByIdAndDelete(id);
+  }
+
+  async addLecture(id: string, lectureId?: string): Promise<void> {
+    await CourseModel.findByIdAndUpdate(
+      id,
+      { $push: { lectures: lectureId } },
+      { new: true }
+    );
+  }
+
+  async removeLecture(id: string, lectureId: string): Promise<void> {
+    await CourseModel.findByIdAndUpdate(
+      id,
+      { $pull: { lectures: lectureId } },
+      { new: true }
+    );
   }
 }

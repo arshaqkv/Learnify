@@ -27,13 +27,13 @@ const Navbar = () => {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center ">
             <NavLink to="/" location={location}>
-              HOME
+              Home
             </NavLink>
             <NavLink to="/courses/search" location={location}>
-              COURSES
+              Courses
             </NavLink>
             <NavLink to="/wishlist" location={location}>
-              <Heart size={20} /> WISHLIST
+              <Heart size={20} />
             </NavLink>
           </div>
 

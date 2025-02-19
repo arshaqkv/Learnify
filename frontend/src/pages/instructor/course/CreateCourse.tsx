@@ -24,6 +24,7 @@ import {
 } from "../../../components/ui/select";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Save } from "lucide-react";
 
 const validationSchema = yup.object().shape({
   title: yup
@@ -90,8 +91,9 @@ const CreateCourse = () => {
         toast.dismiss(toastId);
 
         if (createCourse.fulfilled.match(result)) {
+          const {course} = result.payload
           toast.success(result.payload.message);
-          navigate("/instructor/courses");
+          navigate(`/instructor/courses/${course._id}/overview`);
         } else if (createCourse.rejected.match(result)) {
           toast.error(result.payload as string);
         }
@@ -105,7 +107,7 @@ const CreateCourse = () => {
     <Card className="max-w-3xl mx-auto mt-10 shadow-lg border rounded-lg p-6 bg-white space-y-6">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-center">
-          Create Course
+          Add Detailed Information About Course
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -250,9 +252,6 @@ const CreateCourse = () => {
 
           {/* Buttons */}
           <div className="flex gap-4">
-            <Button type="submit" className="w-full">
-              Create Course
-            </Button>
             <Button
               type="button"
               variant="outline"
@@ -260,6 +259,9 @@ const CreateCourse = () => {
               onClick={() => navigate("/instructor/courses")}
             >
               Cancel
+            </Button>
+            <Button type="submit" className="w-full">
+              <Save /> Create Course
             </Button>
           </div>
         </form>

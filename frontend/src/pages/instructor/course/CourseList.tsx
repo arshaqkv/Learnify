@@ -1,4 +1,4 @@
-import { FilePenLine, Plus, Search, X } from "lucide-react";
+import { CircleCheckBig, FilePenLine, Plus, Search, X } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Card,
@@ -18,7 +18,7 @@ import {
 } from "../../../components/ui/table";
 import { useAppDispatch } from "../../../app/hooks";
 import { useEffect, useState } from "react";
-import { deleteCourse, getAllCourses } from "../../../features/auth/authThunk";
+import { deleteCourse, getAllCourses, toggleCoursePublish } from "../../../features/auth/authThunk";
 import Pagination from "../../../components/common/Pagination";
 import { Input } from "../../../components/ui/input";
 import { endLoading, startLoading } from "../../../features/auth/authSlice";
@@ -34,6 +34,7 @@ import {
   AlertDialogHeader,
 } from "../../../components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import { Badge } from "../../../components/ui/badge";
 
 const CourseList = () => {
   const navigate = useNavigate();
@@ -61,10 +62,10 @@ const CourseList = () => {
     fetchCourses();
   }, [dispatch, page, search]);
 
-  const handleRemoveCourse = async ()=>{
-    if(!selectedCourse) return
-    dispatch(startLoading())
-    const result = await dispatch(deleteCourse(selectedCourse))
+  const handleRemoveCourse = async () => {
+    if (!selectedCourse) return;
+    dispatch(startLoading());
+    const result = await dispatch(deleteCourse(selectedCourse));
     if (deleteCourse.fulfilled.match(result)) {
       toast.success(result.payload.message);
       setCourses((prev: any) =>
@@ -75,6 +76,22 @@ const CourseList = () => {
       toast.error(result.payload as string);
     }
     dispatch(endLoading());
+  };
+
+  const handleToggleCoursePublish = async (courseId: string)=>{
+    const result = await dispatch(toggleCoursePublish(courseId));
+    if (toggleCoursePublish.fulfilled.match(result)) {
+      toast.success(result.payload.message);
+      setCourses((prevCourses: any) =>
+        prevCourses.map((course: any) =>
+          course._id === courseId
+            ? { ...course, isPublished: !course.isPublished }
+            : course
+        )
+      );
+    } else if (toggleCoursePublish.rejected.match(result)) {
+      toast.error(result.payload as string);
+    }
   }
   return (
     <Card>
@@ -113,12 +130,19 @@ const CourseList = () => {
                 <TableHead>Course Category</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Created at</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="text-center">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {courses.map((course: any) => (
-                <TableRow key={course._id}>
+                <TableRow
+                  className="cursor-pointer hover:bg-gray-100"
+                  key={course._id}
+                  onClick={() =>
+                    navigate(`/instructor/courses/${course._id}/overview`)
+                  }
+                >
                   <TableCell className="font-medium">{course.title}</TableCell>
                   <TableCell className="w[200px] overflow-hidden">
                     {course.category?.name}
@@ -127,15 +151,29 @@ const CourseList = () => {
                   <TableCell>
                     {new Date(course.createdAt).toDateString()}
                   </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={
+                        course?.isPublished
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-600 text-white"
+                      }
+                    >
+                      {course.isPublished ? "Published" : "Draft"}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hover:text-green-500"
                       title="Edit"
-                      onClick={() =>
+                      onClick={(e) =>{
+                        e.stopPropagation()
                         navigate(`/instructor/courses/edit/${course._id}`)
                       }
+                    }
                     >
                       <FilePenLine className="h-4 w-4" />
                     </Button>
@@ -144,12 +182,25 @@ const CourseList = () => {
                       size="sm"
                       className="hover:text-red-500"
                       title="Delete"
-                      onClick={() => {
-                        setSelectedCourse(course._id)
-                        setShowDialog(true)
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSelectedCourse(course._id);
+                        setShowDialog(true);
                       }}
                     >
                       <X className="h-6 w-6" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:text-blue-500"
+                      title="Publish"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleToggleCoursePublish(course._id)
+                      }}
+                    >
+                      <CircleCheckBig className="h-6 w-6" />
                     </Button>
                   </TableCell>
                 </TableRow>

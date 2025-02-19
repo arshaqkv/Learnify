@@ -31,7 +31,7 @@ const UserProfilePage = () => {
     },
     {
       icon: Bookmark,
-      label: "My Courses",
+      label: "My Learning",
       path: "/profile/courses",
     },
     {

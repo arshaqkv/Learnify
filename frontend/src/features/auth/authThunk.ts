@@ -21,10 +21,15 @@ import {
 } from "../../api/authApi";
 import {
   createCourseAPI,
+  createLectureAPI,
   deleteCourseAPI,
+  deleteLectureAPI,
   editCourseAPI,
+  editLectureAPI,
   getAllActiveCategoriesAPI,
   getAllCoursesAPI,
+  getLectureAPI,
+  toggleCoursePublishAPI,
 } from "../../api/instructorApi";
 import {
   addToWishlistAPI,
@@ -367,7 +372,10 @@ export const getAllPublishedCourses = createAsyncThunk(
 
 export const getCourse = createAsyncThunk(
   "auth/getCourse",
-  async ({courseId, userId}: {courseId: string, userId?: string}, { rejectWithValue }) => {
+  async (
+    { courseId, userId }: { courseId: string; userId?: string },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await getCourseAPI(courseId, userId);
       return response.data;
@@ -397,6 +405,75 @@ export const deleteCourse = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await deleteCourseAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const toggleCoursePublish = createAsyncThunk(
+  "auth/togglePublishCourse",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await toggleCoursePublishAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const createLecture = createAsyncThunk(
+  "auth/createLecture",
+  async (
+    { courseId, formData }: { courseId: string; formData: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await createLectureAPI(courseId, formData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getLecture = createAsyncThunk(
+  "auth/createLecture",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await getLectureAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const editLecture = createAsyncThunk(
+  "auth/createLecture",
+  async (
+    { courseId, id, formData }: { courseId: string; id: string; formData: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await editLectureAPI(courseId, id, formData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const deleteLecture = createAsyncThunk(
+  "auth/createLecture",
+  async (
+    { courseId, id }: { courseId: string; id: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await deleteLectureAPI(courseId, id);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

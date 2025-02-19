@@ -10,6 +10,7 @@ export class Course {
     public thumbnail: string,
     public thumbnailPublicId: string,
     public level: string,
+    public lectures?: string[],
     public id?: string,
     public isPublished?: boolean,
     public isDeleted?: boolean,

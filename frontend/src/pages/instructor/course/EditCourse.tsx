@@ -55,7 +55,7 @@ const EditCourse = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { courseId } = useParams<{ courseId: string }>();
 
   const [initialValues, setInitialValues] = useState({
     title: "",
@@ -68,14 +68,14 @@ const EditCourse = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!id) {
+      if (!courseId) {
         toast.error("Course ID not found");
         return;
       }
 
       try {
         const [courseResult, categoriesResult] = await Promise.all([
-          dispatch(getCourse(id)),
+          dispatch(getCourse({courseId})),
           dispatch(getAllActiveCategories()),
         ]);
 
@@ -102,7 +102,7 @@ const EditCourse = () => {
     };
 
     fetchData();
-  }, [dispatch, id]);
+  }, [dispatch, courseId]);
 
   const formik = useFormik({
     initialValues,
@@ -120,12 +120,12 @@ const EditCourse = () => {
         formData.append("thumbnail", values.thumbnail);
       }
 
-      if(!id){
+      if(!courseId){
         toast.error("Id not found")
         return
       }
       const toastId = toast.loading("Updating course, please wait..");
-      const result = await dispatch(editCourse({ id, formData }));
+      const result = await dispatch(editCourse({ id:courseId, formData }));
       toast.dismiss(toastId);
 
       if (editCourse.fulfilled.match(result)) {

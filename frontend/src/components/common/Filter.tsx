@@ -15,7 +15,7 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
 interface SearchAndSortOptions {
-  onCategoryChange: (checkedCategories: string[]) => void
+  onCategoryChange: (checkedCategories: string[]) => void;
   onDifficultyChange: (value: string) => void;
   onSortChange: (value: string) => void;
 }
@@ -61,8 +61,10 @@ const Filter: React.FC<SearchAndSortOptions> = ({
   return (
     <div className="w-full md:w-[20%]">
       <div className="flex flex-col items-center justify-between">
-        <h1 className="mb-3 text-lg font-semibold md:text-xl">Filter Options</h1>
-        
+        <h1 className="mb-3 text-lg font-semibold md:text-xl">
+          Filter Options
+        </h1>
+
         <Select onValueChange={onSortChange}>
           <SelectTrigger>
             <SelectValue placeholder="Sort by" />
@@ -83,23 +85,7 @@ const Filter: React.FC<SearchAndSortOptions> = ({
         </Select>
       </div>
 
-      <Separator className="my-4" />
-
-      <div>
-        <h1 className="mt-3 mb-2 font-semibold">CATEGORY</h1>
-        {categories.map((category) => (
-          <div className="flex items-center my-2 space-x-2" key={category._id}>
-            <Checkbox
-              id={category._id}
-              checked={selectedCategories.includes(category._id)}
-              onCheckedChange={(checked) => handleCategoryChange(category._id, checked as boolean)}
-            />
-            <Label>{category?.name}</Label>
-          </div>
-        ))}
-      </div>
-
-      <Separator className="my-4" />
+      <Separator className="my-5" />
 
       <Select onValueChange={onDifficultyChange}>
         <SelectTrigger>
@@ -111,6 +97,24 @@ const Filter: React.FC<SearchAndSortOptions> = ({
           <SelectItem value="advanced">Advanced</SelectItem>
         </SelectContent>
       </Select>
+
+      <Separator className="my-4" />
+
+      <div>
+        <h1 className="mt-3 mb-2 font-semibold">CATEGORY</h1>
+        {categories.map((category) => (
+          <div className="flex items-center my-2 space-x-2" key={category._id}>
+            <Checkbox
+              id={category._id}
+              checked={selectedCategories.includes(category._id)}
+              onCheckedChange={(checked) =>
+                handleCategoryChange(category._id, checked as boolean)
+              }
+            />
+            <Label>{category?.name}</Label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

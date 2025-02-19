@@ -4,9 +4,11 @@ import {
   SquareLibrary,
 } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const InstructorDashboardPage = () => {
   const location = useLocation();
+  const { user } = useAppSelector((state) => state.auth);
   const menuItems = [
     {
       icon: LayoutDashboard,
@@ -28,7 +30,9 @@ const InstructorDashboardPage = () => {
     <div className="flex h-full min-h-screen shadow-md bg-gray-100">
       <aside className="w-64 bg-white shadow-md hidden md:block">
         <div className="p-4 mt-5">
-          <p className="text-gray-500 text-center mb-4">Instructor Dashboard</p>
+          <p className="text-gray-600 font-semibold text-center mb-4 px-5 py-4 border-2 rounded-sm">
+            Welcome, {`${user?.firstname} ${user?.lastname}`}
+          </p>
 
           <nav className="space-y-2">
             {menuItems.map((menuItem) => (

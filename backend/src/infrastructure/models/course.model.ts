@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-
 interface ICourse extends Document {
   _id: string;
   title: string;
@@ -11,9 +10,9 @@ interface ICourse extends Document {
   thumbnail: string;
   thumbnailPublicId: string;
   level: string;
+  lectures?: string[];
   isPublished?: boolean;
   isDeleted?: boolean;
-  lectures: [];
   createdAt?: Date;
   updatedAt?: Date;
   enrolledCount?: number;

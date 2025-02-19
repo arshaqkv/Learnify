@@ -19,7 +19,7 @@ export class RegisterInstructor {
       throw new CustomError("User not found", 400);
     }
 
-    if (!user.googleId) {
+    if (user && !user.googleId) {
       if (!password) {
         throw new CustomError("Password is required", 400);
       }

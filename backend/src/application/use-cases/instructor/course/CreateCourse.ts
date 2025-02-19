@@ -10,29 +10,23 @@ export class CreateCourse {
     private cloudinaryService: ICloudinaryService
   ) {}
 
-  async execute(data: any, fileBuffer?: Buffer): Promise<Course> {
+  async execute(data: Partial<Course>, fileBuffer?: Buffer): Promise<Course> {
 
     const {title, description, category, price, level, id} = data
-    
-    if(!data){
-        throw new CustomError('Data not provided', 400)
-    }
 
     if(!fileBuffer){
         throw new CustomError('Image not provided', 400)
     }
-    if(!category) {
-        throw new CustomError('Category not provided', 400)
-    }
-    if(!title){
-        throw new CustomError('Title required', 400)
+    
+    if(!title || !description ||  !category || !price || !level ) {
+        throw new CustomError('All fields are required', 400)
     }
 
     if (!id) {
       throw new CustomError("Instructor not found", 400);
     }
 
-    const existingCourse = await this.courseRepository.getCourseByTitle(data.title)
+    const existingCourse = await this.courseRepository.getCourseByTitle(title)
     if(existingCourse){
         throw new CustomError("Course with same title already available", 400)
     }
@@ -46,7 +40,6 @@ export class CreateCourse {
 
     const newCourse = new Course(title, description, price, creator, categoryId, thumbnail, thumbnailPublicId, level)
     
-
     const course = this.courseRepository.createNewCourse(newCourse)
     return course;
   }
