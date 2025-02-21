@@ -8,6 +8,7 @@ import {
   CircleUserRound,
   LockKeyhole,
   LogOut,
+  ShoppingBag,
   UserRoundCog,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
@@ -33,6 +34,11 @@ const UserProfilePage = () => {
       icon: Bookmark,
       label: "My Learning",
       path: "/profile/courses",
+    },
+    {
+      icon: ShoppingBag,
+      label: "Purchase History",
+      path: "/profile/order-history"
     },
     {
       icon: LockKeyhole,

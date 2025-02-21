@@ -9,14 +9,14 @@ import { CreateLecture } from "../../../application/use-cases/instructor/lecture
 import { DeleteLecture } from "../../../application/use-cases/instructor/lecture/DeleteLecture";
 import { EditLecture } from "../../../application/use-cases/instructor/lecture/EditLecture";
 import { GetLecture } from "../../../application/use-cases/instructor/lecture/GetLecture";
-import { MonogoCourseRepository } from "../../repositories/mongo.course.repository";
+import { MongoCourseRepository } from "../../repositories/mongo.course.repository";
 import { MongoLectureRepository } from "../../repositories/mongo.lecture.repositroy";
 import { MongoWishlistRepository } from "../../repositories/mongo.wishlist.repository";
 import { CloudinaryService } from "../../services/cloudinary/Cloudinary";
 
 class CourseDIContainer {
   static getCourseRepository() {
-    return new MonogoCourseRepository();
+    return new MongoCourseRepository();
   }
 
   static getCloudinaryService() {

@@ -33,7 +33,10 @@ import {
 } from "../../api/instructorApi";
 import {
   addToWishlistAPI,
+  getEnrolledCoursesAPI,
+  getOrdersAPI,
   getWsihlistAPI,
+  purshaseCourseAPI,
   removeFromWishlistAPI,
 } from "../../api/studentApi";
 
@@ -474,6 +477,42 @@ export const deleteLecture = createAsyncThunk(
   ) => {
     try {
       const response = await deleteLectureAPI(courseId, id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const purchaseCourse = createAsyncThunk(
+  "auth/purchaseCourse",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await purshaseCourseAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getOrders = createAsyncThunk(
+  "auth/getCategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getOrdersAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getEnrolledCourses = createAsyncThunk(
+  "auth/getEnrolledCourses",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getEnrolledCoursesAPI();
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

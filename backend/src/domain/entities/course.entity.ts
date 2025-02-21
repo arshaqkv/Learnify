@@ -11,7 +11,7 @@ export class Course {
     public thumbnailPublicId: string,
     public level: string,
     public lectures?: string[],
-    public id?: string,
+    public _id?: string,
     public isPublished?: boolean,
     public isDeleted?: boolean,
     public enrolledCount?: number,

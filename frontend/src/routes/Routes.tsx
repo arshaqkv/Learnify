@@ -21,6 +21,9 @@ const EnrolledCourses = lazy(() => import("../pages/student/EnrolledCourses"));
 const EditProfile = lazy(() => import("../pages/student/EditProfile"));
 const ChangePassword = lazy(() => import("../pages/student/ChangePassword"));
 const Wishlist = lazy(() => import("../pages/student/Wishlist"))
+const CancelOrder = lazy(() => import("../pages/student/CancelOrder"))
+const SuccussfullOrder = lazy(() => import("../pages/student/SuccessfullOrder"))
+const OrderHistory = lazy(() => import("../pages/student/OrderHistory"))
 
 const InstructorDashboardPage = lazy(() => import("../pages/instructor/InstructorDashboardPage"));
 const InstructorDashboard = lazy(() => import("../pages/instructor/InstructorDashboard"));
@@ -59,13 +62,18 @@ const AppRoutes = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/instructor-register" element={<InstructorRegister />} />
+          
           <Route path="/profile" element={<UserProfilePage />}>
             <Route path="dashboard" element={<ProfileDashboard />} />
             <Route path="courses" element={<EnrolledCourses />} />
+            <Route path="order-history" element={<OrderHistory />} />
             <Route path="edit" element={<EditProfile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
+
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/payment/success" element={<SuccussfullOrder />} />
+          <Route path="/cancel" element={<CancelOrder />} />
         </Route>
 
         {/* intructor */}

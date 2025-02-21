@@ -1,4 +1,4 @@
-import { BadgeInfo, Heart, HeartOff } from "lucide-react";
+import { BadgeInfo, Heart, HeartOff, Loader } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,13 +7,15 @@ import toast from "react-hot-toast";
 import {
   addToWishlist,
   getCourse,
+  purchaseCourse,
   removeFromWishlist,
 } from "../../features/auth/authThunk";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { endLoading, startLoading } from "../../features/auth/authSlice";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, loading } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [course, setCourse] = useState<any>({});
@@ -26,7 +28,9 @@ const CourseDetails = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const courseResult = await dispatch(getCourse({courseId, userId: user?.id}));
+      const courseResult = await dispatch(
+        getCourse({ courseId, userId: user?.id })
+      );
       if (getCourse.fulfilled.match(courseResult)) {
         const { course, isWishlisted } = courseResult.payload;
         setCourse(course);
@@ -38,7 +42,6 @@ const CourseDetails = () => {
 
     fetchCourse();
   }, [dispatch]);
-
 
   const toggleWishlist = async () => {
     try {
@@ -64,6 +67,23 @@ const CourseDetails = () => {
     }
   };
 
+  const handleCheckout = async () => {
+    if (!user) {
+      toast.error("Please Login to continue");
+      navigate("/login");
+      return;
+    }
+    dispatch(startLoading());
+    const result = await dispatch(purchaseCourse(courseId));
+
+    if (purchaseCourse.fulfilled.match(result)) {
+      window.location.href = result.payload.url;
+    } else if (purchaseCourse.rejected.match(result)) {
+      toast.error(result.payload as string);
+    }
+    dispatch(endLoading());
+  };
+
   return (
     <div className="mt-10 h-screen mb-10">
       {/* Course Header Section */}
@@ -83,7 +103,7 @@ const CourseDetails = () => {
             <p>Last updated: {new Date(course.updatedAt).toDateString()}</p>
           </div>
           <p className="text-lg">
-            Students enrolled: <span className="font-semibold">0</span>
+            Students enrolled: <span className="font-semibold">{course?.enrolledCount}</span>
           </p>
           <p className="text-xl font-semibold">
             Course Price: <span className="text-white">₹{course?.price}</span>
@@ -91,8 +111,18 @@ const CourseDetails = () => {
 
           {/* Buttons */}
           <div className="flex gap-4 mt-5">
-            <Button className="bg-blue-600 hover:bg-blue-500 text-white text-lg px-10 py-5 rounded-lg shadow-md">
-              Purchase Course
+            <Button
+              onClick={handleCheckout}
+              className="bg-blue-600 hover:bg-blue-500 text-white text-lg px-10 py-5 rounded-lg shadow-md"
+            >
+              {loading ? (
+                <span className="flex gap-1 justify-between items-center">
+                  <Loader className="animate-spin  mx-auto" />
+                  Please wait
+                </span>
+              ) : (
+                "Purchase Course"
+              )}
             </Button>
             <Button
               variant="secondary"

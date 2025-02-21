@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export class User {
   constructor(
     public firstname: string,
@@ -11,6 +13,7 @@ export class User {
     public isVerified: boolean = false,
     public role: string = "student",
     public isBlocked: boolean = false,
+    public enrolledCourses?: mongoose.Types.ObjectId[],
     public _id?: string,
     public createdAt?: Date,
     public updatedAt?: Date,

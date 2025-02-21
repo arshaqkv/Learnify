@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
+import { authorizeRole, isAuthenticated, isBlocked } from "../middlewares/auth.middleware";
 import { categoryController } from "../controllers/admin/category/category.controller";
 import { upload } from "../../infrastructure/middleware/multer";
 import { courseController } from "../controllers/instructor/course/course.controller";
@@ -7,7 +7,7 @@ import { courseController } from "../controllers/instructor/course/course.contro
 const router = Router();
 
 router
-  .use(isAuthenticated, authorizeRole(["instructor"]))
+  .use(isAuthenticated, isBlocked, authorizeRole(["instructor"]))
   .get("/categories", categoryController.getAllActiveCategories)
   .get("/courses-all", courseController.getAllCourses)
   .post("/course/add", upload.single('thumbnail'), courseController.createCourse)

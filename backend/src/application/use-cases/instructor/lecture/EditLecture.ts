@@ -1,7 +1,6 @@
 import { ILectureRepository } from "../../../../domain/interfaces/lecture.repository";
 import { Lecture } from "../../../../domain/entities/lecture.entity";
 import {
-  CloudinaryService,
   ICloudinaryService,
 } from "../../../../infrastructure/services/cloudinary/Cloudinary";
 import { CustomError } from "../../../../interface/middlewares/error.middleware";

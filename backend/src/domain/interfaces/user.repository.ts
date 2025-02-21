@@ -10,4 +10,6 @@ export interface IUserRepository {
   blockUser(id: string): Promise<void>;
   unblockuser(id: string): Promise<void>;
   findByData(token: string): Promise<User | null>
+  updateEnrolledCourses(id: string, courseId: string): Promise<void>
+  findEnrolledCourses(userId: string): Promise<User | null>
 }

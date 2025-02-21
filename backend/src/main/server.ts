@@ -10,10 +10,13 @@ import { authRoutes } from "../interface/routes/auth.routes";
 import { adminRoutes } from "../interface/routes/admin.routes";
 import { instructorRoutes } from "../interface/routes/instructor.routes";
 import { studentRoutes } from "../interface/routes/student.routes";
+import { webhookRoute } from "../interface/routes/webhook.routes";
 
 const app: Application = express();
 const PORT = config.port;
 
+
+app.use('/api/purchase', webhookRoute)
 //Middlewares
 app.use(morgan("dev"));
 app.use(express.json());

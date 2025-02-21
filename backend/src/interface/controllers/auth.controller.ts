@@ -5,6 +5,7 @@ import {
   resetCookieOptions,
 } from "../../utils/cookieHelper";
 import { config } from "../../config/config";
+import { StudentDIContainer } from "../../infrastructure/di/containers/studentDIContainer";
 
 class UserController {
   //user signup
@@ -255,6 +256,17 @@ class UserController {
         AuthDIContainer.getUpdateProfilePictureUseCase();
       const user = await updateProfilePicture.execute(id, fileBuffer);
       res.status(200).json({ message: "Profile picture updated", user });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getEnrolledCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const getEnrolledCourses = StudentDIContainer.getEnrolledCoursesUseCase();
+      const courses = await getEnrolledCourses.execute(id);
+      res.status(200).json({ courses: courses?.enrolledCourses });
     } catch (error: any) {
       next(error);
     }

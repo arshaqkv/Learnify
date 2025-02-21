@@ -13,9 +13,9 @@ interface ICourse extends Document {
   lectures?: string[];
   isPublished?: boolean;
   isDeleted?: boolean;
+  enrolledCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  enrolledCount?: number;
 }
 
 const CourseSchema: Schema = new Schema(
@@ -57,14 +57,17 @@ const CourseSchema: Schema = new Schema(
       type: String,
     },
     thumbnailPublicId: {
-      type: String
+      type: String,
     },
     lectures: [
       {
         type: mongoose.Types.ObjectId,
         ref: "Lecture",
-      }
+      },
     ],
+    enrolledCount: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

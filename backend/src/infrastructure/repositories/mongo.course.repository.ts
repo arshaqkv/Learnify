@@ -3,7 +3,7 @@ import { Lecture } from "../../domain/entities/lecture.entity";
 import { ICourseRepository } from "../../domain/interfaces/course.repository";
 import { CourseModel } from "../models/course.model";
 
-export class MonogoCourseRepository implements ICourseRepository {
+export class MongoCourseRepository implements ICourseRepository {
   async createNewCourse(course: Course): Promise<Course> {
     const newCourse = await CourseModel.create(course);
     return newCourse;
@@ -51,12 +51,12 @@ export class MonogoCourseRepository implements ICourseRepository {
   ): Promise<{ courses: Course[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    const regex = search ? new RegExp(`^${search}`, "i") : null;
+    // const regex = search ? new RegExp(search, "i") : null;
     const query: any = { isPublished: true };
 
     // 🔍 Search by title
     if (search) {
-      query.title = { $regex: regex };
+      query.title = { $regex: search, $options: 'i' }
     }
 
     // 🏷 Filter by category
@@ -99,16 +99,20 @@ export class MonogoCourseRepository implements ICourseRepository {
   }
 
   async getCourseById(id: string): Promise<Course | null> {
-    const course = CourseModel.findById(id)
+    const course = await CourseModel.findById(id)
       .populate("category")
-      .populate("creator")
+      .populate("creator", "firstname lastname profileImage")
       .populate({
-        path: "lectures"
+        path: "lectures",
       })
+      .exec();
     return course;
   }
 
-  async updateCourse(id: string, data: Partial<Course>): Promise<Course | null> {
+  async updateCourse(
+    id: string,
+    data: Partial<Course>
+  ): Promise<Course | null> {
     return await CourseModel.findByIdAndUpdate(id, data, { new: true });
   }
 
@@ -130,5 +134,11 @@ export class MonogoCourseRepository implements ICourseRepository {
       { $pull: { lectures: lectureId } },
       { new: true }
     );
+  }
+
+  async updateCourseEnrollmentCount(courseId: string): Promise<void> {
+    await CourseModel.findByIdAndUpdate(courseId, {
+      $inc: { enrolledCount: 1 },
+    });
   }
 }

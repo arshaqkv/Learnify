@@ -14,6 +14,12 @@ interface CloudinaryConfig{
   CLOUDINARY_SECRET: string
 }
 
+interface StripeConfig{
+  SECRET_KEY: string,
+  PUBLISHABLE_KEY: string,
+  WEBHOOK_SECRET_KEY: string
+}
+
 interface Config {
   client_url: string,
   port: number;
@@ -26,6 +32,7 @@ interface Config {
   cors: CorsConfig,
   googleclientId: string
   cloudinary: CloudinaryConfig 
+  stripe: StripeConfig
 }
 
 export const config: Config = {
@@ -48,5 +55,10 @@ export const config: Config = {
     CLOUDINARY_NAME: process.env.CLOUDINARY_NAME as string,
     CLOUDINARY_API: process.env.CLOUDINARY_API as string,
     CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET as string
+  },
+  stripe: {
+    SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+    PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY as string,
+    WEBHOOK_SECRET_KEY: process.env.WEBHOOK_SECRET_KEY as string
   }
 };

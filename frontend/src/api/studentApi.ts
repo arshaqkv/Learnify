@@ -14,3 +14,18 @@ export const getWsihlistAPI = async () => {
   const response = axios.get("/student/wishlist");
   return response;
 };
+
+export const purshaseCourseAPI = async (courseId: string) => {
+  const response = axios.post("/student/order/create", { courseId });
+  return response;
+};
+
+export const getOrdersAPI = async () => {
+  const response = axios.get("/student/get-orders");
+  return response;
+};
+
+export const getEnrolledCoursesAPI = () => {
+  const response = axios.get("/student/get-enrolledCourses");
+  return response;
+};

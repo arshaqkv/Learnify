@@ -2,22 +2,25 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { toast } from "react-hot-toast";
 import { formikPasswordValidation } from "../../utils/passwordValidation";
-import { changePassword } from "../../features/auth/authThunk";
+import { changePassword, logoutUser } from "../../features/auth/authThunk";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { endLoading, startLoading } from "../../features/auth/authSlice";
 
 const ChangePassword = () => {
   const dispatch = useAppDispatch();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { loading } = useAppSelector((state) => state.auth);
 
   const toggleOldPasswordVisibility = () => setShowOldPassword((prev) => !prev);
   const toggleNewPasswordVisibility = () => setShowNewPassword((prev) => !prev);
-  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword((prev) => !prev);
 
   // Form Validation Schema
   const validationSchema = Yup.object({
@@ -35,7 +38,8 @@ const ChangePassword = () => {
       confirmPassword: "",
     },
     validationSchema,
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async (values, { resetForm }) => {
+      dispatch(startLoading());
       const passwords = {
         oldPassword: values.oldPassword,
         newPassword: values.newPassword,
@@ -43,10 +47,12 @@ const ChangePassword = () => {
       const result = await dispatch(changePassword(passwords));
       if (changePassword.fulfilled.match(result)) {
         toast.success(result.payload.message);
-        resetForm()
+        resetForm();
+        dispatch(logoutUser());
       } else {
         toast.error(result.payload as string);
       }
+      dispatch(endLoading());
     },
   });
 
@@ -68,8 +74,8 @@ const ChangePassword = () => {
             {...formik.getFieldProps("oldPassword")}
             className="pr-10" // Added padding to the right for the icon
           />
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="absolute top-8 right-6"
             onClick={toggleOldPasswordVisibility}
           >
@@ -95,8 +101,8 @@ const ChangePassword = () => {
             {...formik.getFieldProps("newPassword")}
             className="pr-10" // Added padding to the right for the icon
           />
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="absolute top-8 right-6"
             onClick={toggleNewPasswordVisibility}
           >
@@ -122,8 +128,8 @@ const ChangePassword = () => {
             {...formik.getFieldProps("confirmPassword")}
             className="pr-10" // Added padding to the right for the icon
           />
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="absolute top-8 right-6"
             onClick={toggleConfirmPasswordVisibility}
           >
@@ -134,13 +140,15 @@ const ChangePassword = () => {
             )}
           </button>
           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-            <p className="text-red-500 text-sm">{formik.errors.confirmPassword}</p>
+            <p className="text-red-500 text-sm">
+              {formik.errors.confirmPassword}
+            </p>
           )}
         </div>
 
         {/* Submit Button */}
-        <Button type="submit" className="w-full" variant={'outline'}>
-          Change Password
+        <Button type="submit" className="w-full" variant={"outline"}>
+          {loading ? <Loader className="w-6 h-6 animate-spin  mx-auto"/>: "Change Password"}
         </Button>
       </form>
     </div>

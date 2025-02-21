@@ -39,11 +39,10 @@ const ForgotPassword = () => {
 
       if (forgotPassword.fulfilled.match(result)) {
         toast.success(result.payload.message);
-        dispatch(endLoading());
       } else if (forgotPassword.rejected.match(result)) {
         toast.error(result.payload as string);
-        dispatch(endLoading())
       }
+      dispatch(endLoading());
     },
   });
 

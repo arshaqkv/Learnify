@@ -13,6 +13,7 @@ interface IUser extends Document {
   profileImage: string;
   profileImagePublicId: string;
   googleId?: string;
+  enrolledCourses?: mongoose.Types.ObjectId[];
   resetPasswordToken: string;
   resetPasswordExpiresAt: Date;
   createdAt?: Date;
@@ -58,15 +59,21 @@ const UserSchema: Schema = new Schema(
       default: "",
     },
     profileImagePublicId: {
-      type: String
+      type: String,
     },
     googleId: {
       type: String,
     },
+    enrolledCourses: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Course'
+      }
+    ],
     resetPasswordToken: {
-      type: String
+      type: String,
     },
-    resetPasswordExpiresAt: Date
+    resetPasswordExpiresAt: Date,
   },
   { timestamps: true }
 );

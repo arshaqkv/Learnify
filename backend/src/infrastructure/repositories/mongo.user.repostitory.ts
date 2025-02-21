@@ -14,11 +14,14 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    return await UserModel.findById(id);
+    return await UserModel.findById(id)
   }
 
-  async findByIdAndUpdate(id: string, data: Partial<User>): Promise<User | null> {
-    return await UserModel.findByIdAndUpdate(id, data, {new: true})
+  async findByIdAndUpdate(
+    id: string,
+    data: Partial<User>
+  ): Promise<User | null> {
+    return await UserModel.findByIdAndUpdate(id, data, { new: true });
   }
 
   async findByEmailAndUpdate(
@@ -61,5 +64,33 @@ export class MongoUserRepository implements IUserRepository {
       resetPasswordExpiresAt: { $gt: Date.now() },
     });
     return user;
+  }
+
+  async updateEnrolledCourses(id: string, courseId: string): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      id,
+      {
+        $push: { enrolledCourses: courseId },
+      },
+      { new: true }
+    );
+  }
+
+  async findEnrolledCourses(userId: string): Promise<User | null> {
+    const user = await UserModel.findById(userId).populate({
+      path: 'enrolledCourses',
+      populate: [
+        {
+          path: 'category'
+        },
+        {
+          path: 'creator'
+        }
+      ]
+    })
+    .select("enrolledCourses")
+    .exec()
+
+    return user
   }
 }
