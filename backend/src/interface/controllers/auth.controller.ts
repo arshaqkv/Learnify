@@ -6,6 +6,7 @@ import {
 } from "../../utils/cookieHelper";
 import { config } from "../../config/config";
 import { StudentDIContainer } from "../../infrastructure/di/containers/studentDIContainer";
+import { CourseDIContainer } from "../../infrastructure/di/containers/courseDIContainer";
 
 class UserController {
   //user signup
@@ -267,6 +268,16 @@ class UserController {
       const getEnrolledCourses = StudentDIContainer.getEnrolledCoursesUseCase();
       const courses = await getEnrolledCourses.execute(id);
       res.status(200).json({ courses: courses?.enrolledCourses });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getPopularCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const getPopularCourses = CourseDIContainer.getPopularCoursesUseCase();
+      const courses = await getPopularCourses.execute();
+      res.status(200).json({ courses });
     } catch (error: any) {
       next(error);
     }

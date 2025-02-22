@@ -132,3 +132,8 @@ export const RegisterInstructorAPI = async (data: {
   const response = axios.post("/auth/instructor-register", data);
   return response;
 };
+
+export const getPopularCoursesAPI = async () => {
+  const response = axios.get("/auth/popular-courses");
+  return response;
+};

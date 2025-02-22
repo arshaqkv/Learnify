@@ -33,6 +33,7 @@ interface Config {
   googleclientId: string
   cloudinary: CloudinaryConfig 
   stripe: StripeConfig
+  recaptcha_secret: string
 }
 
 export const config: Config = {
@@ -60,5 +61,6 @@ export const config: Config = {
     SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
     PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY as string,
     WEBHOOK_SECRET_KEY: process.env.WEBHOOK_SECRET_KEY as string
-  }
+  },
+  recaptcha_secret: process.env.RECAPTCHA_SECRET_KEY as string
 };

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Skeleton } from "../../components/ui/skeleton";
 import Course from "./Course";
-import { getAllPublishedCourses } from "../../features/auth/authThunk";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
+import { getPopularCourses } from "../../features/auth/authThunk";
 
 const Courses = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -13,8 +13,8 @@ const Courses = () => {
   useEffect(()=> {
     const fetchCourses = async() =>{
       dispatch(startLoading())
-      const result = await dispatch(getAllPublishedCourses())
-      if(getAllPublishedCourses.fulfilled.match(result)){
+      const result = await dispatch(getPopularCourses())
+      if(getPopularCourses.fulfilled.match(result)){
         const { courses } = result.payload
         setCourses(courses)
       }
@@ -27,7 +27,7 @@ const Courses = () => {
     <div className="bg-gray-50 ">
       <div className="max-w-7xl mx-auto p-6 ">
         <h2 className="font-bold text-3xl text-center mb-10 ">
-          Featured Courses
+          Popular Courses
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {loading

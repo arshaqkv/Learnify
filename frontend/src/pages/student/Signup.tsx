@@ -91,9 +91,9 @@ const Signup: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center ">
-      <div className="bg-white p-8 rounded-lg shadow-md w-80 mt-10">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="p-8 rounded-lg w-96 mt-10">
+        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Register</h2>
         <form onSubmit={formik.handleSubmit}>
           {/* First Name */}
           <div className="mb-4">
@@ -206,13 +206,13 @@ const Signup: React.FC = () => {
             )}
             <button
               type="button"
-              className="absolute mt-3 ml-56"
+              className="absolute mt-3 ml-72"
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
-                <Eye className="w-5 h-5 text-gray-400" />
-              ) : (
                 <EyeOff className="w-5 h-5 text-gray-400" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-400" />
               )}
             </button>
           </div>
@@ -234,13 +234,13 @@ const Signup: React.FC = () => {
             />
             <button
               type="button"
-              className="absolute mt-3 ml-56"
+              className="absolute mt-3 ml-72"
               onClick={toggleConfirmPasswordVisibility}
             >
               {confirmPasswordVisible ? (
-                <Eye className="w-5 h-5 text-gray-400" />
-              ) : (
                 <EyeOff className="w-5 h-5 text-gray-400" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-400" />
               )}
             </button>
             {formik.touched.confirmPassword &&

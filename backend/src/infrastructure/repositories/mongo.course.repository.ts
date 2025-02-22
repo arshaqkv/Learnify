@@ -56,7 +56,7 @@ export class MongoCourseRepository implements ICourseRepository {
 
     // 🔍 Search by title
     if (search) {
-      query.title = { $regex: search, $options: 'i' }
+      query.title = { $regex: search, $options: "i" };
     }
 
     // 🏷 Filter by category
@@ -140,5 +140,13 @@ export class MongoCourseRepository implements ICourseRepository {
     await CourseModel.findByIdAndUpdate(courseId, {
       $inc: { enrolledCount: 1 },
     });
+  }
+
+  async getPopularCourses(): Promise<Course[]> {
+    const courses = await CourseModel.find()
+      .populate("category")
+      .populate("creator")
+      .sort({ enrolledCount: -1 });
+    return courses;
   }
 }

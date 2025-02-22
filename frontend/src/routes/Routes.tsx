@@ -51,7 +51,7 @@ const Unauthorized = lazy(() => import("../pages/Unauthorized"));
 const AppRoutes = () => {
   return (
     <Suspense fallback={<Loading />}>
-      <Routes>
+      <Routes> 
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

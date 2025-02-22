@@ -8,17 +8,22 @@ import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { loginUser } from "../../features/auth/authThunk";
 import { Loader, EyeOff, Eye } from "lucide-react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
+import ReCAPTCHA from "react-google-recaptcha";
+import { config } from "../../config/config.ts";
 
 const Login = () => {
-  const { isAuthenticated, loading } = useAppSelector(
-    (state) => state.auth
-  );
+  const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [captcha, setCaptcha] = useState("");
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
+  };
+
+  const onCaptchaChange = (value: any) => {
+    setCaptcha(value);
   };
 
   const validationSchema = Yup.object({
@@ -36,8 +41,6 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate]);
 
-
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -45,32 +48,35 @@ const Login = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      dispatch(startLoading())
+      if (!captcha) {
+        toast.error("Please complete the CAPTCHA");
+        return;
+      }
+      dispatch(startLoading());
       const trimmedValues = {
         email: values.email.trim(),
         password: values.password,
+        captcha: captcha,
       };
-      const result = await dispatch(loginUser(trimmedValues))
-      if(loginUser.fulfilled.match(result)){
-        toast.success(result.payload.message)
-        dispatch(endLoading())
-      }else if(loginUser.rejected.match(result)){
-      
-        toast.error(result.payload as string)
-        dispatch(endLoading())
+
+      const result = await dispatch(loginUser(trimmedValues));
+      if (loginUser.fulfilled.match(result)) {
+        toast.success(result.payload.message);
+        dispatch(endLoading());
+      } else if (loginUser.rejected.match(result)) {
+        toast.error(result.payload as string);
+        dispatch(endLoading());
       }
-      
     },
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 rounded-lg w-96">
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">Learnify Login</h2>
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
-            
             <input
               type="email"
               id="email"
@@ -93,7 +99,6 @@ const Login = () => {
 
           {/* Password Field */}
           <div className="mb-4 flex flex-col">
-            
             <input
               type={passwordVisible ? "text" : "password"}
               id="password"
@@ -115,7 +120,7 @@ const Login = () => {
 
             <button
               type="button"
-              className="absolute mt-3 ml-56"
+              className="absolute mt-3 ml-72"
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
@@ -127,7 +132,7 @@ const Login = () => {
           </div>
           <div className="mb-2 text-sm hover:text-blue-950">
             <Link to={"/forgot-password"}>
-              <span>Forgot Password?</span>
+              <span className=" font-semibold">Forgot Password?</span>
             </Link>
           </div>
 
@@ -143,6 +148,12 @@ const Login = () => {
               "Log in"
             )}
           </button>
+          <div className="flex justify-center items-center mt-2">
+            <ReCAPTCHA
+              sitekey={config.recaptcha.RECAPTCHA_SITE_KEY}
+              onChange={onCaptchaChange}
+            />
+          </div>
         </form>
         <div className="text-center mt-3 font-bold">
           <h3>OR</h3>
@@ -154,7 +165,9 @@ const Login = () => {
           <p className="text-gray-400">Don't have an account?</p>
           <div>
             <Link to={"/signup"}>
-              <span className="text-blue-800 font-semibold hover:underline">Sign up</span>
+              <span className="text-blue-800 font-semibold hover:underline">
+                Sign up
+              </span>
             </Link>
           </div>
         </div>

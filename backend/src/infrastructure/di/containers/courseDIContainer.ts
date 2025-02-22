@@ -9,6 +9,7 @@ import { CreateLecture } from "../../../application/use-cases/instructor/lecture
 import { DeleteLecture } from "../../../application/use-cases/instructor/lecture/DeleteLecture";
 import { EditLecture } from "../../../application/use-cases/instructor/lecture/EditLecture";
 import { GetLecture } from "../../../application/use-cases/instructor/lecture/GetLecture";
+import { GetPopularCourses } from "../../../application/use-cases/student/GetPopularCourses";
 import { MongoCourseRepository } from "../../repositories/mongo.course.repository";
 import { MongoLectureRepository } from "../../repositories/mongo.lecture.repositroy";
 import { MongoWishlistRepository } from "../../repositories/mongo.wishlist.repository";
@@ -97,6 +98,10 @@ class CourseDIContainer {
 
   static getLectureUseCase() {
     return new GetLecture(this.getLectureRepository());
+  }
+
+  static getPopularCoursesUseCase() {
+    return new GetPopularCourses(this.getCourseRepository());
   }
 }
 
