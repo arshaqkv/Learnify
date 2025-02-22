@@ -1,3 +1,4 @@
+import { GetAllOrders } from "../../../application/use-cases/admin/purchase/GetAllOrders";
 import { OrdersPerInstructor } from "../../../application/use-cases/instructor/purchase/OrdersPerInstructor";
 import { CreateOrder } from "../../../application/use-cases/student/CreateOrder";
 import { GetOrders } from "../../../application/use-cases/student/GetOrders";
@@ -60,6 +61,10 @@ class OrderDIContainer {
 
   static GetOrdersPerInstructorUseCase() {
     return new OrdersPerInstructor(this.getOrderRepository());
+  }
+
+  static GetAllOrdersUseCase() {
+    return new GetAllOrders(this.getOrderRepository());
   }
 }
 

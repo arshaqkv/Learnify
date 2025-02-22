@@ -15,8 +15,18 @@ export const logoutAdminAPI = async () => {
 };
 
 //user management
-export const getAllUsersAPI = async ({page, limit, search}: {page: number; limit: number; search?: string}) => {
-  const response = axios.get(`/users?page=${page}&limit=${limit}&search=${search}`);
+export const getAllUsersAPI = async ({
+  page,
+  limit,
+  search,
+}: {
+  page: number;
+  limit: number;
+  search?: string;
+}) => {
+  const response = axios.get(
+    `/users?page=${page}&limit=${limit}&search=${search}`
+  );
   return response;
 };
 
@@ -31,15 +41,25 @@ export const unblockUserAPI = async (id: string) => {
 };
 
 //category management
-export const getAllCategoriesAPI = async ({page, limit, search}: {page: number, limit: number, search?: string}) => {
-  const response = axios.get(`/categories?page=${page}&limit=${limit}&search=${search}`);
+export const getAllCategoriesAPI = async ({
+  page,
+  limit,
+  search,
+}: {
+  page: number;
+  limit: number;
+  search?: string;
+}) => {
+  const response = axios.get(
+    `/categories?page=${page}&limit=${limit}&search=${search}`
+  );
   return response;
 };
 
-export const getCategoryAPI = async (id: string) =>{
-  const response = axios.get(`/category/${id}`)
-  return response
-}
+export const getCategoryAPI = async (id: string) => {
+  const response = axios.get(`/category/${id}`);
+  return response;
+};
 
 export const createCategoryAPI = async (data: {
   name: string;
@@ -62,23 +82,61 @@ export const removeCategoryAPI = async (id: string) => {
   return response;
 };
 
-export const toggleBlockCategoryAPI = async(id: string) => {
-  const response = axios.patch(`/category/toggle-block/${id}`)
-  return response
-}
+export const toggleBlockCategoryAPI = async (id: string) => {
+  const response = axios.patch(`/category/toggle-block/${id}`);
+  return response;
+};
 
 //instructor management
-export const getAllInstructorsAPI = async({page, limit, search}: {page: number, limit: number, search?: string}) =>{
-  const response = axios.get(`/instructors?page=${page}&limit=${limit}&search=${search}`)
-  return response
-}
+export const getAllInstructorsAPI = async ({
+  page,
+  limit,
+  search,
+}: {
+  page: number;
+  limit: number;
+  search?: string;
+}) => {
+  const response = axios.get(
+    `/instructors?page=${page}&limit=${limit}&search=${search}`
+  );
+  return response;
+};
 
-export const getSingleInstructorAPI = async(id: string) =>{
-  const response = axios.get(`/instructors/${id}`)
-  return response
-}
+export const getSingleInstructorAPI = async (id: string) => {
+  const response = axios.get(`/instructors/${id}`);
+  return response;
+};
 
-export const updateInstructorStatusAPI = async({id, status, rejectionReason}: {id: string, status: string, rejectionReason?: string}) =>{
-  const response = axios.patch(`/instructors/${id}`, {status, rejectionReason})
-  return response
-}
+export const updateInstructorStatusAPI = async ({
+  id,
+  status,
+  rejectionReason,
+}: {
+  id: string;
+  status: string;
+  rejectionReason?: string;
+}) => {
+  const response = axios.patch(`/instructors/${id}`, {
+    status,
+    rejectionReason,
+  });
+  return response;
+};
+
+export const getAllOrdersAPI = async (
+  page: number,
+  limit: number,
+  instructor: string,
+  paymentStatus: string
+) => {
+  const response = axios.get(
+    `get-orders?page=${page}&limit=${limit}&instructor=${instructor}&paymentStatus=${paymentStatus}`
+  );
+  return response;
+};
+
+export const GetApprovedInstructorsAPI = async () => {
+  const response = axios.get("/approved-instructors");
+  return response;
+};

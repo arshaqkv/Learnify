@@ -20,13 +20,13 @@ class InstructorController {
   }
 
   //get all instructors
-  async getAllInstructors(req: Request, res: Response, next: NextFunction) {
+  async getAllInstructorsRequest(req: Request, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
-      const getAllInstructors = InstructorDIContainer.getAllInstructorUseCase();
-      const { instructors, total } = await getAllInstructors.execute(
+      const getAllInstructorsRequest = InstructorDIContainer.getAllInstructorRequestUseCase();
+      const { instructors, total } = await getAllInstructorsRequest.execute(
         page,
         limit,
         search
@@ -84,6 +84,16 @@ class InstructorController {
       res.status(200).json({ orders, total, totalPages: Math.ceil(total / limit)  });
     } catch (error: any) {
       next(error);
+    }
+  }
+
+  async getAllInstructors(req: Request, res: Response, next: NextFunction){
+    try {
+      const getallInstructors = InstructorDIContainer.getAllInstructorsUseCase()
+      const instructors = await getallInstructors.execute()
+      res.status(200).json({instructors})
+    } catch (error: any) {
+      next(error)
     }
   }
 }

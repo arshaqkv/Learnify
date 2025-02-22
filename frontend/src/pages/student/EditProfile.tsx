@@ -229,7 +229,7 @@ const EditProfile = () => {
           type="submit"
           className="w-full"
           variant={"outline"}
-          disabled={!formik.dirty || !formik.isValid}
+          disabled={!formik.dirty}
         >
           {loading ? (
             <Loader className="w-6 h-6 animate-spin  mx-auto" />

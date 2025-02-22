@@ -14,7 +14,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    return await UserModel.findById(id)
+    return await UserModel.findById(id);
   }
 
   async findByIdAndUpdate(
@@ -77,20 +77,28 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async findEnrolledCourses(userId: string): Promise<User | null> {
-    const user = await UserModel.findById(userId).populate({
-      path: 'enrolledCourses',
-      populate: [
-        {
-          path: 'category'
-        },
-        {
-          path: 'creator'
-        }
-      ]
-    })
-    .select("enrolledCourses")
-    .exec()
+    const user = await UserModel.findById(userId)
+      .populate({
+        path: "enrolledCourses",
+        populate: [
+          {
+            path: "category",
+          },
+          {
+            path: "creator",
+          },
+        ],
+      })
+      .select("enrolledCourses")
+      .exec();
 
-    return user
+    return user;
+  }
+
+  async getAllInstructors(): Promise<User[] | null> {
+    const instructors = await UserModel.find({ role: "instructor" })
+      .select("firstname lastname")
+      .lean();
+    return instructors;
   }
 }

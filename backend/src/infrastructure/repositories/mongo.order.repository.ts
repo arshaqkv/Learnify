@@ -29,9 +29,34 @@ export class MongoOrderRepository implements IOrderRepository {
     return orders;
   }
 
-  async getAllOrders(): Promise<Order[] | null> {
-    const orders = await OrderModel.find();
-    return orders;
+  async getAllOrders(
+    page: number,
+    limit: number,
+    instructor: string,
+    paymentStatus: string
+  ): Promise<{ orders: Order[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    const query: any = {};
+
+    if (instructor) {
+      query["course.courseCreator"] = instructor;
+    }
+
+    if (paymentStatus) {
+      query.paymentStatus = paymentStatus;
+    }
+
+    const orders = await OrderModel.find(query)
+      .populate({
+        path: "userId",
+        select: "firstname lastname",
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+    const totalOrders = await OrderModel.countDocuments(query);
+    return { orders, total: totalOrders };
   }
 
   async alreadyPurchasedCourse(
@@ -62,7 +87,7 @@ export class MongoOrderRepository implements IOrderRepository {
     const orders = await OrderModel.find({ "course.courseCreatorId": id })
       .populate({
         path: "userId",
-        select: "firstname",
+        select: "firstname lastname",
       })
       .skip(skip)
       .limit(limit)
@@ -71,7 +96,7 @@ export class MongoOrderRepository implements IOrderRepository {
     const totalOrders = await OrderModel.countDocuments({
       "course.courseCreatorId": id,
     });
-    console.log(id);
+
     return { orders, total: totalOrders };
   }
 }

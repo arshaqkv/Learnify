@@ -31,14 +31,13 @@ const StudentPurchases = () => {
       const result = await dispatch(ordersPerInstructor({ page, limit: 5 }));
       if (ordersPerInstructor.fulfilled.match(result)) {
         const { orders, total, totalPages } = result.payload;
-        console.log(orders);
         setOrders(orders);
         setTotalPages(totalPages);
         setTotalOrders(total);
       }
     };
     getOrders();
-  }, [dispatch]);
+  }, [dispatch, page]);
   return (
     <Card>
       <CardHeader>
@@ -49,24 +48,20 @@ const StudentPurchases = () => {
           <TableCaption>Total Purchases {totalOrders}</TableCaption>
           <TableHeader>
             <TableRow>
-            <TableHead>Order Id</TableHead>
+              <TableHead>Order Id</TableHead>
               <TableHead>Course Title</TableHead>
               <TableHead>User</TableHead>
               <TableHead>Order Date</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead className="text-center">Status</TableHead>
-              <TableHead>Type</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {orders.map((order: any) => (
               <TableRow key={order._id}>
-                <TableCell className="font-medium">
-                    {order.orderId}
-                </TableCell>
-                <TableCell >
-                  {order.course.courseTitle}
-                </TableCell>
+                <TableCell className="font-medium">{order.orderId}</TableCell>
+                <TableCell>{order.course.courseTitle}</TableCell>
                 <TableCell className="w[200px] overflow-hidden">
                   {order.userId.firstname}
                 </TableCell>
@@ -77,6 +72,9 @@ const StudentPurchases = () => {
                 </TableCell>
 
                 <TableCell>₹{order.course.coursePrice}</TableCell>
+                <TableCell className=" text-center">
+                  {order.paymentType.toUpperCase()}
+                </TableCell>
                 <TableCell className="text-center">
                   <Badge
                     className={
@@ -89,9 +87,6 @@ const StudentPurchases = () => {
                   >
                     {order.paymentStatus}
                   </Badge>
-                </TableCell>
-                <TableCell className=" text-center">
-                  {order.paymentType.toUpperCase()}
                 </TableCell>
               </TableRow>
             ))}

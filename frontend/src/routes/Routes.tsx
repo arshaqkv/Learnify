@@ -43,6 +43,7 @@ const CreateCategory = lazy(() => import("../pages/admin/Category/CreateCategory
 const EditCategory = lazy(() => import("../pages/admin/Category/EditCategory"));
 const InstructorList = lazy(() => import("../pages/admin/instructor/InstructorList"));
 const InstructorApplication = lazy(() => import("../pages/admin/instructor/InstructorApplication"));
+const PurchaseManagement = lazy(() => import("../pages/admin/purchase/PurchaseManagement"));
 
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Unauthorized = lazy(() => import("../pages/Unauthorized"));
@@ -101,6 +102,7 @@ const AppRoutes = () => {
             <Route path="categories/edit/:id" element={<EditCategory />} />
             <Route path="instructors" element={<InstructorList />} />
             <Route path="instructors/request/:id" element={<InstructorApplication />} />
+            <Route path="user-purchases" element={<PurchaseManagement />} />
           </Route>
         </Route>
 

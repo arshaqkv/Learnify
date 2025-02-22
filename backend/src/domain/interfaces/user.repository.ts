@@ -6,10 +6,15 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmailAndUpdate(email: string, data: Partial<User>): Promise<void>;
   findByIdAndUpdate(id: string, data: Partial<User>): Promise<User | null>;
-  getAllUsers(page: number, limit: number, search?: string): Promise<{ users: any[]; totalUsers: number }>;
+  getAllUsers(
+    page: number,
+    limit: number,
+    search?: string
+  ): Promise<{ users: any[]; totalUsers: number }>;
   blockUser(id: string): Promise<void>;
   unblockuser(id: string): Promise<void>;
-  findByData(token: string): Promise<User | null>
-  updateEnrolledCourses(id: string, courseId: string): Promise<void>
-  findEnrolledCourses(userId: string): Promise<User | null>
+  findByData(token: string): Promise<User | null>;
+  updateEnrolledCourses(id: string, courseId: string): Promise<void>;
+  findEnrolledCourses(userId: string): Promise<User | null>;
+  getAllInstructors(): Promise<User[] | null>;
 }

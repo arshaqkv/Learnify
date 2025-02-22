@@ -4,7 +4,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { startLoading } from "../../features/admin/adminSlice";
 import { logoutAdmin } from "../../features/admin/adminThunk";
 import { endLoading } from "../../features/auth/authSlice";
-import { LayoutDashboard, ListPlus, LogOut, UserRoundCog, Users } from "lucide-react";
+import { BookUser, LayoutDashboard, ListPlus, LogOut, ShoppingCart, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
 const AdminDashboardPage = () => {
@@ -28,9 +28,14 @@ const AdminDashboardPage = () => {
       path: "/admin/users",
     },
     {
-      icon: UserRoundCog,
+      icon: BookUser,
       label: "Instructors",
       path: "/admin/instructors"
+    },
+    {
+      icon: ShoppingCart,
+      label: "User Purchases",
+      path: "/admin/user-purchases"
     },
     {
       icon: LogOut,
@@ -52,7 +57,7 @@ const AdminDashboardPage = () => {
 
   return (
     <div className="flex h-full min-h-screen shadow-md bg-gray-100">
-      <aside className="w-64 bg-white shadow-md hidden md:block">
+      <aside className="w-72 bg-white shadow-md hidden md:block">
         <div className="p-4">
           <h1 className="text-3xl mb-2 font-bold text-center">Learnify.</h1>
           <p className="text-gray-500 text-center mb-4">Admin Dashboard</p>
@@ -63,7 +68,7 @@ const AdminDashboardPage = () => {
                   key={menuItem.path}
                   to={menuItem.path}
                   className={() =>
-                    `flex items-center w-full p-2 rounded-md transition-colors ${
+                    `flex items-center w-full p-2 rounded-md transition-colors text-lg ${
                       location.pathname.includes(menuItem.path) // Match partial path for similar routes
                         ? "bg-gray-100 text-gray-900"
                         : "text-gray-600 hover:bg-gray-50"

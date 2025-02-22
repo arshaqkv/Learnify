@@ -5,7 +5,12 @@ export interface IOrderRepository {
   updateOrder(orderId: string, data: Partial<Order>): Promise<Order | null>;
   getOrderById(orderId: string): Promise<Order | null>;
   getOrdersByUserId(userId: string): Promise<Order[]>;
-  getAllOrders(): Promise<Order[] | null>;
+  getAllOrders(
+    page: number,
+    limit: number,
+    instructor: string,
+    paymentStatus: string
+  ): Promise<{ orders: Order[]; total: number }>;
   alreadyPurchasedCourse(userId: string, orderId: string): Promise<boolean>;
   findOrderByUserAndCourse(
     userId: string,
@@ -14,6 +19,6 @@ export interface IOrderRepository {
   findOrdersByInstructorId(
     id: string,
     page: number,
-    limit: number,
+    limit: number
   ): Promise<{ orders: Order[]; total: number }>;
 }

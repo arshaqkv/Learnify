@@ -4,6 +4,7 @@ import { authorizeRole, isAuthenticated } from "../middlewares/auth.middleware";
 import { userController } from "../controllers/auth.controller";
 import { studentController } from "../controllers/admin/student/student.controller";
 import { instructorController } from "../controllers/instructor/instructor.controller";
+import { orderController } from "../controllers/student/order.controller";
 
 const adminRouter = Router();
 
@@ -22,14 +23,18 @@ adminRouter
   .delete("/category/remove/:id", categoryController.deleteCategory)
   .patch("/category/toggle-block/:id", categoryController.toggleCategoryBlock)
 
-//user management
+  //user management
   .get("/users", studentController.getAllUsers)
   .patch("/block-user/:id", studentController.blockUser)
   .patch("/unblock-user/:id", studentController.unBlockUser)
 
-//instructor
-  .get('/instructors', instructorController.getAllInstructors)
-  .get('/instructors/:id', instructorController.getSingleInstructor)
-  .patch('/instructors/:id', instructorController.updateInstructorStatus)
+  //instructor
+  .get("/instructors", instructorController.getAllInstructorsRequest)
+  .get("/instructors/:id", instructorController.getSingleInstructor)
+  .patch("/instructors/:id", instructorController.updateInstructorStatus)
+  .get("/approved-instructors", instructorController.getAllInstructors)
+
+  //all orders
+  .get("/get-orders", orderController.getAllOrders);
 
 export { adminRouter as adminRoutes };

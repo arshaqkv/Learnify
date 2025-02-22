@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { Order } from "../../../domain/entities/order.entity";
 import { ICourseRepository } from "../../../domain/interfaces/course.repository";
 import { IOrderRepository } from "../../../domain/interfaces/order.repository";
-
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { StripeService } from "../../../infrastructure/services/stripe/StripeService";

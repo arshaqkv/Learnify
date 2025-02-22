@@ -5,7 +5,9 @@ import {
   editCategoryAPI,
   getAllCategoriesAPI,
   getAllInstructorsAPI,
+  getAllOrdersAPI,
   getAllUsersAPI,
+  GetApprovedInstructorsAPI,
   getCategoryAPI,
   getSingleInstructorAPI,
   loginAdminAPI,
@@ -186,15 +188,54 @@ export const getSingleInstructor = createAsyncThunk(
   }
 );
 
-
 export const updateInstructorStatus = createAsyncThunk(
   "admin/updateInstructorStatus",
-  async({id, status, rejectionReason}: {id: string, status: string, rejectionReason?: string}, {rejectWithValue}) =>{
+  async (
+    {
+      id,
+      status,
+      rejectionReason,
+    }: { id: string; status: string; rejectionReason?: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await updateInstructorStatusAPI({id, status, rejectionReason})
-      return response.data
+      const response = await updateInstructorStatusAPI({
+        id,
+        status,
+        rejectionReason,
+      });
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
     }
   }
-)
+);
+
+//orders
+
+export const getAllOrders = createAsyncThunk(
+  "admin/getAllOrders",
+  async (
+    { page, limit, instructor, paymentStatus }: { page: number; limit: number, instructor: string, paymentStatus: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAllOrdersAPI(page, limit, instructor, paymentStatus);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const GetApprovedInstructors = createAsyncThunk(
+  "admin/getApprovedInstructors",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await GetApprovedInstructorsAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
