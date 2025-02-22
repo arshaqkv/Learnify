@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import morgan from "morgan";
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -42,5 +42,5 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   connectDB();
-  console.log(`server is running on port : http://localhost:${PORT}`);
+  console.log(`Server is running on port : http://localhost:${PORT}`);
 });

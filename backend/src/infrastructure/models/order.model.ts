@@ -7,6 +7,7 @@ interface ICourseInOrder extends Document {
   coursePrice: number;
   courseCategory: string;
   courseCreator: string;
+  courseCreatorId: mongoose.Types.ObjectId;
   courseCreatorImage: string;
   courseLevel: string;
   courseImage: string;
@@ -22,7 +23,7 @@ interface IOrder extends Document {
   paymentStatus: "pending" | "completed" | "failed";
   paymentType: "stripe" | "razorpay" | "paypal";
   transactionId?: string;
-  paymentDate?: Date | null;
+  transactionDate?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -39,6 +40,7 @@ const CourseInOrderSchema: Schema = new Schema({
   coursePrice: { type: Number },
   courseCategory: { type: String },
   courseCreator: { type: String },
+  courseCreatorId: { type: mongoose.Types.ObjectId },
   courseCreatorImage: { type: String },
   courseLevel: { type: String },
   courseImage: { type: String },
@@ -74,7 +76,9 @@ const OrderSchema: Schema = new Schema(
     transactionId: {
       type: String,
     },
-    transactionDate: Date,
+    transactionDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

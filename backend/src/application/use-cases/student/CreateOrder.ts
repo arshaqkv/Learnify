@@ -55,6 +55,7 @@ export class CreateOrder {
       coursePrice: course.price,
       courseCategory: course?.category?.name,
       courseCreator: `${creator.firstname} ${creator.lastname}`,
+      courseCreatorId: course.creator._id,
       courseCreatorImage: creator.profileImage,
       courseLevel: course.level,
       courseImage: course.thumbnail,

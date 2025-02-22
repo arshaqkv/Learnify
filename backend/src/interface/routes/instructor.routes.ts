@@ -3,6 +3,7 @@ import { authorizeRole, isAuthenticated, isBlocked } from "../middlewares/auth.m
 import { categoryController } from "../controllers/admin/category/category.controller";
 import { upload } from "../../infrastructure/middleware/multer";
 import { courseController } from "../controllers/instructor/course/course.controller";
+import { instructorController } from "../controllers/instructor/instructor.controller";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router
   .put("/course/:courseId/lecture/edit/:id", upload.single("videoUrl"), courseController.editLecture)
   .delete("/course/:courseId/lecture/remove/:id", courseController.deleteLecture)
   .get("/course/get-lecture/:id", courseController.getLecture)
+  .get("/student-orders", instructorController.ordersPerInstructor)
    
 export { router as instructorRoutes };

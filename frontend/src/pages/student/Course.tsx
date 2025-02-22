@@ -30,9 +30,9 @@ const Course = ({ course }: CourseProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="" />
-                <AvatarFallback className=" object-cover">
-                  <img src={course?.creator?.profileImage ? course?.creator?.profileImage: avatar} alt=""/>
+                <AvatarImage className=" object-cover" src={course?.creator?.profileImage  || avatar } />
+                <AvatarFallback >
+                  avatar
                 </AvatarFallback>
               </Avatar>
               <h1 className="font-medium text-sm">{`${course?.creator.firstname} ${course?.creator.lastname}`}</h1>

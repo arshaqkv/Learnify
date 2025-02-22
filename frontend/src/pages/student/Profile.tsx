@@ -91,7 +91,7 @@ const UserProfilePage = () => {
                   key={menuItem.path}
                   to={menuItem.path}
                   className={({ isActive }) =>
-                    `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg ${
+                    `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-md ${
                       isActive
                         ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
                         : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"

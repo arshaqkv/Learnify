@@ -1,6 +1,7 @@
 import {
   ArrowLeftCircleIcon,
   LayoutDashboard,
+  ShoppingCart,
   SquareLibrary,
 } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
@@ -19,6 +20,11 @@ const InstructorDashboardPage = () => {
       icon: SquareLibrary,
       label: "Courses",
       path: "/instructor/courses",
+    },
+    {
+      icon: ShoppingCart,
+      label: "User Purchases",
+      path: "/instructor/student-purchases",
     },
     {
       icon: ArrowLeftCircleIcon,
@@ -40,7 +46,7 @@ const InstructorDashboardPage = () => {
                 key={menuItem.path}
                 to={menuItem.path}
                 className={() =>
-                  `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg ${
+                  `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-md ${
                     location.pathname.includes(menuItem.path)
                       ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
                       : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"

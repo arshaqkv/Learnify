@@ -11,4 +11,9 @@ export interface IOrderRepository {
     userId: string,
     courseId?: string
   ): Promise<Order | null>;
+  findOrdersByInstructorId(
+    id: string,
+    page: number,
+    limit: number,
+  ): Promise<{ orders: Order[]; total: number }>;
 }

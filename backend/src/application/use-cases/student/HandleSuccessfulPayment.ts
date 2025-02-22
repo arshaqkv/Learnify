@@ -24,7 +24,7 @@ export class HandleSuccessfulPayment {
     await this.orderRepository.updateOrder(orderId, {
       paymentStatus: "completed",
       transactionId,
-      paymentDate: new Date(),
+      transactionDate: new Date(),
     });
 
     const course = await this.courseRepository.getCourseById(courseId);

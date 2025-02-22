@@ -66,6 +66,15 @@ export const editLectureAPI = async (
 };
 
 export const deleteLectureAPI = async (courseId: string, id: string) => {
-  const response = axios.delete(`/instructor/course/${courseId}/lecture/remove/${id}`);
+  const response = axios.delete(
+    `/instructor/course/${courseId}/lecture/remove/${id}`
+  );
+  return response;
+};
+
+export const ordersPerInstructorAPI = async (page: number, limit: number) => {
+  const response = axios.get(
+    `/instructor/student-orders?page=${page}&limit=${limit}`
+  );
   return response
 };

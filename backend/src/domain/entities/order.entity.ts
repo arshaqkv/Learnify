@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { ICourseInOrder } from "../../infrastructure/models/order.model";
 
 export class Order {
   constructor(
@@ -12,6 +11,7 @@ export class Order {
       coursePrice: number;
       courseCategory: string; 
       courseCreator: string;
+      courseCreatorId: mongoose.Types.ObjectId;
       courseCreatorImage: string;
       courseLevel: string;
       courseImage: string;
@@ -21,7 +21,7 @@ export class Order {
     public paymentStatus: "pending" | "completed" | "failed",
     public discountAmount?: number,
     public transactionId?: string,
-    public paymentDate?: Date | null,
+    public transactionDate?: Date | null,
     public createdAt?: Date,
     public updatedAt?: Date
   ) {}

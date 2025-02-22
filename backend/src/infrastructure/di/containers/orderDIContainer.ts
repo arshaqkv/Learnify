@@ -1,3 +1,4 @@
+import { OrdersPerInstructor } from "../../../application/use-cases/instructor/purchase/OrdersPerInstructor";
 import { CreateOrder } from "../../../application/use-cases/student/CreateOrder";
 import { GetOrders } from "../../../application/use-cases/student/GetOrders";
 import { HandleFailedPayment } from "../../../application/use-cases/student/HandleFailedPayment";
@@ -55,6 +56,10 @@ class OrderDIContainer {
       this.getHandleSuccessfulPayment(),
       this.getHandleFailedPayment()
     );
+  }
+
+  static GetOrdersPerInstructorUseCase() {
+    return new OrdersPerInstructor(this.getOrderRepository());
   }
 }
 

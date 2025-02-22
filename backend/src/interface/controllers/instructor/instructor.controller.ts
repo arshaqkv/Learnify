@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { InstructorDIContainer } from "../../../infrastructure/di/containers/instructorDIcontainer";
+import { OrderDIContainer } from "../../../infrastructure/di/containers/orderDIContainer";
 
 class InstructorController {
   //instructor registration
   async RegisterInstructor(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const registerInstructor = InstructorDIContainer.getRegisterInstructorUseCase();
+      const registerInstructor =
+        InstructorDIContainer.getRegisterInstructorUseCase();
       await registerInstructor.execute(id, req.body);
       res.status(200).json({
         success: true,
@@ -58,13 +60,28 @@ class InstructorController {
       const updateInstructor =
         InstructorDIContainer.getUpdateInstructorStatusUseCase();
       const { status, rejectionReason } = req.body;
-      const instructor = await updateInstructor.execute(id, status, rejectionReason);
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: `Instructor request ${instructor?.status}`,
-        });
+      const instructor = await updateInstructor.execute(
+        id,
+        status,
+        rejectionReason
+      );
+      res.status(200).json({
+        success: true,
+        message: `Instructor request ${instructor?.status}`,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async ordersPerInstructor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const getAllPurchases = OrderDIContainer.GetOrdersPerInstructorUseCase();
+      const { orders, total } = await getAllPurchases.execute(id, page, limit);
+      res.status(200).json({ orders, total, totalPages: Math.ceil(total / limit)  });
     } catch (error: any) {
       next(error);
     }

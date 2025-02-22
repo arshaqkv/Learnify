@@ -33,6 +33,7 @@ const EditCourse = lazy(() => import("../pages/instructor/course/EditCourse"));
 const CourseOverview = lazy(() => import("../pages/instructor/course/CourseOverview"))
 const CreateLecture = lazy(()=> import("../pages/instructor/lecture/CreateLecture"))
 const EditLecture = lazy(()=> import("../pages/instructor/lecture/EditLecture"))
+const StudentPurchases = lazy(() => import("../pages/instructor/student/StudentPurchases"))
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboardPage"));
 const AdminDashboard = lazy(() => import("../pages/admin/AdminDashboard"));
@@ -86,6 +87,7 @@ const AppRoutes = () => {
             <Route path="courses/:courseId/overview" element={<CourseOverview />} />
             <Route path="courses/add/:courseId/lecture" element={<CreateLecture />} />
             <Route path="courses/edit/:courseId/lecture/edit/:id" element={<EditLecture />} />
+            <Route path="student-purchases" element={<StudentPurchases />} />
           </Route>
         </Route>
 

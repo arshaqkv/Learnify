@@ -42,18 +42,19 @@ const Navbar = () => {
             {user ? (
               <Link to="/profile/dashboard">
                 <Avatar className="hover:scale-105 transition transform duration-300">
-                  <AvatarImage src={user.profileImage || avatar} />
-                  <AvatarFallback>
-                    <img src={avatar} alt="User" className="rounded-full" />
-                  </AvatarFallback>
+                  <AvatarImage src={user.profileImage || avatar} className=" object-cover"/>
+                  <AvatarFallback className="text-sm">avatar</AvatarFallback>
                 </Avatar>
               </Link>
             ) : (
               <div className="flex items-center gap-2">
-                <Button onClick={() => navigate("/login")} variant="outline" className="rounded">
+                <Button
+                  onClick={() => navigate("/login")}
+                  variant="outline"
+                  className="rounded"
+                >
                   Login
                 </Button>
-                
               </div>
             )}
           </div>

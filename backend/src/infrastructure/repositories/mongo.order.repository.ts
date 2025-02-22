@@ -52,4 +52,26 @@ export class MongoOrderRepository implements IOrderRepository {
       paymentStatus: "pending",
     });
   }
+
+  async findOrdersByInstructorId(
+    id: string,
+    page: number,
+    limit: number
+  ): Promise<{ orders: Order[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const orders = await OrderModel.find({ "course.courseCreatorId": id })
+      .populate({
+        path: "userId",
+        select: "firstname",
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalOrders = await OrderModel.countDocuments({
+      "course.courseCreatorId": id,
+    });
+    console.log(id);
+    return { orders, total: totalOrders };
+  }
 }

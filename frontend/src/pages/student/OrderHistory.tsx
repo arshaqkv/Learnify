@@ -8,6 +8,7 @@ import { Avatar } from "../../components/ui/avatar";
 import avatar from "../../assets/avatar.jpg";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Link } from "react-router-dom";
+import { Calendar } from "lucide-react";
 
 const OrderHistory = () => {
   const dispatch = useAppDispatch();
@@ -89,16 +90,24 @@ const OrderHistory = () => {
 
             <Separator className="my-4" />
             <div className="flex justify-between items-center">
-              <p className="text-gray-700">
-                <span className="font-medium">Payment Status: </span>
-                <span
-                  className={`px-2 py-1 rounded-md text-sm font-medium ${getStatusColor(
-                    order.paymentStatus
-                  )}`}
-                >
-                  {order.paymentStatus.toUpperCase()}
-                </span>
-              </p>
+              <div className="">
+                <p className="text-gray-700">
+                  <span className="font-medium">Payment Status: </span>
+                  <span
+                    className={`px-2 py-1 rounded-md text-sm font-medium ${getStatusColor(
+                      order.paymentStatus
+                    )}`}
+                  >
+                    {order.paymentStatus.toUpperCase()}
+                  </span>
+                  { order.transactionDate && <div className="flex text-sm items-center">
+                    <Calendar size={18} />
+                    <span>
+                      {new Date(order.transactionDate).toDateString()}
+                    </span>
+                  </div>}
+                </p>
+              </div>
               <p className="text-lg font-semibold text-gray-900">
                 ₹{order.course.coursePrice}
               </p>
