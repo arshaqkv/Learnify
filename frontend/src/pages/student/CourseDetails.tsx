@@ -7,12 +7,19 @@ import toast from "react-hot-toast";
 import {
   addToWishlist,
   getCourse,
+  getInstructorProfile,
   purchaseCourse,
   removeFromWishlist,
 } from "../../features/auth/authThunk";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import ScrollToTop from "../../components/common/ScrollToTop";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../components/ui/popover";
+import { Avatar, AvatarImage } from "../../components/ui/avatar";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -21,6 +28,7 @@ const CourseDetails = () => {
   const dispatch = useAppDispatch();
   const [course, setCourse] = useState<any>({});
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [instructor, setInstructor] = useState<any>(null);
 
   if (!courseId) {
     toast.error("Course not found");
@@ -43,6 +51,19 @@ const CourseDetails = () => {
 
     fetchCourse();
   }, [dispatch]);
+
+  const handleGetInstructor = async (id: string) => {
+    if (!user) {
+      toast.error("Please Login to continue");
+      navigate("/login");
+      return;
+    }
+    const result = await dispatch(getInstructorProfile(id));
+    if (getInstructorProfile.fulfilled.match(result)) {
+      const { instructor } = result.payload;
+      setInstructor(instructor);
+    }
+  };
 
   const toggleWishlist = async () => {
     try {
@@ -97,10 +118,53 @@ const CourseDetails = () => {
               {course?.category?.name}
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold">{course.title}</h1>
-            <p className="text-lg">
-              Created By{" "}
-              <span className="text-blue-300 underline italic">{`${course?.creator?.firstname} ${course?.creator?.lastname}`}</span>
-            </p>
+            <Popover>
+              <PopoverTrigger
+                className="text-lg"
+                onClick={() => handleGetInstructor(course.creator._id)}
+              >
+                Created By{" "}
+                <span className=" cursor-pointer text-blue-300 underline italic hover:text-blue-700">
+                  {`${course?.creator?.firstname} ${course?.creator?.lastname}`}
+                </span>
+              </PopoverTrigger>
+              <PopoverContent className="bg-white p-4 rounded-lg shadow-lg">
+                {instructor ? (
+                  <div className="text-gray-800">
+                    <div>
+                      <Avatar>
+                        <AvatarImage
+                          src={instructor?.instructorId?.profileImage}
+                          className=" object-cover"
+                        />
+                      </Avatar>
+                      <h3 className="font-bold text-lg">{`${instructor?.instructorId?.firstname} ${instructor?.instructorId?.lastname}`}</h3>
+                    </div>
+                    <p className="text-sm text-gray-600">{instructor?.bio}</p>
+                    <p className="text-sm text-gray-600 font-semibold">
+                      Qualifications:
+                    </p>
+                    <div className="list-disc list-inside text-gray-600">
+                      {instructor?.qualifications?.map(
+                        (qualification: any, index: number) => (
+                          <Badge className="m-1" key={index}>{qualification}</Badge> 
+                        )
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 font-semibold">
+                      Skills:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600">
+                      {instructor?.skills?.map((skill: any, index: number) => (
+                        <li key={index}>{skill}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="text-gray-500">Loading...</p>
+                )}
+              </PopoverContent>
+            </Popover>
             <div className="flex items-center gap-3 text-sm text-gray-300">
               <BadgeInfo size={18} />
               <p>Last updated: {new Date(course.updatedAt).toDateString()}</p>

@@ -7,6 +7,7 @@ import {
 import { wishlistController } from "../controllers/student/wishlist.controller";
 import { orderController } from "../controllers/student/order.controller";
 import { userController } from "../controllers/auth.controller";
+import { instructorController } from "../controllers/instructor/instructor.controller";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router
   .post("/wishlist/remove", wishlistController.removeFromWishlist)
   .get("/wishlist", wishlistController.getWishlist)
   .get("/get-enrolledCourses", userController.getEnrolledCourses)
+  .get("/instructor-profile/:id", instructorController.getInstructorProfile)
 
   .post("/order/create", orderController.createOrder)
   .get("/get-orders", orderController.getOrders)

@@ -20,12 +20,17 @@ class InstructorController {
   }
 
   //get all instructors
-  async getAllInstructorsRequest(req: Request, res: Response, next: NextFunction) {
+  async getAllInstructorsRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = req.query.search as string;
-      const getAllInstructorsRequest = InstructorDIContainer.getAllInstructorRequestUseCase();
+      const getAllInstructorsRequest =
+        InstructorDIContainer.getAllInstructorRequestUseCase();
       const { instructors, total } = await getAllInstructorsRequest.execute(
         page,
         limit,
@@ -81,19 +86,34 @@ class InstructorController {
       const limit = parseInt(req.query.limit as string) || 10;
       const getAllPurchases = OrderDIContainer.GetOrdersPerInstructorUseCase();
       const { orders, total } = await getAllPurchases.execute(id, page, limit);
-      res.status(200).json({ orders, total, totalPages: Math.ceil(total / limit)  });
+      res
+        .status(200)
+        .json({ orders, total, totalPages: Math.ceil(total / limit) });
     } catch (error: any) {
       next(error);
     }
   }
 
-  async getAllInstructors(req: Request, res: Response, next: NextFunction){
+  async getAllInstructors(req: Request, res: Response, next: NextFunction) {
     try {
-      const getallInstructors = InstructorDIContainer.getAllInstructorsUseCase()
-      const instructors = await getallInstructors.execute()
-      res.status(200).json({instructors})
+      const getallInstructors =
+        InstructorDIContainer.getAllInstructorsUseCase();
+      const instructors = await getallInstructors.execute();
+      res.status(200).json({ instructors });
     } catch (error: any) {
-      next(error)
+      next(error);
+    }
+  }
+
+  async getInstructorProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params; 
+      const getInstructorProfile =
+        InstructorDIContainer.getInstructorProfileUseCase()
+      const instructor = await getInstructorProfile.execute(id)
+      res.status(200).json({ instructor });
+    } catch (error: any) {
+      next(error);
     }
   }
 }

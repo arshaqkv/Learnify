@@ -1,5 +1,6 @@
 import { GetApprovedInstructors } from "../../../application/use-cases/admin/instructor/GetApprovedInstructors";
 import { GetInstructor } from "../../../application/use-cases/admin/instructor/GetInstructor";
+import { GetInstructorProfile } from "../../../application/use-cases/student/GetInstructorProfile";
 import { UpdateInstructorStatus } from "../../../application/use-cases/admin/instructor/UpdateInstructorStatus";
 import { GetAllInstructors } from "../../../application/use-cases/instructor/GetAllInstructors";
 import { RegisterInstructor } from "../../../application/use-cases/instructor/RegisterInstructor";
@@ -39,6 +40,10 @@ class InstructorDIContainer {
 
   static getAllInstructorsUseCase() {
     return new GetApprovedInstructors(this.getUserRepository());
+  }
+
+  static getInstructorProfileUseCase() {
+    return new GetInstructorProfile(this.getInstructorRepository());
   }
 }
 

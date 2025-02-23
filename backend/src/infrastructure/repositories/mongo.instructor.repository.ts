@@ -19,7 +19,7 @@ export class MongoInstructorRepository implements IInstructorRepository {
   }
 
   async findById(id: string): Promise<Instructor | null> {
-    return await InstructorModel.findById(id)
+    return await InstructorModel.findById(id);
   }
 
   async findInstructorById(id: string): Promise<Instructor | null> {
@@ -81,15 +81,22 @@ export class MongoInstructorRepository implements IInstructorRepository {
     return { instructors, total: total.length > 0 ? total[0]["total"] : 0 };
   }
 
-  async updateInstructor(
-    id: string,
-    data: string
-  ): Promise<Instructor | null> {
+  async updateInstructor(id: string, data: string): Promise<Instructor | null> {
     const updatedInstructor = await InstructorModel.findByIdAndUpdate(
       id,
       { status: data },
       { new: true }
     );
     return updatedInstructor;
+  }
+
+  async getInstructorDetails(id: string): Promise<Instructor | null> {
+    const instructor = await InstructorModel.findOne({
+      instructorId: id,
+    }).populate({
+      path: "instructorId",
+      select: "email firstname lastname profileImage",
+    });
+    return instructor;
   }
 }

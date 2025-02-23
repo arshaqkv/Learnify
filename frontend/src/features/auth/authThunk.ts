@@ -36,6 +36,7 @@ import {
 import {
   addToWishlistAPI,
   getEnrolledCoursesAPI,
+  getInstructorProfileAPI,
   getOrdersAPI,
   getWsihlistAPI,
   purshaseCourseAPI,
@@ -542,6 +543,18 @@ export const getPopularCourses = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getPopularCoursesAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getInstructorProfile = createAsyncThunk(
+  "auth/getInstructorProfile",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await getInstructorProfileAPI(id);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

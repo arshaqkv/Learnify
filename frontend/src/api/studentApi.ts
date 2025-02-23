@@ -29,3 +29,8 @@ export const getEnrolledCoursesAPI = () => {
   const response = axios.get("/student/get-enrolledCourses");
   return response;
 };
+
+export const getInstructorProfileAPI = (id: string) => {
+  const response = axios.get(`/student/instructor-profile/${id}`);
+  return response;
+};
