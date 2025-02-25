@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export class Course {
   constructor(
     public title: string,
+    public subtitle: string,
     public description: string,
     public price: number,
     public creator: mongoose.Types.ObjectId,
@@ -14,7 +15,7 @@ export class Course {
     public _id?: string,
     public isPublished?: boolean,
     public isDeleted?: boolean,
-    public enrolledCount?: number,
+    public enrolledCount: number = 0,
     public createdAt?: Date,
     public updatedAt?: Date
   ) {}

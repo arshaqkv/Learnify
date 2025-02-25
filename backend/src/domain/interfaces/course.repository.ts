@@ -24,4 +24,5 @@ export interface ICourseRepository {
   removeLecture(id: string, lectureId: string): Promise<void>;
   updateCourseEnrollmentCount(courseId: string): Promise<void>;
   getPopularCourses(): Promise<Course[]>;
+  getCourseByCreator(userId: string, courseId: string): Promise<boolean>;
 }

@@ -126,6 +126,7 @@ const CourseList = () => {
             <TableCaption>Total Courses {totalCourses}</TableCaption>
             <TableHeader>
               <TableRow>
+                <TableHead>#</TableHead>
                 <TableHead>Course Title</TableHead>
                 <TableHead>Course Category</TableHead>
                 <TableHead>Price</TableHead>
@@ -135,7 +136,7 @@ const CourseList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {courses.map((course: any) => (
+              {courses.map((course: any, index: number) => (
                 <TableRow
                   className="cursor-pointer hover:bg-gray-100"
                   key={course._id}
@@ -143,8 +144,9 @@ const CourseList = () => {
                     navigate(`/instructor/courses/${course._id}/overview`)
                   }
                 >
-                  <TableCell className="font-medium">{course.title}</TableCell>
-                  <TableCell className="w[200px] overflow-hidden">
+                  <TableCell>{index + 1}.</TableCell>
+                  <TableCell className="font-medium max-w-20 truncate">{course.title}</TableCell>
+                  <TableCell className="w[200px] ">
                     {course.category?.name}
                   </TableCell>
                   <TableCell>₹{course.price}</TableCell>

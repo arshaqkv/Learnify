@@ -14,7 +14,7 @@ export class EditCourse {
     data: Partial<Course>,
     fileBuffer?: Buffer
   ): Promise<void> {
-    const { title, description, category, price, level } = data;
+    const { title, subtitle, description, category, price, level } = data;
     const course = await this.courseRepository.getCourseById(id);
 
     if (!course) {
@@ -32,6 +32,7 @@ export class EditCourse {
 
     const updateData: Partial<Course> = {
       title,
+      subtitle,
       description,
       category,
       price,

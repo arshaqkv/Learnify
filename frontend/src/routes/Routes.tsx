@@ -12,6 +12,7 @@ const ForgotPassword = lazy(() => import("../pages/student/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/student/ResetPassword"));
 const CourseDetails = lazy(() => import("../pages/student/CourseDetails"));
 const CourseSearchPage = lazy(() => import("../pages/student/CourseSearchPage"))
+const ViewLecture = lazy(() => import("../pages/student/ViewLecture"))
 const AdminLogin = lazy(() => import("../pages/admin/AdminLogin"));
 
 const InstructorRegister = lazy(() => import("../pages/instructor/InstructorRegister"));
@@ -64,6 +65,7 @@ const AppRoutes = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/instructor-register" element={<InstructorRegister />} />
+          <Route path="/courses/course-details/:courseId/lectures" element={<ViewLecture />} />
           
           <Route path="/profile" element={<UserProfilePage />}>
             <Route path="dashboard" element={<ProfileDashboard />} />

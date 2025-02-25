@@ -32,6 +32,11 @@ const validationSchema = yup.object().shape({
     .matches(/^[A-Za-z].*$/, "Title must start with a letter")
     .min(3, "Title must be at least 3 characters")
     .required("Title is required"),
+  subtitle: yup
+    .string()
+    .matches(/^[A-Za-z].*$/, "Subtitle must start with a letter")
+    .min(3, "Subtitle must be at least 5 characters")
+    .required("Subtitle is required"),
   description: yup
     .string()
     .matches(/^[A-Za-z].*$/, "Description must start with a letter")
@@ -59,6 +64,7 @@ const EditCourse = () => {
 
   const [initialValues, setInitialValues] = useState({
     title: "",
+    subtitle: "",
     description: "",
     price: "",
     level: "",
@@ -75,7 +81,7 @@ const EditCourse = () => {
 
       try {
         const [courseResult, categoriesResult] = await Promise.all([
-          dispatch(getCourse({courseId})),
+          dispatch(getCourse({ courseId })),
           dispatch(getAllActiveCategories()),
         ]);
 
@@ -85,6 +91,7 @@ const EditCourse = () => {
         if (course) {
           setInitialValues({
             title: course.title,
+            subtitle: course.subtitle,
             description: course.description,
             price: course.price,
             level: course.level,
@@ -111,6 +118,7 @@ const EditCourse = () => {
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("title", values.title);
+      formData.append("subtitle", values.subtitle);
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price);
@@ -120,12 +128,12 @@ const EditCourse = () => {
         formData.append("thumbnail", values.thumbnail);
       }
 
-      if(!courseId){
-        toast.error("Id not found")
-        return
+      if (!courseId) {
+        toast.error("Id not found");
+        return;
       }
       const toastId = toast.loading("Updating course, please wait..");
-      const result = await dispatch(editCourse({ id:courseId, formData }));
+      const result = await dispatch(editCourse({ id: courseId, formData }));
       toast.dismiss(toastId);
 
       if (editCourse.fulfilled.match(result)) {
@@ -160,7 +168,17 @@ const EditCourse = () => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium">Price ($)</label>
+                <label className="block text-sm font-medium">Subtitle</label>
+                <Input
+                  {...formik.getFieldProps("subtitle")}
+                  placeholder="Enter course subtitle"
+                />
+                {formik.touched.subtitle && formik.errors.subtitle && (
+                  <p className="text-red-500 text-sm">{formik.errors.subtitle}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Price (₹)</label>
                 <Input
                   type="number"
                   {...formik.getFieldProps("price")}
@@ -273,7 +291,7 @@ const EditCourse = () => {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => navigate("/instructor/courses")}
+              onClick={() => navigate(-1)}
             >
               Cancel
             </Button>

@@ -44,7 +44,7 @@ export class LoginUser {
       accessToken,
       refreshToken,
       user: {
-        id: user._id,
+        _id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,

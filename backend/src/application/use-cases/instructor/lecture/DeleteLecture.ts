@@ -17,10 +17,12 @@ export class DeleteLecture {
       throw new CustomError("Lecture not found", 400);
     }
 
-    await this.cloudinaryService.deleteVideo(lecture.publicId);
+    lecture.videos.map(async (video) => {
+      await this.cloudinaryService.deleteVideo(video.publicId);
+    });
 
     await this.courseRepository.removeLecture(courseId, id);
 
-    await this.lectureRepository.deleteLecture(id)
+    await this.lectureRepository.deleteLecture(id);
   }
 }

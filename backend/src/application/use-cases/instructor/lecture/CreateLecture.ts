@@ -1,3 +1,4 @@
+import { buffer } from "stream/consumers";
 import { Lecture } from "../../../../domain/entities/lecture.entity";
 import { ICourseRepository } from "../../../../domain/interfaces/course.repository";
 import { ILectureRepository } from "../../../../domain/interfaces/lecture.repository";
@@ -14,36 +15,47 @@ export class CreateLecture {
   async execute(
     courseId: string,
     data: Lecture,
-    fileBuffer?: Buffer
+    fileBuffers?: Buffer[]
   ): Promise<void> {
-    const { title, isPreviewFree } = data;
+    const { title, isFree, videos } = data;
     if (!courseId) {
       throw new CustomError("Course id not found", 400);
     }
 
-    if (!title || !isPreviewFree) {
+    if (!title || !isFree || !videos) {
       throw new CustomError("Data not provided", 400);
     }
 
-    if (!fileBuffer) {
-      throw new CustomError("Lecture video is not provided", 400);
+    if (!fileBuffers || fileBuffers.length === 0) {
+      throw new CustomError("Lecture videos are not provided", 400);
     }
 
-    const { url, publicId } = await this.cloudinaryService.uploadLecturevideo(
-      fileBuffer
+    const uploadedFiles = await Promise.all(
+      fileBuffers.map(async (buffer, index) => {
+        const uploadResponse = await this.cloudinaryService.uploadLecturevideo(
+          buffer
+        );
+
+        return {
+          title: videos[index].title,
+          duration: videos[index].duration, 
+          videoUrl: uploadResponse.url,
+          publicId: uploadResponse.publicId,
+        };
+      })
     );
 
-    const newLecture = new Lecture(title, isPreviewFree, url, publicId);
-
-    const lecture = await this.lectureRepository.createNewLecture(newLecture)
-    if(!lecture){
-        throw new CustomError("Error in creating lecture", 400)
+    const newLecture = new Lecture(title, isFree, uploadedFiles);
+ 
+    const lecture = await this.lectureRepository.createNewLecture(newLecture);
+    if (!lecture) {
+      throw new CustomError("Error in creating lecture", 400);
     }
 
     const course = await this.courseRepository.getCourseById(courseId);
-    if(!course){
-        throw new CustomError("Course not found", 400)
+    if (!course) {
+      throw new CustomError("Course not found", 400);
     }
-    await this.courseRepository.addLecture(courseId, lecture?.id)
+    await this.courseRepository.addLecture(courseId, lecture?._id);
   }
 }

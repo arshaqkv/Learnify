@@ -34,12 +34,17 @@ import {
 } from "../../../components/ui/alert-dialog";
 import { endLoading, startLoading } from "../../../features/auth/authSlice";
 
+interface Video {
+  title: string;
+  videoUrl: string;
+  duration: string;
+}
 
 interface Lecture {
   _id: string;
   title: string;
-  isPreviewFree: boolean;
-  videoUrl: string;
+  isFree: boolean;
+  videos: Video[];
 }
 
 const CourseOverview = () => {
@@ -150,11 +155,13 @@ const CourseOverview = () => {
 
       <Card className="p-5 w-full flex flex-col md:flex-row items-center md:items-start gap-5">
         <div className="w-full md:w-2/3 space-y-2">
-          <h2 className="text-2xl font-semibold text-blue-500">
-            {course?.title}
-          </h2>
+          <h2 className="text-2xl font-bold text-blue-500">{course?.title}</h2>
+          <h3 className="text-sm font-semibold">{course?.subtitle}</h3>
           <Badge className="mb-2">{course?.category?.name}</Badge>
-          <p className="text-gray-700">{course?.description}</p>
+          <p className="text-gray-700">
+            <span className=" font-semibold">Description:</span>{" "}
+            {course?.description}
+          </p>
           <p className="text-lg font-semibold">Price: ₹{course?.price}</p>
           <Separator className="my-3" />
           <p className="flex items-center gap-2 text-gray-600">
@@ -225,26 +232,33 @@ const CourseOverview = () => {
       </div>
       {course?.lectures &&
         course?.lectures.map((lecture: Lecture, index: number) => (
-          <Card className="w-full p-3" key={index}>
+          <Card className="w-full p-3 " key={index}>
             <div className="flex justify-between">
               <h1 className="text-xl font-semibold text-gray-500">{`${
                 index + 1
               }. ${lecture.title}`}</h1>
               <span
                 className={
-                  lecture.isPreviewFree
+                  lecture?.isFree
                     ? "px-2 border-2 border-red-600 text-red-600 font-semibold rounded-sm"
                     : "px-2 border-2 border-green-600 text-green-600 font-semibold rounded-sm"
                 }
               >
-                {lecture.isPreviewFree ? "FREE" : "PAID"}
+                {lecture?.isFree ? "FREE" : "PAID"}
               </span>
             </div>
-            <video
-              controls
-              className="mt-4 max-w-md rounded-lg border mb-2"
-              src={lecture.videoUrl}
-            />
+            {lecture?.videos.map((video: any, index: number) => (
+              <div className="mt-2" key={index}>
+                <p className=" font-semibold">
+                  {index + 1 + ". " + video?.title}
+                </p>
+                <video
+                  controls
+                  className="mt-4 max-w-xs rounded-lg border mb-2"
+                  src={video.videoUrl}
+                />
+              </div>
+            ))}
             <div className="flex gap-1">
               <Button
                 variant={"outline"}

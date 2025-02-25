@@ -11,7 +11,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <div className="h-18 bg-white border-b shadow-md sticky top-0 z-10">
+    <div className="h-18 bg-slate-100 border-b shadow-md sticky top-0 z-10">
       <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="flex items-center gap-2">

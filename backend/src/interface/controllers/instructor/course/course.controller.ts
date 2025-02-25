@@ -5,11 +5,11 @@ class CourseController {
   async createCourse(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      let { title, description, category, price, level } = req.body;
-      let courseData = { title, description, category, price, level, id };
+      let { title, subtitle, description, category, price, level } = req.body;
+      let courseData = { title, subtitle, description, category, price, level };
       const fileBuffer = req.file ? req.file.buffer : undefined;
       const createCourse = CourseDIContainer.getCreateCourseUseCase();
-      const newCourse = await createCourse.execute(courseData, fileBuffer);
+      const newCourse = await createCourse.execute(id, courseData, fileBuffer);
       res.status(201).json({
         message: "Course created successfully!",
         course: newCourse,
@@ -78,11 +78,18 @@ class CourseController {
       const { courseId } = req.params;
       const userId = req.query.userId as string;
       const getCourse = CourseDIContainer.getCourseUseCase();
-      const { course, isWishlisted } = await getCourse.execute(
-        courseId,
-        userId
-      );
-      res.status(200).json({ course, isWishlisted });
+      const {
+        course,
+        isWishlisted,
+        isAlreadyPurchased,
+        isCourseOftheSameUser,
+      } = await getCourse.execute(courseId, userId);
+      res.status(200).json({
+        course,
+        isWishlisted,
+        isAlreadyPurchased,
+        isCourseOftheSameUser,
+      });
     } catch (error: any) {
       next(error);
     }
@@ -129,12 +136,11 @@ class CourseController {
   async createLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const fileBuffer = req.file ? req.file.buffer : undefined;
+      const files = req.files as Express.Multer.File[];
       const createLecture = CourseDIContainer.getCreateLectureUseCase();
-      const course = await createLecture.execute(id, req.body, fileBuffer);
-      res
-        .status(200)
-        .json({ message: "Lecture uploaded successfully", course });
+      const fileBuffers = files?.map((file) => file.buffer);
+      await createLecture.execute(id, req.body, fileBuffers);
+      res.status(200).json({ message: "Lecture uploaded successfully" });
     } catch (error: any) {
       next(error);
     }
@@ -143,9 +149,10 @@ class CourseController {
   async editLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const fileBuffer = req.file ? req.file.buffer : undefined;
+      const files = req.files as Express.Multer.File[];
       const editCourse = CourseDIContainer.getEditLectureUseCase();
-      await editCourse.execute(id, req.body, fileBuffer);
+      const fileBuffers = files?.map((file) => file.buffer);
+      await editCourse.execute(id, req.body, fileBuffers);
       res.status(200).json({ message: "Lecture updated successfully" });
     } catch (error: any) {
       next(error);
@@ -155,7 +162,6 @@ class CourseController {
   async deleteLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const { courseId, id } = req.params;
-      console.log(courseId, id)
       const deleteLecture = CourseDIContainer.getDeleteLectureUseCase();
       await deleteLecture.execute(id, courseId);
       res.status(200).json({ message: "Lecture removed successfully" });
@@ -169,10 +175,10 @@ class CourseController {
       const { id } = req.params;
       const getLecture = CourseDIContainer.getLectureUseCase();
       const lecture = await getLecture.execute(id);
-      res.status(200).json({ lecture });   
+      res.status(200).json({ lecture });
     } catch (error: any) {
-      next(error);   
-    }  
+      next(error);
+    }
   }
 }
 

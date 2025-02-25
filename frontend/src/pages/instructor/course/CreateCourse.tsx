@@ -32,6 +32,11 @@ const validationSchema = yup.object().shape({
     .matches(/^[A-Za-z].*$/, "Title must start with a letter")
     .min(3, "Title must be at least 3 characters")
     .required("Title is required"),
+  subtitle: yup
+    .string()
+    .matches(/^[A-Za-z].*$/, "Subtitle must start with a letter")
+    .min(3, "Subtitle must be at least 5 characters")
+    .required("Subtitle is required"),
   description: yup
     .string()
     .matches(/^[A-Za-z].*$/, "Description must start with a letter")
@@ -69,6 +74,7 @@ const CreateCourse = () => {
   const formik = useFormik({
     initialValues: {
       title: "",
+      subtitle: "",
       description: "",
       price: "",
       level: "",
@@ -80,6 +86,7 @@ const CreateCourse = () => {
       try {
         const formData = new FormData();
         formData.append("title", values.title);
+        formData.append("subtitle", values.subtitle);
         formData.append("description", values.description);
         formData.append("category", values.category);
         formData.append("price", values.price);
@@ -91,7 +98,7 @@ const CreateCourse = () => {
         toast.dismiss(toastId);
 
         if (createCourse.fulfilled.match(result)) {
-          const {course} = result.payload
+          const { course } = result.payload;
           toast.success(result.payload.message);
           navigate(`/instructor/courses/${course._id}/overview`);
         } else if (createCourse.rejected.match(result)) {
@@ -129,7 +136,20 @@ const CreateCourse = () => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium">Price ($)</label>
+                <label className="block text-sm font-medium">Subtitle</label>
+                <Input
+                  name="subtitle"
+                  value={formik.values.subtitle}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Enter course Subtitle"
+                />
+                {formik.touched.subtitle && formik.errors.subtitle && (
+                  <p className="text-red-500 text-sm">{formik.errors.subtitle}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Price (₹)</label>
                 <Input
                   type="number"
                   name="price"

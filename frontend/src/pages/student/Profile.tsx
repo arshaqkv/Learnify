@@ -5,10 +5,10 @@ import toast from "react-hot-toast";
 import {
   BadgeCheck,
   Bookmark,
+  Box,
   CircleUserRound,
   LockKeyhole,
-  LogOut,
-  ShoppingBag,
+  SquareArrowOutUpRight,
   UserRoundCog,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
@@ -22,7 +22,7 @@ const UserProfilePage = () => {
   const menuItems = [
     {
       icon: CircleUserRound,
-      label: "Dashboard",
+      label: "Profile",
       path: "/profile/dashboard",
     },
     {
@@ -36,9 +36,9 @@ const UserProfilePage = () => {
       path: "/profile/courses",
     },
     {
-      icon: ShoppingBag,
+      icon: Box,
       label: "Purchase History",
-      path: "/profile/order-history"
+      path: "/profile/order-history",
     },
     {
       icon: LockKeyhole,
@@ -46,7 +46,7 @@ const UserProfilePage = () => {
       path: "/profile/change-password",
     },
     {
-      icon: LogOut,
+      icon: SquareArrowOutUpRight,
       label: "Logout",
       path: null,
     },
@@ -63,9 +63,9 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="flex h-full min-h-screen bg-gray-100">
+    <div className="flex bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-72 bg-white shadow-lg border-r hidden md:block">
+      <aside className="w-72 bg-white mb-1 shadow-lg border-r hidden md:block rounded-md overflow-y-auto max-h-fit">
         <div className="p-6">
           <nav className="space-y-4">
             {user?.role === "instructor" && (
@@ -104,24 +104,22 @@ const UserProfilePage = () => {
               ) : (
                 <Button
                   key="logout"
-                  className="w-full justify-start px-5 py-4 text-lg text-gray-700 rounded-lg transition-all duration-300 hover:bg-slate-800 hover:text-white"
+                  className="w-full justify-start px-5 py-4 text-md text-gray-700 rounded-lg transition-all duration-300 hover:bg-slate-800 hover:text-white"
                   variant="ghost"
                   onClick={handleLogout}
                 >
-                  <menuItem.icon className="mr-3 h-6 w-6" />
+                  <menuItem.icon className="mr-3 h-3 w-3" />
                   {menuItem.label}
                 </Button>
               )
             )}
-
-            
           </nav>
         </div>
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-10 overflow-y-auto">
-        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <main className="flex-1 p-10 ">
+        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto h-[480px]">
           <Outlet />
         </Card>
       </main>

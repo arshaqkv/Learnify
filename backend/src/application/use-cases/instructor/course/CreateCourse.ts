@@ -10,15 +10,15 @@ export class CreateCourse {
     private cloudinaryService: ICloudinaryService
   ) {}
 
-  async execute(data: Partial<Course>, fileBuffer?: Buffer): Promise<Course> {
+  async execute(id: string, data: Partial<Course>, fileBuffer?: Buffer): Promise<Course> {
 
-    const {title, description, category, price, level, id} = data
+    const {title, subtitle, description, category, price, level } = data
 
     if(!fileBuffer){
         throw new CustomError('Image not provided', 400)
     }
     
-    if(!title || !description ||  !category || !price || !level ) {
+    if(!title || !subtitle || !description ||  !category || !price || !level ) {
         throw new CustomError('All fields are required', 400)
     }
 
@@ -38,7 +38,7 @@ export class CreateCourse {
     const creator = new mongoose.Types.ObjectId(id)
     const categoryId = new mongoose.Types.ObjectId(category)
 
-    const newCourse = new Course(title, description, price, creator, categoryId, thumbnail, thumbnailPublicId, level)
+    const newCourse = new Course(title, subtitle, description, price, creator, categoryId, thumbnail, thumbnailPublicId, level)
     
     const course = this.courseRepository.createNewCourse(newCourse)
     return course;

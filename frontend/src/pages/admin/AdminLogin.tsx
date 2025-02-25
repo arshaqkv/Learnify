@@ -60,10 +60,10 @@ const AdminLogin = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Admin Login
+    <div className="min-h-screen  flex items-center justify-center">
+      <div className=" p-8 rounded-lg  w-96">
+        <h2 className="text-3xl text-blue-600 font-bold text-center mb-6">
+          Learnify Admin
         </h2>
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
@@ -111,13 +111,13 @@ const AdminLogin = () => {
 
             <button
               type="button"
-              className="absolute mt-3 ml-56"
+              className="absolute mt-3 ml-72"
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
-                <Eye className="size-5 text-gray-400" />
-              ) : (
                 <EyeOff className="size-5 text-gray-400" />
+              ) : (
+                <Eye className="size-5 text-gray-400" />
               )}
             </button>
           </div>

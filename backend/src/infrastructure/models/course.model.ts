@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 interface ICourse extends Document {
   _id: string;
   title: string;
+  subtitle: string;
   description: string;
   price: number;
   creator: mongoose.Types.ObjectId;
@@ -13,7 +14,7 @@ interface ICourse extends Document {
   lectures?: string[];
   isPublished?: boolean;
   isDeleted?: boolean;
-  enrolledCount?: number;
+  enrolledCount: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -21,6 +22,10 @@ interface ICourse extends Document {
 const CourseSchema: Schema = new Schema(
   {
     title: {
+      type: String,
+      required: true,
+    },
+    subtitle: {
       type: String,
       required: true,
     },
@@ -67,6 +72,7 @@ const CourseSchema: Schema = new Schema(
     ],
     enrolledCount: {
       type: Number,
+      default: 0
     },
   },
   { timestamps: true }

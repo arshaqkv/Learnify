@@ -12,6 +12,7 @@ import { GetLecture } from "../../../application/use-cases/instructor/lecture/Ge
 import { GetPopularCourses } from "../../../application/use-cases/student/GetPopularCourses";
 import { MongoCourseRepository } from "../../repositories/mongo.course.repository";
 import { MongoLectureRepository } from "../../repositories/mongo.lecture.repositroy";
+import { MongoOrderRepository } from "../../repositories/mongo.order.repository";
 import { MongoWishlistRepository } from "../../repositories/mongo.wishlist.repository";
 import { CloudinaryService } from "../../services/cloudinary/Cloudinary";
 
@@ -32,6 +33,10 @@ class CourseDIContainer {
     return new MongoLectureRepository();
   }
 
+  static getOrderRepository() {
+    return new MongoOrderRepository();
+  }
+
   static getCreateCourseUseCase() {
     return new CreateCourse(
       this.getCourseRepository(),
@@ -50,7 +55,8 @@ class CourseDIContainer {
   static getCourseUseCase() {
     return new GetCourse(
       this.getCourseRepository(),
-      this.getWishlistRepository()
+      this.getWishlistRepository(),
+      this.getOrderRepository()
     );
   }
 

@@ -1,14 +1,38 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface ILecture extends Document {
-  _id: string;
+export interface IVideo extends Document {
+  _id: mongoose.Types.ObjectId;
   title: string;
-  isPreviewFree: boolean;
   videoUrl: string;
   publicId: string;
+  duration: string;
+}
+
+interface ILecture extends Document {
+  _id: mongoose.Types.ObjectId;
+  title: string;
+  isFree: boolean;
+  videos: IVideo[] | mongoose.Types.DocumentArray<IVideo>;
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+const VideoSchema: Schema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  videoUrl: {
+    type: String,
+    required: true,
+  },
+  publicId: {
+    type: String,
+  },
+  duration: {
+    type: String,
+  },
+});
 
 const LectureSchema: Schema = new Schema(
   {
@@ -16,17 +40,12 @@ const LectureSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    isPreviewFree: {
+    videos: {
+      type: [VideoSchema],
+      default: [],
+    },
+    isFree: {
       type: Boolean,
-      required: true
-    },
-    videoUrl: {
-      type: String,
-      required: true
-    },
-    publicId: {
-      type: String,
-      required: true
     },
   },
   { timestamps: true }

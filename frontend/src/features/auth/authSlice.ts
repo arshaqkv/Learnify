@@ -3,7 +3,7 @@ import { forgotPassword, googleLogin, loginUser, logoutUser, resetPassword } fro
 
 interface UserAuthState {
   user: {
-    id: string;
+    _id: string;
     firstname: string;
     lastname: string;
     phone: string;

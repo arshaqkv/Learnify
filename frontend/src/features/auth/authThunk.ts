@@ -446,7 +446,7 @@ export const createLecture = createAsyncThunk(
 );
 
 export const getLecture = createAsyncThunk(
-  "auth/createLecture",
+  "auth/getLecture",
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await getLectureAPI(id);
@@ -458,7 +458,7 @@ export const getLecture = createAsyncThunk(
 );
 
 export const editLecture = createAsyncThunk(
-  "auth/createLecture",
+  "auth/editLecture",
   async (
     { courseId, id, formData }: { courseId: string; id: string; formData: any },
     { rejectWithValue }
@@ -473,7 +473,7 @@ export const editLecture = createAsyncThunk(
 );
 
 export const deleteLecture = createAsyncThunk(
-  "auth/createLecture",
+  "auth/deleteLecture",
   async (
     { courseId, id }: { courseId: string; id: string },
     { rejectWithValue }

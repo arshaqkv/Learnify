@@ -16,16 +16,19 @@ export class DeleteCourse {
       throw new CustomError("Course not found", 400);
     }
 
-    const lectureIds = course.lectures
-    if(lectureIds){
-      for(let lectureId of lectureIds){
-        const lecture = await this.lectureRepository.getLectureById(lectureId)
-        if(!lecture){
-          throw new CustomError("Lecture not found", 400)
+    const lectureIds = course.lectures;
+    if (lectureIds) {
+      for (let lectureId of lectureIds) {
+        const lecture = await this.lectureRepository.getLectureById(lectureId);
+        if (!lecture) {
+          throw new CustomError("Lecture not found", 400);
         }
-        await this.cloudinaryService.deleteVideo(lecture?.publicId)
+        
+        lecture.videos.map(async (video) => {
+          await this.cloudinaryService.deleteVideo(video.publicId);
+        });
 
-        await this.lectureRepository.deleteLecture(lectureId)
+        await this.lectureRepository.deleteLecture(lectureId);
       }
     }
 

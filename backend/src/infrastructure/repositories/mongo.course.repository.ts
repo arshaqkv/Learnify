@@ -143,10 +143,19 @@ export class MongoCourseRepository implements ICourseRepository {
   }
 
   async getPopularCourses(): Promise<Course[]> {
-    const courses = await CourseModel.find()
+    const courses = await CourseModel.find({ isPublished: true })
       .populate("category")
       .populate("creator")
+      .limit(8)
       .sort({ enrolledCount: -1 });
     return courses;
+  }
+
+  async getCourseByCreator(userId: string, courseId: string): Promise<boolean> {
+    const course = await CourseModel.findOne({
+      _id: courseId,
+      creator: userId,
+    });
+    return course ? true : false;
   }
 }

@@ -99,4 +99,13 @@ export class MongoOrderRepository implements IOrderRepository {
 
     return { orders, total: totalOrders };
   }
+
+  async getPurchaseStatus(userId: string, courseId: string): Promise<boolean> {
+    const order = await OrderModel.findOne({
+      userId,
+      "course.courseId": courseId,
+      paymentStatus: 'completed'
+    });
+    return order ? true : false;
+  }
 }

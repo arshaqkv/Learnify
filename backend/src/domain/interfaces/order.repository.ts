@@ -21,4 +21,5 @@ export interface IOrderRepository {
     page: number,
     limit: number
   ): Promise<{ orders: Order[]; total: number }>;
+  getPurchaseStatus(userId: string, courseId: string): Promise<boolean>;
 }

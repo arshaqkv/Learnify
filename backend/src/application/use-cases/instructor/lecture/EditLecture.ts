@@ -1,8 +1,6 @@
 import { ILectureRepository } from "../../../../domain/interfaces/lecture.repository";
 import { Lecture } from "../../../../domain/entities/lecture.entity";
-import {
-  ICloudinaryService,
-} from "../../../../infrastructure/services/cloudinary/Cloudinary";
+import { ICloudinaryService } from "../../../../infrastructure/services/cloudinary/Cloudinary";
 import { CustomError } from "../../../../interface/middlewares/error.middleware";
 
 export class EditLecture {
@@ -14,27 +12,48 @@ export class EditLecture {
   async execute(
     id: string,
     data: Partial<Lecture>,
-    fileBuffer?: Buffer
+    fileBuffers?: Buffer[]
   ): Promise<void> {
-    const { title, isPreviewFree } = data;
-    const lecture = await this.lectureRepository.getLectureById(id)
+    const { title, isFree, videos } = data;
+    const lecture = await this.lectureRepository.getLectureById(id);
 
-    if(!lecture){
-        throw new CustomError("Lecture not found", 400)
+    if (!lecture) {
+      throw new CustomError("Lecture not found", 400);
     }
 
     let updatedData: Partial<Lecture> = {
-        title,
-        isPreviewFree
+      title,
+      isFree,
+      videos,
+    };
+
+    if (fileBuffers && fileBuffers.length > 0) {
+      if (lecture.videos && lecture.videos.length > 0) {
+        await Promise.all(
+          lecture.videos.map((video) =>
+            this.cloudinaryService.deleteVideo(video.publicId)
+          )
+        );
+      }
+
+      const uploadedVideos = await Promise.all(
+        fileBuffers.map(async (buffer, index) => {
+          const uploadResponse =
+            await this.cloudinaryService.uploadLecturevideo(buffer);
+
+          return {
+            title: videos
+              ? videos[index]?.title || `Video ${index + 1}`
+              : `Video ${index + 1}`,
+            duration: videos ? videos[index]?.duration || "0:0" : "0:0",
+            videoUrl: uploadResponse.url,
+            publicId: uploadResponse.publicId,
+          };
+        })
+      );
+      updatedData.videos = uploadedVideos;
     }
 
-    if(fileBuffer){
-        await this.cloudinaryService.deleteVideo(lecture.publicId)
-        const { url, publicId} = await this.cloudinaryService.uploadLecturevideo(fileBuffer)
-        updatedData.videoUrl = url
-        updatedData.publicId = publicId
-    }
-
-    await this.lectureRepository.updateLecture(id, updatedData)
+    await this.lectureRepository.updateLecture(id, updatedData);
   }
 }
