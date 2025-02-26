@@ -104,8 +104,159 @@ export class MongoOrderRepository implements IOrderRepository {
     const order = await OrderModel.findOne({
       userId,
       "course.courseId": courseId,
-      paymentStatus: 'completed'
+      paymentStatus: "completed",
     });
     return order ? true : false;
+  }
+
+  async getOrderedCourseOfInstructor(userId: string): Promise<any> {
+    const orders = await OrderModel.aggregate([
+      {
+        $match: {
+          "course.courseCreatorId": new mongoose.Types.ObjectId(userId),
+          paymentStatus: "completed",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $multiply: ["$course.coursePrice", 0.8] } }, // Apply 80% share
+        },
+      },
+      {
+        $project: { _id: 0, total: 1 },
+      },
+    ]);
+
+    return orders.length > 0 ? orders[0].total : 0;
+  }
+
+  async getInstructorSalesData(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+    filter: string
+  ): Promise<any> {
+    const salesReport = await OrderModel.aggregate([
+      {
+        $match: {
+          "course.courseCreatorId": new mongoose.Types.ObjectId(userId),
+          paymentStatus: "completed",
+          createdAt: { $gt: startDate, $lt: endDate },
+        },
+      },
+      {
+        $group: {
+          _id:
+            filter === "daily"
+              ? {
+                  date: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                  },
+                } // Full date
+              : filter === "monthly"
+              ? {
+                  year: { $year: "$createdAt" },
+                  month: { $month: "$createdAt" },
+                } // Year + Month
+              : { year: { $year: "$createdAt" } }, // Year only
+          totalEarnings: { $sum: { $multiply: ["$course.coursePrice", 0.8] } },
+          totalOrders: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by date
+      },
+    ]);
+    return salesReport;
+  }
+
+  async getTotalOrders(): Promise<number> {
+    const totalOrders = await OrderModel.countDocuments({
+      paymentStatus: "completed",
+    });
+    return totalOrders;
+  }
+
+  async getTotalRevenue(): Promise<any> {
+    const totalRevenue = await OrderModel.aggregate([
+      {
+        $match: {
+          paymentStatus: "completed",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$course.coursePrice" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+    return totalRevenue;
+  }
+
+  async getCompanyRevenue(): Promise<any> {
+    const companyRevenue = await OrderModel.aggregate([
+      {
+        $match: {
+          paymentStatus: "completed",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $multiply: ["$course.coursePrice", 0.2] } },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+    return companyRevenue;
+  }
+
+  async getAdminSalesData(
+    startDate: Date,
+    endDate: Date,
+    filter: string
+  ): Promise<any> {
+    const salesReport = await OrderModel.aggregate([
+      {
+        $match: {
+          paymentStatus: "completed",
+          createdAt: { $gt: startDate, $lt: endDate },
+        },
+      },
+      {
+        $group: {
+          _id:
+            filter === "daily"
+              ? {
+                  date: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                  },
+                } // Full date
+              : filter === "monthly"
+              ? {
+                  year: { $year: "$createdAt" },
+                  month: { $month: "$createdAt" },
+                } // Year + Month
+              : { year: { $year: "$createdAt" } }, // Year only
+          totalEarnings: { $sum: { $multiply: ["$course.coursePrice", 0.2] } },
+          totalOrders: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by date
+      },
+    ]);
+    return salesReport;
   }
 }

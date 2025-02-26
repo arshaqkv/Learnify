@@ -76,5 +76,15 @@ export const ordersPerInstructorAPI = async (page: number, limit: number) => {
   const response = axios.get(
     `/instructor/student-orders?page=${page}&limit=${limit}`
   );
-  return response
+  return response;
+};
+
+export const getInstructorDashboardAPI = async () => {
+  const response = axios.get("/instructor/dashboard-metrics");
+  return response;
+};
+
+export const getInstructorSalesReportAPI = async (filter: string) => {
+  const response = axios.get(`/instructor/sales-report?filter=${filter}`);
+  return response;
 };

@@ -22,4 +22,19 @@ export interface IOrderRepository {
     limit: number
   ): Promise<{ orders: Order[]; total: number }>;
   getPurchaseStatus(userId: string, courseId: string): Promise<boolean>;
+  getOrderedCourseOfInstructor(userId: string): Promise<any>;
+  getInstructorSalesData(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+    filter: string
+  ): Promise<any>;
+  getTotalOrders(): Promise<number>;
+  getTotalRevenue(): Promise<any>;
+  getCompanyRevenue(): Promise<any>
+  getAdminSalesData(
+    startDate: Date,
+    endDate: Date,
+    filter: string
+  ): Promise<any>;
 }

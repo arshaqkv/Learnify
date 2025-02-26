@@ -101,4 +101,23 @@ export class MongoUserRepository implements IUserRepository {
       .lean();
     return instructors;
   }
+
+  async getUsersCountPerRole(role: string): Promise<number> {
+    const totalUsers = await UserModel.countDocuments({ role });
+    return totalUsers;
+  }
+
+  async getTotalActiveUsers(): Promise<{
+    totalActiveUsers: number;
+    totalUsers: number;
+  }> {
+    const totalActiveUsers = await UserModel.countDocuments({
+      isBlocked: false,
+      role: { $ne: "admin" },
+    });
+    const totalUsers = await UserModel.countDocuments({
+      role: { $ne: "admin" },
+    });
+    return { totalActiveUsers, totalUsers };
+  }
 }

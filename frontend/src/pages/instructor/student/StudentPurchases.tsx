@@ -16,8 +16,10 @@ import {
 import Pagination from "../../../components/common/Pagination";
 import { Badge } from "../../../components/ui/badge";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { ordersPerInstructor } from "../../../features/auth/authThunk";
+import { LoaderCircle } from "lucide-react";
+import { endLoading, startLoading } from "../../../features/auth/authSlice";
 
 const StudentPurchases = () => {
   const [orders, setOrders] = useState<any>([]);
@@ -25,9 +27,11 @@ const StudentPurchases = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const getOrders = async () => {
+      dispatch(startLoading())
       const result = await dispatch(ordersPerInstructor({ page, limit: 5 }));
       if (ordersPerInstructor.fulfilled.match(result)) {
         const { orders, total, totalPages } = result.payload;
@@ -35,9 +39,18 @@ const StudentPurchases = () => {
         setTotalPages(totalPages);
         setTotalOrders(total);
       }
+      dispatch(endLoading())
     };
     getOrders();
   }, [dispatch, page]);
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
   return (
     <Card>
       <CardHeader>

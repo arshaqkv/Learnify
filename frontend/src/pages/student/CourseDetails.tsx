@@ -3,6 +3,7 @@ import {
   Heart,
   HeartOff,
   Loader,
+  LoaderCircle,
   TvMinimalPlay,
   Users,
 } from "lucide-react";
@@ -59,6 +60,7 @@ const CourseDetails = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
+      dispatch(startLoading())
       const courseResult = await dispatch(
         getCourse({ courseId, userId: user?._id })
       );
@@ -76,6 +78,7 @@ const CourseDetails = () => {
       } else {
         toast.error(courseResult.payload as string);
       }
+      dispatch(endLoading())
     };
 
     fetchCourse();
@@ -134,6 +137,14 @@ const CourseDetails = () => {
     }
     dispatch(endLoading());
   };
+
+  if(loading){
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <>

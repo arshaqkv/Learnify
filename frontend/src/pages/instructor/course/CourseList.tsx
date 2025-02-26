@@ -1,4 +1,11 @@
-import { CircleCheckBig, FilePenLine, Plus, Search, X } from "lucide-react";
+import {
+  CircleCheckBig,
+  FilePenLine,
+  LoaderCircle,
+  Plus,
+  Search,
+  X,
+} from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Card,
@@ -16,9 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
-import { deleteCourse, getAllCourses, toggleCoursePublish } from "../../../features/auth/authThunk";
+import {
+  deleteCourse,
+  getAllCourses,
+  toggleCoursePublish,
+} from "../../../features/auth/authThunk";
 import Pagination from "../../../components/common/Pagination";
 import { Input } from "../../../components/ui/input";
 import { endLoading, startLoading } from "../../../features/auth/authSlice";
@@ -39,6 +50,7 @@ import { Badge } from "../../../components/ui/badge";
 const CourseList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
   const [courses, setCourses] = useState<any>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState<string>("");
@@ -78,7 +90,15 @@ const CourseList = () => {
     dispatch(endLoading());
   };
 
-  const handleToggleCoursePublish = async (courseId: string)=>{
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
+
+  const handleToggleCoursePublish = async (courseId: string) => {
     const result = await dispatch(toggleCoursePublish(courseId));
     if (toggleCoursePublish.fulfilled.match(result)) {
       toast.success(result.payload.message);
@@ -92,7 +112,7 @@ const CourseList = () => {
     } else if (toggleCoursePublish.rejected.match(result)) {
       toast.error(result.payload as string);
     }
-  }
+  };
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
@@ -145,7 +165,9 @@ const CourseList = () => {
                   }
                 >
                   <TableCell>{index + 1}.</TableCell>
-                  <TableCell className="font-medium max-w-20 truncate">{course.title}</TableCell>
+                  <TableCell className="font-medium max-w-20 truncate">
+                    {course.title}
+                  </TableCell>
                   <TableCell className="w[200px] ">
                     {course.category?.name}
                   </TableCell>
@@ -171,11 +193,10 @@ const CourseList = () => {
                       size="sm"
                       className="hover:text-green-500"
                       title="Edit"
-                      onClick={(e) =>{
-                        e.stopPropagation()
-                        navigate(`/instructor/courses/edit/${course._id}`)
-                      }
-                    }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/instructor/courses/edit/${course._id}`);
+                      }}
                     >
                       <FilePenLine className="h-4 w-4" />
                     </Button>
@@ -185,7 +206,7 @@ const CourseList = () => {
                       className="hover:text-red-500"
                       title="Delete"
                       onClick={(e) => {
-                        e.stopPropagation()
+                        e.stopPropagation();
                         setSelectedCourse(course._id);
                         setShowDialog(true);
                       }}
@@ -198,8 +219,8 @@ const CourseList = () => {
                       className="hover:text-blue-500"
                       title="Publish"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        handleToggleCoursePublish(course._id)
+                        e.stopPropagation();
+                        handleToggleCoursePublish(course._id);
                       }}
                     >
                       <CircleCheckBig className="h-6 w-6" />

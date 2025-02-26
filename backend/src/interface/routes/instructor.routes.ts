@@ -20,5 +20,7 @@ router
   .delete("/course/:courseId/lecture/remove/:id", courseController.deleteLecture)
   .get("/course/get-lecture/:id", courseController.getLecture)
   .get("/student-orders", instructorController.ordersPerInstructor)
+  .get("/dashboard-metrics", instructorController.getInstructorDashboard)
+  .get("/sales-report", instructorController.getInstructorSalesReport)
    
 export { router as instructorRoutes };

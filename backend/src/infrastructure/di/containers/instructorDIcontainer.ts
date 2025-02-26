@@ -6,6 +6,10 @@ import { GetAllInstructors } from "../../../application/use-cases/instructor/Get
 import { RegisterInstructor } from "../../../application/use-cases/instructor/RegisterInstructor";
 import { MongoInstructorRepository } from "../../repositories/mongo.instructor.repository";
 import { MongoUserRepository } from "../../repositories/mongo.user.repostitory";
+import { GetInstructorDashboard } from "../../../application/use-cases/instructor/dashboard/GetInstructorDashboard";
+import { MongoCourseRepository } from "../../repositories/mongo.course.repository";
+import { MongoOrderRepository } from "../../repositories/mongo.order.repository";
+import { GetInstructorSalesReport } from "../../../application/use-cases/instructor/dashboard/GetInstructorSalesReport";
 
 class InstructorDIContainer {
   static getInstructorRepository() {
@@ -14,6 +18,14 @@ class InstructorDIContainer {
 
   static getUserRepository() {
     return new MongoUserRepository();
+  }
+
+  static getCouresRepository() {
+    return new MongoCourseRepository();
+  }
+
+  static getOrderRepository() {
+    return new MongoOrderRepository();
   }
 
   static getRegisterInstructorUseCase() {
@@ -44,6 +56,17 @@ class InstructorDIContainer {
 
   static getInstructorProfileUseCase() {
     return new GetInstructorProfile(this.getInstructorRepository());
+  }
+
+  static getInstructorDashboardUseCase() {
+    return new GetInstructorDashboard(
+      this.getCouresRepository(),
+      this.getOrderRepository()
+    );
+  }
+
+  static getInstructorSalesReportUseCase() {
+    return new GetInstructorSalesReport(this.getOrderRepository());
   }
 }
 

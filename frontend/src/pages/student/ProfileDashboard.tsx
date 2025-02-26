@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { endLoading, startLoading, updateUser } from "../../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  endLoading,
+  startLoading,
+  updateUser,
+} from "../../features/auth/authSlice";
 import { getUser } from "../../features/auth/authThunk";
 import avatar from "../../assets/avatar.jpg";
-import { Calendar, Mail, PhoneCall } from "lucide-react";
+import { Calendar, LoaderCircle, Mail, PhoneCall } from "lucide-react";
 
 const ProfileDashboard = () => {
   const [user, setUser] = useState<any>(null);
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchUser = async () => {
       dispatch(startLoading());
       try {
         const result: any = await dispatch(getUser());
-        if(getUser.fulfilled.match(result)){
-          setUser(result.payload.user)
-          dispatch(updateUser(result.payload.user))
+        if (getUser.fulfilled.match(result)) {
+          setUser(result.payload.user);
+          dispatch(updateUser(result.payload.user));
         }
       } finally {
         dispatch(endLoading());
@@ -25,6 +30,14 @@ const ProfileDashboard = () => {
 
     fetchUser();
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto bg-white p-6 flex gap-5 flex-col justify-center items-center">

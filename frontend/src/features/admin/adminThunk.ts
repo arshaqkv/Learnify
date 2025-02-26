@@ -3,6 +3,8 @@ import {
   blockUserAPI,
   createCategoryAPI,
   editCategoryAPI,
+  getAdminDashboardAPI,
+  getAdminSalesReportAPI,
   getAllCategoriesAPI,
   getAllInstructorsAPI,
   getAllOrdersAPI,
@@ -216,11 +218,26 @@ export const updateInstructorStatus = createAsyncThunk(
 export const getAllOrders = createAsyncThunk(
   "admin/getAllOrders",
   async (
-    { page, limit, instructor, paymentStatus }: { page: number; limit: number, instructor: string, paymentStatus: string },
+    {
+      page,
+      limit,
+      instructor,
+      paymentStatus,
+    }: {
+      page: number;
+      limit: number;
+      instructor: string;
+      paymentStatus: string;
+    },
     { rejectWithValue }
   ) => {
     try {
-      const response = await getAllOrdersAPI(page, limit, instructor, paymentStatus);
+      const response = await getAllOrdersAPI(
+        page,
+        limit,
+        instructor,
+        paymentStatus
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
@@ -233,6 +250,32 @@ export const GetApprovedInstructors = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await GetApprovedInstructorsAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+//dashboard
+
+export const getAdminDashboard = createAsyncThunk(
+  "admin/getAdminDash",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAdminDashboardAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getAdminSalesReport = createAsyncThunk(
+  "admin/getAdminDash",
+  async (filter: string, { rejectWithValue }) => {
+    try {
+      const response = await getAdminSalesReportAPI(filter);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

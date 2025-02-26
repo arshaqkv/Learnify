@@ -1,5 +1,4 @@
 import { Course } from "../../domain/entities/course.entity";
-import { Lecture } from "../../domain/entities/lecture.entity";
 import { ICourseRepository } from "../../domain/interfaces/course.repository";
 import { CourseModel } from "../models/course.model";
 
@@ -157,5 +156,45 @@ export class MongoCourseRepository implements ICourseRepository {
       creator: userId,
     });
     return course ? true : false;
+  }
+
+  async getTotalCourseOfInstructor(userId: string): Promise<number> {
+    const courseCount = await CourseModel.countDocuments({ creator: userId });
+    return courseCount;
+  }
+
+  async getTopSellingCourses(userId: string): Promise<Course[]> {
+    const courses = await CourseModel.find({
+      creator: userId,
+      enrolledCount: { $ne: 0 },
+    })
+      .sort({ enrolledCount: -1 })
+      .limit(5);
+
+    return courses;
+  }
+
+  async getCoursesOfInstructor(userId: string): Promise<Course[]> {
+    const courses = await CourseModel.find({ creator: userId });
+    return courses;
+  }
+
+  async getAllCoursesCountForAdmin(): Promise<number> {
+    const totalCourses = await CourseModel.countDocuments({});
+    return totalCourses;
+  }
+
+  async getAllPublishedCoursesCount(): Promise<number> {
+    const totalCourses = await CourseModel.countDocuments({
+      isPublished: true,
+    });
+    return totalCourses;
+  }
+
+  async getTopSellingCoursesForAdmin(): Promise<Course[]> {
+    const courses = await CourseModel.find({ enrolledCount: { $ne: 0 } })
+      .sort({ enrolledCount: -1 })
+      .limit(5);
+    return courses;
   }
 }

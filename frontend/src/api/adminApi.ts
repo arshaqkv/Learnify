@@ -140,3 +140,13 @@ export const GetApprovedInstructorsAPI = async () => {
   const response = axios.get("/approved-instructors");
   return response;
 };
+
+export const getAdminDashboardAPI = async () => {
+  const response = axios.get("/dashboard-metrics");
+  return response;
+};
+
+export const getAdminSalesReportAPI = async (filter: string) => {
+  const response = axios.get(`/sales-report?filter=${filter}`);
+  return response;
+};

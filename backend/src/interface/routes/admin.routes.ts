@@ -5,6 +5,7 @@ import { userController } from "../controllers/auth.controller";
 import { studentController } from "../controllers/admin/student/student.controller";
 import { instructorController } from "../controllers/instructor/instructor.controller";
 import { orderController } from "../controllers/student/order.controller";
+import { adminController } from "../controllers/admin/admin.controller";
 
 const adminRouter = Router();
 
@@ -35,6 +36,10 @@ adminRouter
   .get("/approved-instructors", instructorController.getAllInstructors)
 
   //all orders
-  .get("/get-orders", orderController.getAllOrders);
+  .get("/get-orders", orderController.getAllOrders)
+
+  //dashboard
+  .get("/dashboard-metrics", adminController.GetAdminDashboard)
+  .get("/sales-report", adminController.getAdminSalesReport);
 
 export { adminRouter as adminRoutes };

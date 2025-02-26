@@ -17,4 +17,6 @@ export interface IUserRepository {
   updateEnrolledCourses(id: string, courseId: string): Promise<void>;
   findEnrolledCourses(userId: string): Promise<User | null>;
   getAllInstructors(): Promise<User[] | null>;
+  getUsersCountPerRole(role: string): Promise<number>;
+  getTotalActiveUsers(): Promise<{totalActiveUsers: number, totalUsers: number}>
 }

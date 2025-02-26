@@ -25,4 +25,10 @@ export interface ICourseRepository {
   updateCourseEnrollmentCount(courseId: string): Promise<void>;
   getPopularCourses(): Promise<Course[]>;
   getCourseByCreator(userId: string, courseId: string): Promise<boolean>;
+  getTotalCourseOfInstructor(userId: string): Promise<number>;
+  getTopSellingCourses(userId: string): Promise<Course[]>;
+  getCoursesOfInstructor(userId: string): Promise<Course[]>;
+  getAllCoursesCountForAdmin(): Promise<number>;
+  getAllPublishedCoursesCount(): Promise<number>;
+  getTopSellingCoursesForAdmin(): Promise<Course[]>;
 }

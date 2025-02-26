@@ -107,11 +107,53 @@ class InstructorController {
 
   async getInstructorProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params; 
+      const { id } = req.params;
       const getInstructorProfile =
-        InstructorDIContainer.getInstructorProfileUseCase()
-      const instructor = await getInstructorProfile.execute(id)
+        InstructorDIContainer.getInstructorProfileUseCase();
+      const instructor = await getInstructorProfile.execute(id);
       res.status(200).json({ instructor });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getInstructorDashboard(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.user;
+      const getInstructorDashboard =
+        InstructorDIContainer.getInstructorDashboardUseCase();
+      const { totalStudents, totalCourses, totalEarnings, topSellingCourses } =
+        await getInstructorDashboard.execute(id);
+      res.status(200).json({
+        totalStudents,
+        totalCourses,
+        totalEarnings,
+        topSellingCourses,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getInstructorSalesReport(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.user;
+      const { filter } = req.query;
+      const getInstructorSalesReport =
+        InstructorDIContainer.getInstructorSalesReportUseCase();
+      const salesData = await getInstructorSalesReport.execute(
+        id,
+        filter as "daily" | "monthly" | "yearly"
+      );
+      res.status(200).json(salesData);
     } catch (error: any) {
       next(error);
     }

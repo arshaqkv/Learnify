@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card } from "../../../components/ui/card";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   deleteCourse,
   deleteLecture,
@@ -17,6 +17,7 @@ import {
   CalendarCheck,
   CircleX,
   FilePenLine,
+  LoaderCircle,
   MoveLeftIcon,
   Settings2,
   Trash2,
@@ -52,6 +53,7 @@ const CourseOverview = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [course, setCourse] = useState<any>({});
   const navigate = useNavigate();
+  const { loading } = useAppSelector((state) => state.auth);
 
   if (!courseId) {
     toast.error("Course ID not found");
@@ -65,9 +67,10 @@ const CourseOverview = () => {
       if (getCourse.fulfilled.match(result)) {
         setCourse(result.payload.course);
       }
+      dispatch(endLoading());
     };
     fetchData();
-    dispatch(endLoading());
+   
   }, [dispatch, courseId]);
 
   const handleTogglePublish = async () => {
@@ -108,6 +111,14 @@ const CourseOverview = () => {
       toast.error(result.payload as string);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center max-w-3xl mx-auto p-5 space-y-4">

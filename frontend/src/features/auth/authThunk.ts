@@ -29,6 +29,8 @@ import {
   editLectureAPI,
   getAllActiveCategoriesAPI,
   getAllCoursesAPI,
+  getInstructorDashboardAPI,
+  getInstructorSalesReportAPI,
   getLectureAPI,
   ordersPerInstructorAPI,
   toggleCoursePublishAPI,
@@ -555,6 +557,32 @@ export const getInstructorProfile = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await getInstructorProfileAPI(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+//sales
+
+export const getInstructorDashboard = createAsyncThunk(
+  "auth/getInstructorDashboard",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getInstructorDashboardAPI();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getInstructorSalesReport = createAsyncThunk(
+  "auth/salesReport",
+  async (filter: string, { rejectWithValue }) => {
+    try {
+      const response = await getInstructorSalesReportAPI(filter);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
