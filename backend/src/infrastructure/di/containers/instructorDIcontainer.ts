@@ -61,7 +61,8 @@ class InstructorDIContainer {
   static getInstructorDashboardUseCase() {
     return new GetInstructorDashboard(
       this.getCouresRepository(),
-      this.getOrderRepository()
+      this.getOrderRepository(),
+      this.getUserRepository()
     );
   }
 

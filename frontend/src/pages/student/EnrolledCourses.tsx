@@ -1,24 +1,37 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getEnrolledCourses } from "../../features/auth/authThunk";
 import Course from "./Course";
 import noEnrollement from "../../assets/no.courses.webp";
 import { Link } from "react-router-dom";
+import { endLoading, startLoading } from "../../features/auth/authSlice";
+import { LoaderCircle } from "lucide-react";
 
 const EnrolledCourses = () => {
   const [courses, setCourses] = useState<any>([]);
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchCourses = async () => {
+      dispatch(startLoading());
       const result = await dispatch(getEnrolledCourses());
       if (getEnrolledCourses.fulfilled.match(result)) {
         setCourses(result.payload.courses);
       }
+      dispatch(endLoading());
     };
 
     fetchCourses();
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-2xl">

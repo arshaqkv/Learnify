@@ -25,6 +25,7 @@ const Wishlist = lazy(() => import("../pages/student/Wishlist"))
 const CancelOrder = lazy(() => import("../pages/student/CancelOrder"))
 const SuccussfullOrder = lazy(() => import("../pages/student/SuccessfullOrder"))
 const OrderHistory = lazy(() => import("../pages/student/OrderHistory"))
+const ChatPage = lazy(() => import("../pages/student/ChatPage"))
 
 const InstructorDashboardPage = lazy(() => import("../pages/instructor/InstructorDashboardPage"));
 const InstructorDashboard = lazy(() => import("../pages/instructor/InstructorDashboard"));
@@ -66,6 +67,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/instructor-register" element={<InstructorRegister />} />
           <Route path="/courses/course-details/:courseId/lectures" element={<ViewLecture />} />
+          <Route path="/chat" element={<ChatPage />} />
           
           <Route path="/profile" element={<UserProfilePage />}>
             <Route path="dashboard" element={<ProfileDashboard />} />

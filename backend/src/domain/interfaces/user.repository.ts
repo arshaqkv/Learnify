@@ -6,6 +6,7 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmailAndUpdate(email: string, data: Partial<User>): Promise<void>;
   findByIdAndUpdate(id: string, data: Partial<User>): Promise<User | null>;
+  getAllUsersAtOnce(): Promise<User[]>;
   getAllUsers(
     page: number,
     limit: number,
@@ -18,5 +19,9 @@ export interface IUserRepository {
   findEnrolledCourses(userId: string): Promise<User | null>;
   getAllInstructors(): Promise<User[] | null>;
   getUsersCountPerRole(role: string): Promise<number>;
-  getTotalActiveUsers(): Promise<{totalActiveUsers: number, totalUsers: number}>
+  getTotalActiveUsers(): Promise<{
+    totalActiveUsers: number;
+    totalUsers: number;
+  }>;
+  GetAllUsersByOppositeRole(role: string): Promise<User[]>;
 }

@@ -25,6 +25,11 @@ export const getAllCoursesAPI = async ({
   return response;
 };
 
+export const getCourseForInstructorAPI = async (id: string) => {
+  const response = axios.get(`/instructor/course/${id}`);
+  return response;
+};
+
 export const editCourseAPI = async (id: string, formData: any) => {
   const response = axios.put(`/instructor/course/edit/${id}`, formData);
   return response;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getOrders } from "../../features/auth/authThunk";
 import { Card } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
@@ -8,18 +8,22 @@ import { Avatar } from "../../components/ui/avatar";
 import avatar from "../../assets/avatar.jpg";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Link } from "react-router-dom";
-import { Calendar } from "lucide-react";
+import { Calendar, LoaderCircle } from "lucide-react";
+import { endLoading, startLoading } from "../../features/auth/authSlice";
 
 const OrderHistory = () => {
   const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<any>([]);
+  const { loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchOrders = async () => {
+      dispatch(startLoading());
       const result = await dispatch(getOrders());
       if (getOrders.fulfilled.match(result)) {
         setOrders(result.payload.orders);
       }
+      dispatch(endLoading());
     };
     fetchOrders();
   }, []);
@@ -37,9 +41,17 @@ const OrderHistory = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-6 w-full h-full flex flex-col rounded-2xl bg-white ">
-      <p className="text-3xl font-bold text-center text-gray-900 mb-6">
+    <div className="max-w-4xl mx-auto p-6 w-full h-full flex flex-col rounded-2xl bg-white">
+      <p className="text-3xl font-bold text-center text-gray-700">
         Order History
       </p>
 
@@ -100,12 +112,14 @@ const OrderHistory = () => {
                   >
                     {order.paymentStatus.toUpperCase()}
                   </span>
-                  { order.transactionDate && <div className="flex text-sm items-center">
-                    <Calendar size={18} />
-                    <span>
-                      {new Date(order.transactionDate).toDateString()}
-                    </span>
-                  </div>}
+                  {order.transactionDate && (
+                    <div className="flex text-sm items-center">
+                      <Calendar size={18} />
+                      <span>
+                        {new Date(order.transactionDate).toDateString()}
+                      </span>
+                    </div>
+                  )}
                 </p>
               </div>
               <p className="text-lg font-semibold text-gray-900">

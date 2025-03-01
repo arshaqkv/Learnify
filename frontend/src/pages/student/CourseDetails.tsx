@@ -3,7 +3,6 @@ import {
   Heart,
   HeartOff,
   Loader,
-  LoaderCircle,
   TvMinimalPlay,
   Users,
 } from "lucide-react";
@@ -41,6 +40,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../components/ui/accordion";
+import { Skeleton } from "../../components/ui/skeleton";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -60,10 +60,8 @@ const CourseDetails = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      dispatch(startLoading())
-      const courseResult = await dispatch(
-        getCourse({ courseId, userId: user?._id })
-      );
+      dispatch(startLoading());
+      const courseResult = await dispatch(getCourse(courseId));
       if (getCourse.fulfilled.match(courseResult)) {
         const {
           course,
@@ -78,7 +76,7 @@ const CourseDetails = () => {
       } else {
         toast.error(courseResult.payload as string);
       }
-      dispatch(endLoading())
+      dispatch(endLoading());
     };
 
     fetchCourse();
@@ -127,7 +125,6 @@ const CourseDetails = () => {
       navigate("/login");
       return;
     }
-    dispatch(startLoading());
     const result = await dispatch(purchaseCourse(courseId));
 
     if (purchaseCourse.fulfilled.match(result)) {
@@ -135,15 +132,10 @@ const CourseDetails = () => {
     } else if (purchaseCourse.rejected.match(result)) {
       toast.error(result.payload as string);
     }
-    dispatch(endLoading());
   };
 
-  if(loading){
-    return (
-      <div className="text-center text-xl mt-10 flex items-center justify-center">
-        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
-      </div>
-    );
+  if (loading) {
+    return <CourseDetailsSkeleton />;
   }
 
   return (
@@ -302,7 +294,9 @@ const CourseDetails = () => {
                           <AccordionContent className="flex gap-2 justify-between">
                             <div className="flex gap-2">
                               <TvMinimalPlay size={18} />
-                              <p className="text-violet-700 underline">{video?.title}</p>
+                              <p className="text-violet-700 underline">
+                                {video?.title}
+                              </p>
                             </div>
                             <p className=" text-gray-700">{video?.duration}</p>
                           </AccordionContent>
@@ -318,7 +312,10 @@ const CourseDetails = () => {
               <Card className="p-3">
                 <CardContent className="p-1 flex flex-col">
                   <div className="w-full aspect-video mb-4">
-                    <video src={course?.lectures[0]?.videos[0]?.videoUrl} controls />
+                    <video
+                      src={course?.lectures[0]?.videos[0]?.videoUrl}
+                      controls
+                    />
                     <h1 className=" font-semibold text-center mt-2">
                       {course?.lectures[0]?.title.toUpperCase()}
                     </h1>
@@ -334,3 +331,46 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
+
+const CourseDetailsSkeleton = () => {
+  return (
+    <div className=" flex flex-col md:flex-row justify-between items-center py-10 px-6 md:px-16 rounded-lg shadow-lg">
+      {/* Course Details Skeleton */}
+      <div className="max-w-2xl space-y-2">
+        <Skeleton className="max-w-max text-sm px-3 rounded-full" />
+
+        <Skeleton className="h-8 w-96" />
+        <Skeleton className="h-6 w-48" />
+
+        {/* Instructor Details Skeleton */}
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-6 w-32" />
+        </div>
+
+        <p className="text-lg flex gap-1 text-gray-300">
+          <Skeleton className="h-5 w-5" />
+          <Skeleton className="h-5 w-10" />
+        </p>
+        <p className="text-xl font-semibold">
+          <Skeleton className="h-6 w-16" />
+        </p>
+
+        <div className="flex items-center gap-3 text-sm text-gray-300">
+          <Skeleton className="h-5 w-5" />
+          <Skeleton className="h-5 w-32" />
+        </div>
+
+        {/* Buttons Skeleton */}
+        <div className="flex gap-4 mt-5">
+          <Skeleton className="h-12 w-40 rounded-lg" />
+          <Skeleton className="h-12 w-40 rounded-lg" />
+        </div>
+      </div>
+
+      {/* Course Thumbnail Skeleton */}
+      <div className="mt-8 md:mt-0">
+        <Skeleton className="w-96 h-48 rounded-lg shadow-md" />
+      </div>
+    </div>
+  );
+};

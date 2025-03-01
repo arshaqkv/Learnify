@@ -6,7 +6,7 @@ import {
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Link } from "react-router-dom";
-import avatar from '../../assets/60111.jpg'
+import avatar from '../../assets/avatar.jpg'
 
 interface CourseProps {
   course: any

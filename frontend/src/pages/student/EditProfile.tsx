@@ -4,7 +4,7 @@ import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { UploadCloud, Pencil, Camera, Loader } from "lucide-react";
+import { UploadCloud, Pencil, Camera, Loader, LoaderCircle } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   endLoading,
@@ -38,11 +38,12 @@ const EditProfile = () => {
     firstname: "",
     lastname: "",
     phone: "",
-    email: ""
+    email: "",
   });
 
   useEffect(() => {
     const fetchUser = async () => {
+      dispatch(startLoading());
       const result: any = await dispatch(getUser());
       if (getUser.fulfilled.match(result)) {
         const { user } = result.payload;
@@ -52,10 +53,11 @@ const EditProfile = () => {
             firstname: user.firstname || "",
             lastname: user.lastname || "",
             phone: user.phone || "",
-            email: user.email || ""
+            email: user.email || "",
           });
         }
       }
+      dispatch(endLoading());
     };
 
     fetchUser();
@@ -147,6 +149,14 @@ const EditProfile = () => {
       dispatch(endLoading());
     },
   });
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl mt-10 flex items-center justify-center">
+        <LoaderCircle className="w-8 h-8 animate-spin  mx-auto text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto mt-5 p-6">

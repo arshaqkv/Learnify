@@ -45,6 +45,19 @@ export class GetCourse {
       );
     }
 
-    return { course, isWishlisted, isAlreadyPurchased, isCourseOftheSameUser };
+    const filteredCourse = JSON.parse(JSON.stringify(course));
+
+    if (filteredCourse.lectures && filteredCourse.lectures.length > 0) {
+      filteredCourse.lectures.forEach((lecture: any, lectureIndex: number) => {
+        lecture.videos.forEach((video: any, videoIndex: number) => {
+          delete video.publicId;
+          if (!(lectureIndex === 0 && videoIndex === 0)) {
+            delete video.videoUrl;
+          }
+        });
+      });
+    }
+
+    return { course: filteredCourse, isWishlisted, isAlreadyPurchased, isCourseOftheSameUser };
   }
 }

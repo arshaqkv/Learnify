@@ -1,4 +1,4 @@
-import { GraduationCap, Heart } from "lucide-react";
+import { GraduationCap, Heart, MessageSquareText } from "lucide-react";
 import { Button } from "../ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
@@ -34,6 +34,9 @@ const Navbar = () => {
             </NavLink>
             <NavLink to="/wishlist" location={location}>
               <Heart size={20} />
+            </NavLink>
+            <NavLink to="/chat" location={location}>
+              <MessageSquareText size={20} />
             </NavLink>
           </div>
 

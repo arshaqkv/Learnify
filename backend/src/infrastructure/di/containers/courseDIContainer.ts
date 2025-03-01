@@ -4,6 +4,7 @@ import { EditCourse } from "../../../application/use-cases/instructor/course/Edi
 import { GetAllCourses } from "../../../application/use-cases/instructor/course/GetAllCourses";
 import { GetAllPublishedCourses } from "../../../application/use-cases/instructor/course/GetAllPublishedCourses";
 import { GetCourse } from "../../../application/use-cases/instructor/course/GetCourse";
+import { GetCourseDetailsForInstructor } from "../../../application/use-cases/instructor/course/GetCourseDetailsForInstructor";
 import { ToggleCoursePublish } from "../../../application/use-cases/instructor/course/ToggleCoursePublish";
 import { CreateLecture } from "../../../application/use-cases/instructor/lecture/CreateLecture";
 import { DeleteLecture } from "../../../application/use-cases/instructor/lecture/DeleteLecture";
@@ -58,6 +59,10 @@ class CourseDIContainer {
       this.getWishlistRepository(),
       this.getOrderRepository()
     );
+  }
+
+  static getCourseForInstructorUseCase() {
+    return new GetCourseDetailsForInstructor(this.getCourseRepository());
   }
 
   static getEditCourseUseCase() {

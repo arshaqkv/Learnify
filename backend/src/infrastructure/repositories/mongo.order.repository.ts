@@ -10,7 +10,7 @@ export class MongoOrderRepository implements IOrderRepository {
   }
 
   async updateOrder(
-    orderId: string,
+    orderId: string, 
     data: Partial<Order>
   ): Promise<Order | null> {
     const order = await OrderModel.findOneAndUpdate({ orderId }, data, {
@@ -25,7 +25,7 @@ export class MongoOrderRepository implements IOrderRepository {
   }
 
   async getOrdersByUserId(userId: string): Promise<Order[]> {
-    const orders = await OrderModel.find({ userId });
+    const orders = await OrderModel.find({ userId }).sort({ createdAt: -1 });
     return orders;
   }
 

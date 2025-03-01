@@ -3,11 +3,11 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/auth/authThunk";
 import toast from "react-hot-toast";
 import {
-  BadgeCheck,
   Bookmark,
   Box,
   CircleUserRound,
-  LockKeyhole,
+  LockKeyholeOpen,
+  LogIn,
   SquareArrowOutUpRight,
   UserRoundCog,
 } from "lucide-react";
@@ -41,7 +41,7 @@ const UserProfilePage = () => {
       path: "/profile/order-history",
     },
     {
-      icon: LockKeyhole,
+      icon: LockKeyholeOpen,
       label: "Change Password",
       path: "/profile/change-password",
     },
@@ -71,9 +71,9 @@ const UserProfilePage = () => {
             {user?.role === "instructor" && (
               <NavLink
                 to={"/instructor/dashboard"}
-                className="flex border items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg hover:bg-gray-100 hover:text-blue-600"
+                className="flex border items-center text-gray-700 font-semibold border-blue-100 w-full px-5 py-4 rounded-lg transition-all duration-300 text-lg hover:bg-gray-100 hover:text-blue-600"
               >
-                <BadgeCheck className="mr-3 h-6 w-6" />
+                <LogIn className="mr-3 h-6 w-6" />
                 Instructor Menu
               </NavLink>
             )}
@@ -119,7 +119,7 @@ const UserProfilePage = () => {
 
       {/* Content Area */}
       <main className="flex-1 p-10 ">
-        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto h-[480px]">
+        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto h-[500px]">
           <Outlet />
         </Card>
       </main>

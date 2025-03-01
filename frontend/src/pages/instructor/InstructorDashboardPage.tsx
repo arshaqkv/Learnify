@@ -36,8 +36,10 @@ const InstructorDashboardPage = () => {
     <div className="flex h-full min-h-screen shadow-md bg-gray-100">
       <aside className="w-64 bg-white shadow-md hidden md:block max-h-screen rounded-md">
         <div className="p-4 mt-5">
-          <p className="text-gray-600 font-semibold text-center mb-4 px-5 py-4 border-2 rounded-sm">
-            Welcome, {`${user?.firstname} ${user?.lastname}`}
+          <p className="text-gray-600 flex items-center gap-2 font-semibold text-center mb-4 px-5 py-4 border-2 rounded-sm">
+          <img src={user?.profileImage} alt="" className="rounded-full w-10 h-10 object-cover"/>
+            Welcome {`${user?.firstname}`}
+            
           </p>
 
           <nav className="space-y-2">

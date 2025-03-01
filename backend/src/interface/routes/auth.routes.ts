@@ -24,7 +24,7 @@ router.put("/reset-password/:token", userController.resetPassword);
 router.post("/google", userController.googleLogin);
 
 router.get("/get-categories", categoryController.getAllActiveCategories);
-router.get("/courses/:courseId", courseController.getCourse);
+router.get("/course/:courseId", courseController.getCourse);
 router.get("/courses", courseController.getAllPublishedCourses);
 router.get("/popular-courses", userController.getPopularCourses);
 

@@ -113,11 +113,8 @@ export const getAllPublishedCoursesAPI = async ({
   return response;
 };
 
-export const getCourseAPI = async (courseId: string, userId?: string) => {
-  const url = userId
-    ? `/auth/courses/${courseId}?userId=${userId}`
-    : `/auth/courses/${courseId}`;
-  const response = axios.get(url);
+export const getCourseAPI = async (courseId: string) => {
+  const response = axios.get(`/auth/course/${courseId}`);
   return response;
 };
 

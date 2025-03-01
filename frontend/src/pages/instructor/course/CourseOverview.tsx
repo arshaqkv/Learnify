@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   deleteCourse,
   deleteLecture,
-  getCourse,
+  getCourseForInstructor,
   toggleCoursePublish,
 } from "../../../features/auth/authThunk";
 import toast from "react-hot-toast";
@@ -63,14 +63,13 @@ const CourseOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(startLoading());
-      const result = await dispatch(getCourse({ courseId, userId: undefined }));
-      if (getCourse.fulfilled.match(result)) {
+      const result = await dispatch(getCourseForInstructor(courseId));
+      if (getCourseForInstructor.fulfilled.match(result)) {
         setCourse(result.payload.course);
       }
       dispatch(endLoading());
     };
     fetchData();
-   
   }, [dispatch, courseId]);
 
   const handleTogglePublish = async () => {

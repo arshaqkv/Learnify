@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { CourseDIContainer } from "../../../../infrastructure/di/containers/courseDIContainer";
+import { verifyAccessToken } from "../../../../config/verifyToken";
 
 class CourseController {
   async createCourse(req: Request, res: Response, next: NextFunction) {
@@ -76,14 +77,19 @@ class CourseController {
   async getCourse(req: Request, res: Response, next: NextFunction) {
     try {
       const { courseId } = req.params;
-      const userId = req.query.userId as string;
+      const token = req.cookies.accessToken;
+      if (token) {
+        const decoded = verifyAccessToken(token);
+        req.user = decoded;
+      }
+      const id = req.user ? req.user.id : undefined;
       const getCourse = CourseDIContainer.getCourseUseCase();
       const {
         course,
         isWishlisted,
         isAlreadyPurchased,
         isCourseOftheSameUser,
-      } = await getCourse.execute(courseId, userId);
+      } = await getCourse.execute(courseId, id);
       res.status(200).json({
         course,
         isWishlisted,
@@ -113,6 +119,22 @@ class CourseController {
       const deleteCourse = CourseDIContainer.getDeleteCourseUseCase();
       await deleteCourse.execute(id);
       res.status(200).json({ message: "Course deleted successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getCourseDetailsForInstructor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const getCourseDetailsForInstructor =
+        CourseDIContainer.getCourseForInstructorUseCase();
+      const course = await getCourseDetailsForInstructor.execute(id);
+      res.status(200).json({ course });
     } catch (error: any) {
       next(error);
     }

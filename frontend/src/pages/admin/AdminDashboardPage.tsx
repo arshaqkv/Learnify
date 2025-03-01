@@ -4,7 +4,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { startLoading } from "../../features/admin/adminSlice";
 import { logoutAdmin } from "../../features/admin/adminThunk";
 import { endLoading } from "../../features/auth/authSlice";
-import { BookUser, LayoutDashboard, ListPlus, LogOut, ShoppingCart, Users } from "lucide-react";
+import { BookUser, LayoutDashboard, ListPlus, LogOut, ReceiptIndianRupee, ShoppingCart, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
 const AdminDashboardPage = () => {
@@ -36,6 +36,11 @@ const AdminDashboardPage = () => {
       icon: ShoppingCart,
       label: "User Purchases",
       path: "/admin/user-purchases"
+    },
+    {
+      icon: ReceiptIndianRupee,
+      label: "Sales Report",
+      path: "/admin/sales-report"
     },
     {
       icon: LogOut,
@@ -94,7 +99,7 @@ const AdminDashboardPage = () => {
         </div>
       </aside>
       <main className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto max-h-screen">
           {/* Outlet will render the child routes */}
           <Outlet />
         </div>

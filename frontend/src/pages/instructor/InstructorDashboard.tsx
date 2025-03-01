@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import { BookOpenCheck, CircleDollarSign, LoaderCircle, Users } from "lucide-react";
+import { BookOpenCheck, CircleDollarSign, LayoutDashboard, LoaderCircle, Users } from "lucide-react";
 import SalesBarChart from "../../components/instructor/SalesBarChart";
 
 const InstructorDashboard = () => {
@@ -42,9 +42,13 @@ const InstructorDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header */}
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">
+      <div className="flex items-center gap-1">
+      <LayoutDashboard className="mb-5 text-gray-800"/>
+      <h2 className="text-3xl  font-bold text-gray-800 mb-6">
+        
         Instructor Dashboard
       </h2>
+      </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-8">

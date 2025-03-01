@@ -31,6 +31,11 @@ export class MongoUserRepository implements IUserRepository {
     await UserModel.findOneAndUpdate({ email }, data, { new: true });
   }
 
+  async getAllUsersAtOnce(): Promise<User[]> {
+    const users = await UserModel.find({ role: "student" });
+    return users;
+  }
+
   async getAllUsers(
     page: number,
     limit: number,
@@ -97,7 +102,7 @@ export class MongoUserRepository implements IUserRepository {
 
   async getAllInstructors(): Promise<User[] | null> {
     const instructors = await UserModel.find({ role: "instructor" })
-      .select("firstname lastname")
+      .select("firstname lastname profileImage")
       .lean();
     return instructors;
   }
@@ -119,5 +124,12 @@ export class MongoUserRepository implements IUserRepository {
       role: { $ne: "admin" },
     });
     return { totalActiveUsers, totalUsers };
+  }
+
+  async GetAllUsersByOppositeRole(role: string): Promise<User[]> {
+    const users = await UserModel.find({ role: { $ne: role } }).select(
+      "-password"
+    );
+    return users;
   }
 }

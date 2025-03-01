@@ -46,7 +46,7 @@ const PurchaseManagement = () => {
         dispatch(
           getAllOrders({
             page,
-            limit: 5,
+            limit: 10,
             instructor: selectedInstructor,
             paymentStatus: selectedPayment,
           })

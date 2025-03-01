@@ -56,7 +56,7 @@ const CourseProgressSchema: Schema = new Schema(
       type: [LectureProgressSchmea],
     },
     progressPercentage: {
-      type: Boolean,
+      type: Number,
     },
   },
   { timestamps: true }

@@ -29,6 +29,7 @@ import {
   editLectureAPI,
   getAllActiveCategoriesAPI,
   getAllCoursesAPI,
+  getCourseForInstructorAPI,
   getInstructorDashboardAPI,
   getInstructorSalesReportAPI,
   getLectureAPI,
@@ -380,12 +381,21 @@ export const getAllPublishedCourses = createAsyncThunk(
 
 export const getCourse = createAsyncThunk(
   "auth/getCourse",
-  async (
-    { courseId, userId }: { courseId: string; userId?: string },
-    { rejectWithValue }
-  ) => {
+  async (courseId: string, { rejectWithValue }) => {
     try {
-      const response = await getCourseAPI(courseId, userId);
+      const response = await getCourseAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getCourseForInstructor = createAsyncThunk(
+  "auth/getCourseForInstructor",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await getCourseForInstructorAPI(courseId);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);
