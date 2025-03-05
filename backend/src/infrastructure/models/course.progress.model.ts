@@ -1,22 +1,23 @@
-import mongoose, { Document, Schema, ObjectId, mongo } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 interface IVideoProgress extends Document {
-  videoId: string | ObjectId;
+  videoId: string | mongoose.Types.ObjectId;
   isCompleted: boolean;
 }
 
 interface ILectureProgress extends Document {
-  lectureId: string | ObjectId;
+  lectureId: string | mongoose.Types.ObjectId;
   completedVideos: IVideoProgress[];
 }
 
 interface ICourseProgress extends Document {
-  userId: ObjectId;
-  courseId: ObjectId;
+  _id: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  courseId: mongoose.Types.ObjectId;
   completedLectures: ILectureProgress[];
   progressPercentage: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const VideoProgressSchema: Schema = new Schema({
@@ -34,7 +35,7 @@ const LectureProgressSchmea: Schema = new Schema({
     type: mongoose.Types.ObjectId,
     ref: "Lecture",
   },
-  completedvideos: {
+  completedVideos: {
     type: [VideoProgressSchema],
     default: [],
   },
@@ -57,6 +58,7 @@ const CourseProgressSchema: Schema = new Schema(
     },
     progressPercentage: {
       type: Number,
+      default: 0
     },
   },
   { timestamps: true }
@@ -66,4 +68,4 @@ const CouresProgressModel = mongoose.model<ICourseProgress>(
   "CouresProgress",
   CourseProgressSchema
 );
-export { ICourseProgress, CouresProgressModel };
+export { ICourseProgress, ILectureProgress, CouresProgressModel };

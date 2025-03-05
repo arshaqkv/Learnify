@@ -11,7 +11,7 @@ export class Course {
     public thumbnail: string,
     public thumbnailPublicId: string,
     public level: string,
-    public lectures?: string[],
+    public lectures?: mongoose.Types.ObjectId[],
     public _id?: string,
     public isPublished?: boolean,
     public isDeleted?: boolean,

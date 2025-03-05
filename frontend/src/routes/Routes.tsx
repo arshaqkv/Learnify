@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AdminProtectedRoute from "../components/AdminProtectedRoute";
 import Loading from "../components/common/Loading";
+import AdminSalesReport from "../pages/admin/purchase/AdminSalesReport";
 
 const Home = lazy(() => import("../pages/student/Home"));
 const Signup = lazy(() => import("../pages/student/Signup"));
@@ -66,7 +67,7 @@ const AppRoutes = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/instructor-register" element={<InstructorRegister />} />
-          <Route path="/courses/course-details/:courseId/lectures" element={<ViewLecture />} />
+          <Route path="/course/draft/:courseId/learn/lecture" element={<ViewLecture />} />
           <Route path="/chat" element={<ChatPage />} />
           
           <Route path="/profile" element={<UserProfilePage />}>
@@ -107,6 +108,7 @@ const AppRoutes = () => {
             <Route path="instructors" element={<InstructorList />} />
             <Route path="instructors/request/:id" element={<InstructorApplication />} />
             <Route path="user-purchases" element={<PurchaseManagement />} />
+            <Route path="sales-report" element={<AdminSalesReport />} />
           </Route>
         </Route>
 

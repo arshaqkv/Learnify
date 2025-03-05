@@ -40,6 +40,7 @@ adminRouter
 
   //dashboard
   .get("/dashboard-metrics", adminController.GetAdminDashboard)
+  .get("/sales-chart", adminController.getAdminSalesChart)
   .get("/sales-report", adminController.getAdminSalesReport);
 
 export { adminRouter as adminRoutes };

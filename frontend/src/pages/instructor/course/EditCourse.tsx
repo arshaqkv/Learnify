@@ -14,7 +14,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import {
   editCourse,
   getAllActiveCategories,
-  getCourse,
+  getCourseForInstructor,
 } from "../../../features/auth/authThunk";
 import {
   Select,
@@ -81,7 +81,7 @@ const EditCourse = () => {
 
       try {
         const [courseResult, categoriesResult] = await Promise.all([
-          dispatch(getCourse({ courseId })),
+          dispatch(getCourseForInstructor(courseId)),
           dispatch(getAllActiveCategories()),
         ]);
 
@@ -174,7 +174,9 @@ const EditCourse = () => {
                   placeholder="Enter course subtitle"
                 />
                 {formik.touched.subtitle && formik.errors.subtitle && (
-                  <p className="text-red-500 text-sm">{formik.errors.subtitle}</p>
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.subtitle}
+                  </p>
                 )}
               </div>
               <div>

@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useAppDispatch } from "../../../app/hooks";
-import { getAdminSalesReport } from "../../../features/admin/adminThunk";
+import { getAdminSalesChart } from "../../../features/admin/adminThunk";
 import { Card, CardHeader, CardTitle } from "../../ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
@@ -70,7 +70,7 @@ const AdminSalesBarChart: React.FC = () => {
     const fetchSalesData = async () => {
       try {
         const result = await dispatch(
-          getAdminSalesReport(filter)
+          getAdminSalesChart(filter)
         ).unwrap();
         if (!result || !Array.isArray(result)) return;
 

@@ -118,7 +118,7 @@ const UserProfilePage = () => {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-10 ">
+      <main className="flex-1 p-10">
         <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto h-[500px]">
           <Outlet />
         </Card>

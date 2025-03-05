@@ -10,23 +10,28 @@ import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Link } from "react-router-dom";
 import { Calendar, LoaderCircle } from "lucide-react";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
+import Pagination from "../../components/common/Pagination";
 
 const OrderHistory = () => {
   const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<any>([]);
   const { loading } = useAppSelector((state) => state.auth);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchOrders = async () => {
       dispatch(startLoading());
-      const result = await dispatch(getOrders());
+      const result = await dispatch(getOrders({ page, limit: 3 }));
       if (getOrders.fulfilled.match(result)) {
-        setOrders(result.payload.orders);
+        const { orders, totalPages } = result.payload;
+        setOrders(orders);
+        setTotalPages(totalPages);
       }
       dispatch(endLoading());
     };
     fetchOrders();
-  }, []);
+  }, [dispatch, page]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -50,7 +55,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 w-full h-full flex flex-col rounded-2xl bg-white">
+    <div className="max-w-4xl mx-auto p-6 w-full  flex flex-col rounded-2xl bg-white">
       <p className="text-3xl font-bold text-center text-gray-700">
         Order History
       </p>
@@ -128,6 +133,13 @@ const OrderHistory = () => {
             </div>
           </Card>
         ))
+      )}
+      {orders.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       )}
     </div>
   );

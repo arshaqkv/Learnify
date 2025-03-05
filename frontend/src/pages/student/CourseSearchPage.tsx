@@ -7,6 +7,7 @@ import { endLoading, startLoading } from "../../features/auth/authSlice";
 import Pagination from "../../components/common/Pagination";
 import ResultNotFound from "../../components/common/ResultNotFound";
 import CourseSkeleton from "../../components/common/CourseSkeleton";
+import CourseBreadcrumb from "../../components/common/BreadCrumb";
 
 const CourseSearchPage = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -64,8 +65,14 @@ const CourseSearchPage = () => {
     setSearchTerm(inputValue);
   };
 
+  const breadcrumbPaths = [
+    { name: "Home", url: "/" },
+    { name: "Courses", url: "/courses/search" },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
+      <CourseBreadcrumb paths={breadcrumbPaths}/>
       <form onSubmit={handleSearchSubmit} className="mb-6 flex justify-center">
         <div className="relative w-full max-w-lg">
           <input

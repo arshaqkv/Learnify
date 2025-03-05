@@ -19,7 +19,6 @@ interface IOrder extends Document {
   userId: mongoose.Types.ObjectId;
   course: ICourseInOrder;
   totalAmount: number;
-  discountAmount?: number;
   paymentStatus: "pending" | "completed" | "failed";
   paymentType: "stripe" | "razorpay" | "paypal";
   transactionId?: string;
@@ -58,10 +57,7 @@ const OrderSchema: Schema = new Schema(
       ref: "User",
     },
     course: CourseInOrderSchema,
-    totalAmout: {
-      type: Number,
-    },
-    discountAmount: {
+    totalAmount: {
       type: Number,
     },
     paymentStatus: {

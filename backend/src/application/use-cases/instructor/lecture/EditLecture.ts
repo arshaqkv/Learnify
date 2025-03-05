@@ -14,7 +14,7 @@ export class EditLecture {
     data: Partial<Lecture>,
     fileBuffers?: Buffer[]
   ): Promise<void> {
-    const { title, isFree, videos } = data;
+    const { title, videos } = data;
     const lecture = await this.lectureRepository.getLectureById(id);
 
     if (!lecture) {
@@ -23,7 +23,6 @@ export class EditLecture {
 
     let updatedData: Partial<Lecture> = {
       title,
-      isFree,
       videos,
     };
 
@@ -48,6 +47,7 @@ export class EditLecture {
             duration: videos ? videos[index]?.duration || "0:0" : "0:0",
             videoUrl: uploadResponse.url,
             publicId: uploadResponse.publicId,
+            isPreviewFree: videos ? videos[index]?.isPreviewFree: false
           };
         })
       );

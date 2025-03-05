@@ -11,7 +11,7 @@ interface ICourse extends Document {
   thumbnail: string;
   thumbnailPublicId: string;
   level: string;
-  lectures?: string[];
+  lectures?: mongoose.Types.ObjectId[];
   isPublished?: boolean;
   isDeleted?: boolean;
   enrolledCount: number;

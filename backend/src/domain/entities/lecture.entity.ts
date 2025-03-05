@@ -6,6 +6,7 @@ export class Video {
     public title: string,
     public videoUrl: string,
     public publicId: string,
+    public isPreviewFree: boolean,
     public duration: string
   ) {}
 }
@@ -13,9 +14,8 @@ export class Video {
 export class Lecture {
   constructor(
     public title: string,
-    public isFree: boolean,
     public videos: Video[],
-    public _id?: string,
+    public _id?: mongoose.Types.ObjectId,
     public createdAt?: Date,
     public updatedAt?: Date
   ) {}

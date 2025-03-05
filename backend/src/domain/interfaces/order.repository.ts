@@ -4,7 +4,11 @@ export interface IOrderRepository {
   createOrder(order: Partial<Order>): Promise<Order | null>;
   updateOrder(orderId: string, data: Partial<Order>): Promise<Order | null>;
   getOrderById(orderId: string): Promise<Order | null>;
-  getOrdersByUserId(userId: string): Promise<Order[]>;
+  getOrdersByUserId(
+    userId: string,
+    page: number,
+    limit: number
+  ): Promise<{ orders: Order[]; total: number }>;
   getAllOrders(
     page: number,
     limit: number,
@@ -31,10 +35,11 @@ export interface IOrderRepository {
   ): Promise<any>;
   getTotalOrders(): Promise<number>;
   getTotalRevenue(): Promise<any>;
-  getCompanyRevenue(): Promise<any>
+  getCompanyRevenue(): Promise<any>;
   getAdminSalesData(
     startDate: Date,
     endDate: Date,
     filter: string
   ): Promise<any>;
+  getCompletedOrdersWithFilters(filterCondition: any): Promise<Order[]>;
 }

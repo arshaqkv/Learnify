@@ -48,10 +48,10 @@ export class GetCourse {
     const filteredCourse = JSON.parse(JSON.stringify(course));
 
     if (filteredCourse.lectures && filteredCourse.lectures.length > 0) {
-      filteredCourse.lectures.forEach((lecture: any, lectureIndex: number) => {
-        lecture.videos.forEach((video: any, videoIndex: number) => {
+      filteredCourse.lectures.forEach((lecture: any) => {
+        lecture.videos.forEach((video: any) => {
           delete video.publicId;
-          if (!(lectureIndex === 0 && videoIndex === 0)) {
+          if (!video.isPreviewFree) {
             delete video.videoUrl;
           }
         });

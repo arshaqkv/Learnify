@@ -38,12 +38,16 @@ import {
 } from "../../api/instructorApi";
 import {
   addToWishlistAPI,
+  getCourseDetailsAfterPurchaseUseCaseAPI,
   getEnrolledCoursesAPI,
   getInstructorProfileAPI,
   getOrdersAPI,
+  getUserCourseProgressAPI,
   getWsihlistAPI,
   purshaseCourseAPI,
   removeFromWishlistAPI,
+  resetCourseProgressAPI,
+  updateVideoAsCompletedAPI,
 } from "../../api/studentApi";
 
 export const signupUser = createAsyncThunk(
@@ -511,11 +515,73 @@ export const purchaseCourse = createAsyncThunk(
   }
 );
 
+export const getCourseDetailsAfterPurchase = createAsyncThunk(
+  "auth/getCourseDetails",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await getCourseDetailsAfterPurchaseUseCaseAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getUserCourseProgress = createAsyncThunk(
+  "auth/getCourseProgress",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await getUserCourseProgressAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const updateVideoAsCompleted = createAsyncThunk(
+  "auth/UpdateVideoCompleted",
+  async (
+    {
+      courseId,
+      lectureId,
+      videoId,
+    }: { courseId: string; lectureId: string; videoId: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await updateVideoAsCompletedAPI(
+        courseId,
+        lectureId,
+        videoId
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const resetCourseProgress = createAsyncThunk(
+  "auth/resetCourseProgress",
+  async (courseId: string, { rejectWithValue }) => {
+    try {
+      const response = await resetCourseProgressAPI(courseId);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
 export const getOrders = createAsyncThunk(
   "auth/getCategories",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page, limit }: { page: number; limit: number },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await getOrdersAPI();
+      const response = await getOrdersAPI(page, limit);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

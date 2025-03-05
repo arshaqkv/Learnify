@@ -34,14 +34,30 @@ class AdminController {
     }
   }
 
-  async getAdminSalesReport(req: Request, res: Response, next: NextFunction) {
+  async getAdminSalesChart(req: Request, res: Response, next: NextFunction) {
     try {
       const { filter } = req.query;
-      const getAdminSalesReport = AdminDIContainer.getAdminSalesReportUseCase();
-      const salesData = await getAdminSalesReport.execute(
+      const getAdminSalesChart = AdminDIContainer.getAdminSalesChartUseCase();
+      const salesData = await getAdminSalesChart.execute(
         filter as "daily" | "monthly" | "yearly"
       );
       res.status(200).json(salesData);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getAdminSalesReport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { filter, startDate, endDate } = req.query;
+      const getCompletedOrders = AdminDIContainer.getCompletedOrdersUseCase();
+      const { orders, totalRevenue, companyRevenue } =
+        await getCompletedOrders.execute(
+          filter as string,
+          startDate as string,
+          endDate as string
+        );
+      res.status(200).json({ orders, totalRevenue, companyRevenue });
     } catch (error: any) {
       next(error);
     }

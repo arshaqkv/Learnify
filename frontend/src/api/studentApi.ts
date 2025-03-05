@@ -20,17 +20,45 @@ export const purshaseCourseAPI = async (courseId: string) => {
   return response;
 };
 
-export const getOrdersAPI = async () => {
-  const response = axios.get("/student/get-orders");
+export const getOrdersAPI = async (page: number, limit: number) => {
+  const response = axios.get(`/student/get-orders?page=${page}&limit=${limit}`);
   return response;
 };
 
-export const getEnrolledCoursesAPI = () => {
+export const getEnrolledCoursesAPI = async () => {
   const response = axios.get("/student/get-enrolledCourses");
   return response;
 };
 
-export const getInstructorProfileAPI = (id: string) => {
+export const getInstructorProfileAPI = async (id: string) => {
   const response = axios.get(`/student/instructor-profile/${id}`);
+  return response;
+};
+
+export const getCourseDetailsAfterPurchaseUseCaseAPI = async (
+  courseId: string
+) => {
+  const response = axios.get(`/student/get-course-details/${courseId}`);
+  return response;
+};
+
+export const getUserCourseProgressAPI = async (courseId: string) => {
+  const response = axios.get(`/student/course-progress/${courseId}`);
+  return response;
+};
+
+export const updateVideoAsCompletedAPI = async (
+  courseId: string,
+  lectureId: string,
+  videoId: string
+) => {
+  const response = axios.put(
+    `/student/course-progress/${courseId}/lecture/${lectureId}/video/${videoId}`
+  );
+  return response;
+};
+
+export const resetCourseProgressAPI = async (courseId: string) => {
+  const response = axios.put(`/student/course-progress/${courseId}/reset`);
   return response;
 };

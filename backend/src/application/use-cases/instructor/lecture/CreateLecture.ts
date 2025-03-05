@@ -1,4 +1,3 @@
-import { buffer } from "stream/consumers";
 import { Lecture } from "../../../../domain/entities/lecture.entity";
 import { ICourseRepository } from "../../../../domain/interfaces/course.repository";
 import { ILectureRepository } from "../../../../domain/interfaces/lecture.repository";
@@ -17,12 +16,12 @@ export class CreateLecture {
     data: Lecture,
     fileBuffers?: Buffer[]
   ): Promise<void> {
-    const { title, isFree, videos } = data;
+    const { title, videos } = data;
     if (!courseId) {
       throw new CustomError("Course id not found", 400);
     }
 
-    if (!title || !isFree || !videos) {
+    if (!title || !videos) {
       throw new CustomError("Data not provided", 400);
     }
 
@@ -41,11 +40,12 @@ export class CreateLecture {
           duration: videos[index].duration, 
           videoUrl: uploadResponse.url,
           publicId: uploadResponse.publicId,
+          isPreviewFree: videos[index].isPreviewFree
         };
       })
     );
 
-    const newLecture = new Lecture(title, isFree, uploadedFiles);
+    const newLecture = new Lecture(title, uploadedFiles);
  
     const lecture = await this.lectureRepository.createNewLecture(newLecture);
     if (!lecture) {
@@ -56,6 +56,7 @@ export class CreateLecture {
     if (!course) {
       throw new CustomError("Course not found", 400);
     }
-    await this.courseRepository.addLecture(courseId, lecture?._id);
+    let lectureId = lecture._id?.toString()
+    await this.courseRepository.addLecture(courseId, lectureId);
   }
 }

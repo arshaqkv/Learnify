@@ -247,28 +247,30 @@ const CourseOverview = () => {
               <h1 className="text-xl font-semibold text-gray-500">{`${
                 index + 1
               }. ${lecture.title}`}</h1>
-              <span
-                className={
-                  lecture?.isFree
-                    ? "px-2 border-2 border-red-600 text-red-600 font-semibold rounded-sm"
-                    : "px-2 border-2 border-green-600 text-green-600 font-semibold rounded-sm"
-                }
-              >
-                {lecture?.isFree ? "FREE" : "PAID"}
-              </span>
             </div>
             {lecture?.videos.map((video: any, index: number) => (
               <div className="mt-2" key={index}>
                 <p className=" font-semibold">
                   {index + 1 + ". " + video?.title}
                 </p>
+
                 <video
                   controls
                   className="mt-4 max-w-xs rounded-lg border mb-2"
                   src={video.videoUrl}
                 />
+                <span
+                  className={
+                    video?.isPreviewFree
+                      ? "px-2 border-2 border-red-600 text-red-600 font-semibold rounded-sm mx-2"
+                      : "px-2 border-2 border-green-600 text-green-600 font-semibold rounded-sm mx-2"
+                  }
+                > Preview :
+                  {video?.isPreviewFree ? "FREE" : "PAID"}
+                </span>
               </div>
             ))}
+            <Separator className="my-2"/>
             <div className="flex gap-1">
               <Button
                 variant={"outline"}

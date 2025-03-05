@@ -5,13 +5,13 @@ export interface IVideo extends Document {
   title: string;
   videoUrl: string;
   publicId: string;
+  isPreviewFree: boolean;
   duration: string;
 }
 
 interface ILecture extends Document {
   _id: mongoose.Types.ObjectId;
   title: string;
-  isFree: boolean;
   videos: IVideo[] | mongoose.Types.DocumentArray<IVideo>;
   createdAt?: Date;
   updatedAt?: Date;
@@ -29,6 +29,9 @@ const VideoSchema: Schema = new Schema({
   publicId: {
     type: String,
   },
+  isPreviewFree: {
+    type: Boolean,
+  },
   duration: {
     type: String,
   },
@@ -43,9 +46,6 @@ const LectureSchema: Schema = new Schema(
     videos: {
       type: [VideoSchema],
       default: [],
-    },
-    isFree: {
-      type: Boolean,
     },
   },
   { timestamps: true }

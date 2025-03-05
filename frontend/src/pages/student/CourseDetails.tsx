@@ -40,9 +40,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../components/ui/accordion";
-import { Skeleton } from "../../components/ui/skeleton";
+import CourseDetailsSkeleton from "../../components/common/CourseDetailsSkeleton";
+import CourseBreadcrumb from "../../components/common/BreadCrumb";
 
 const CourseDetails = () => {
+
   const { courseId } = useParams<{ courseId: string }>();
   const { user, loading } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -138,10 +140,20 @@ const CourseDetails = () => {
     return <CourseDetailsSkeleton />;
   }
 
+  const breadcrumbPaths = [
+    { name: "Home", url: "/" },
+    { name: "Courses", url: "/courses/search" },
+    { name: "Course Details", url: `/courses/course-details/${courseId}` },
+  ];
+
+
+
   return (
     <>
       <ScrollToTop />
+      
       <div className="mt-10  mb-10">
+      <CourseBreadcrumb paths={breadcrumbPaths} />
         {/* Course Header Section */}
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-center py-10 px-6 md:px-16 rounded-lg shadow-lg">
           {/* Course Details */}
@@ -220,7 +232,7 @@ const CourseDetails = () => {
             {/* Buttons */}
             <div className="flex gap-4 mt-5">
               {isAlreadyPurchased ? (
-                <Link to="lectures">
+                <Link to={`/course/draft/${courseId}/learn/lecture`}>
                   <Button className="bg-green-600 hover:bg-green-500 text-white text-lg px-10 py-5 rounded-lg shadow-md">
                     Continue Course
                   </Button>
@@ -281,8 +293,8 @@ const CourseDetails = () => {
               </CardHeader>
               <CardContent className=" space-y-3">
                 {course &&
-                  course?.lectures?.map((lecture: any) => (
-                    <Accordion type="single" collapsible>
+                  course?.lectures?.map((lecture: any, index: number) => (
+                    <Accordion key={index} type="single" collapsible>
                       <AccordionItem value="item-1">
                         <AccordionTrigger className="text-gray-700 font-bold text-lg flex justify-between no-underline">
                           <p>{lecture?.title}</p>{" "}
@@ -290,8 +302,11 @@ const CourseDetails = () => {
                             {lecture?.videos?.length} lectures
                           </span> */}
                         </AccordionTrigger>
-                        {lecture?.videos.map((video: any) => (
-                          <AccordionContent className="flex gap-2 justify-between">
+                        {lecture?.videos.map((video: any, index: number) => (
+                          <AccordionContent
+                            key={index}
+                            className="flex gap-2 justify-between"
+                          >
                             <div className="flex gap-2">
                               <TvMinimalPlay size={18} />
                               <p className="text-violet-700 underline">
@@ -331,46 +346,3 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
-
-const CourseDetailsSkeleton = () => {
-  return (
-    <div className=" flex flex-col md:flex-row justify-between items-center py-10 px-6 md:px-16 rounded-lg shadow-lg">
-      {/* Course Details Skeleton */}
-      <div className="max-w-2xl space-y-2">
-        <Skeleton className="max-w-max text-sm px-3 rounded-full" />
-
-        <Skeleton className="h-8 w-96" />
-        <Skeleton className="h-6 w-48" />
-
-        {/* Instructor Details Skeleton */}
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-6 w-32" />
-        </div>
-
-        <p className="text-lg flex gap-1 text-gray-300">
-          <Skeleton className="h-5 w-5" />
-          <Skeleton className="h-5 w-10" />
-        </p>
-        <p className="text-xl font-semibold">
-          <Skeleton className="h-6 w-16" />
-        </p>
-
-        <div className="flex items-center gap-3 text-sm text-gray-300">
-          <Skeleton className="h-5 w-5" />
-          <Skeleton className="h-5 w-32" />
-        </div>
-
-        {/* Buttons Skeleton */}
-        <div className="flex gap-4 mt-5">
-          <Skeleton className="h-12 w-40 rounded-lg" />
-          <Skeleton className="h-12 w-40 rounded-lg" />
-        </div>
-      </div>
-
-      {/* Course Thumbnail Skeleton */}
-      <div className="mt-8 md:mt-0">
-        <Skeleton className="w-96 h-48 rounded-lg shadow-md" />
-      </div>
-    </div>
-  );
-};

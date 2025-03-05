@@ -8,6 +8,7 @@ import { wishlistController } from "../controllers/student/wishlist.controller";
 import { orderController } from "../controllers/student/order.controller";
 import { userController } from "../controllers/auth.controller";
 import { instructorController } from "../controllers/instructor/instructor.controller";
+import { courseProgressController } from "../controllers/student/course.progress.controller";
 
 const router = Router();
 
@@ -21,5 +22,10 @@ router
 
   .post("/order/create", orderController.createOrder)
   .get("/get-orders", orderController.getOrders)
+
+  .get("/get-course-details/:courseId", courseProgressController.getCourseDetails)
+  .get("/course-progress/:courseId", courseProgressController.getUserCourseProgress)
+  .put("/course-progress/:courseId/lecture/:lectureId/video/:videoId", courseProgressController.updateVideoAsCompleted)
+  .put("/course-progress/:courseId/reset", courseProgressController.resetCourseProgress)
 
 export { router as studentRoutes };

@@ -4,6 +4,7 @@ import {
   createCategoryAPI,
   editCategoryAPI,
   getAdminDashboardAPI,
+  getAdminSalesChartAPI,
   getAdminSalesReportAPI,
   getAllCategoriesAPI,
   getAllInstructorsAPI,
@@ -271,11 +272,30 @@ export const getAdminDashboard = createAsyncThunk(
   }
 );
 
-export const getAdminSalesReport = createAsyncThunk(
+export const getAdminSalesChart = createAsyncThunk(
   "admin/getAdminDash",
   async (filter: string, { rejectWithValue }) => {
     try {
-      const response = await getAdminSalesReportAPI(filter);
+      const response = await getAdminSalesChartAPI(filter);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const getAdminSalesReport = createAsyncThunk(
+  "admin/getAdminDash",
+  async (
+    {
+      filter,
+      startDate,
+      endDate,
+    }: { filter: string; startDate: string; endDate: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAdminSalesReportAPI(filter, startDate, endDate);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message);

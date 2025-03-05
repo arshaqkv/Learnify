@@ -20,7 +20,6 @@ const validationSchema = yup.object().shape({
     .matches(/^[A-Za-z].*$/, "Title must start with a letter")
     .min(3, "Title must be at least 3 characters")
     .required("Title is required"),
-  isFree: yup.boolean(),
   videos: yup.array().of(
     yup.object().shape({
       title: yup
@@ -33,6 +32,7 @@ const validationSchema = yup.object().shape({
         .matches(/^\d{1,2}:\d{2}$/, "Duration must be in MM:SS format")
         .required("Duration is required"),
       videoUrl: yup.mixed().required("Video file is required"),
+      isPreviewFree: yup.boolean(),
     })
   ),
 });
@@ -48,8 +48,9 @@ const LectureForm: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       title: "",
-      isFree: false,
-      videos: [{ title: "", duration: "", videoUrl: null }],
+      videos: [
+        { title: "", duration: "", isPreviewFree: false, videoUrl: null },
+      ],
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -60,18 +61,22 @@ const LectureForm: React.FC = () => {
 
       const formData = new FormData();
       formData.append("title", values.title);
-      formData.append("isFree", String(values.isFree));
 
       values.videos.forEach((video, index) => {
         formData.append(`videos[${index}][title]`, video.title);
         formData.append(`videos[${index}][duration]`, video.duration);
+        formData.append(
+          `videos[${index}][isPreviewFree]`,
+          video.isPreviewFree.toString()
+        ); // ✅ Added this
         if (video.videoUrl) {
-          formData.append("videoUrl", video.videoUrl); // ✅ Correct key
+          formData.append(`videos[${index}][videoUrl]`, video.videoUrl);
         }
       });
+
       const toastId = toast.loading("Uploading lecture...");
-      
-      const result = await dispatch(createLecture({courseId, formData}));
+
+      const result = await dispatch(createLecture({ courseId, formData }));
       toast.dismiss(toastId);
 
       if (createLecture.fulfilled.match(result)) {
@@ -81,7 +86,6 @@ const LectureForm: React.FC = () => {
         toast.error(result.payload as string);
       }
     },
-    
   });
 
   return (
@@ -99,15 +103,6 @@ const LectureForm: React.FC = () => {
         {formik.touched.title && formik.errors.title && (
           <p className="text-red-500 text-sm">{formik.errors.title}</p>
         )}
-
-        {/* Free Lecture Toggle */}
-        <div className="flex justify-between items-center mt-4">
-          <label className="text-sm font-medium">Make Lecture Free</label>
-          <Switch
-            checked={formik.values.isFree}
-            onCheckedChange={(checked) => formik.setFieldValue("isFree", checked)}
-          />
-        </div>
       </Card>
 
       {/* Video Upload Section */}
@@ -124,9 +119,13 @@ const LectureForm: React.FC = () => {
               onBlur={formik.handleBlur}
               placeholder="Enter video title"
             />
-            {formik.touched.videos?.[index]?.title && formik.errors.videos?.[index]?.title && (
-              <p className="text-red-500 text-sm">{formik.errors.videos[index].title}</p>
-            )}
+            {formik.touched.videos?.[index]?.title &&
+              typeof formik.errors.videos?.[index] === "object" &&
+              formik.errors.videos[index]?.title && (
+                <p className="text-red-500 text-sm">
+                  {formik.errors.videos[index].title}
+                </p>
+              )}
 
             {/* Video Duration */}
             <Input
@@ -137,9 +136,27 @@ const LectureForm: React.FC = () => {
               onBlur={formik.handleBlur}
               placeholder="Duration (MM:SS)"
             />
-            {formik.touched.videos?.[index]?.duration && formik.errors.videos?.[index]?.duration && (
-              <p className="text-red-500 text-sm">{formik.errors.videos[index].duration}</p>
-            )}
+            {formik.touched.videos?.[index]?.duration &&
+              typeof formik.errors.videos?.[index] === "object" &&
+              formik.errors.videos[index]?.duration && (
+                <p className="text-red-500 text-sm">
+                  {formik.errors.videos[index].duration}
+                </p>
+              )}
+
+            {/* Free Lecture Toggle */}
+            <div className="flex justify-between items-center mt-4">
+              <label className="text-sm font-medium">Make Preview Free</label>
+              <Switch
+                checked={formik.values.videos[index].isPreviewFree}
+                onCheckedChange={(checked) =>
+                  formik.setFieldValue(
+                    `videos[${index}].isPreviewFree`,
+                    checked
+                  )
+                }
+              />
+            </div>
 
             {/* Video Upload */}
             <Input
@@ -167,33 +184,19 @@ const LectureForm: React.FC = () => {
                 }
               }}
             />
-            {formik.touched.videos?.[index]?.videoUrl && formik.errors.videos?.[index]?.videoUrl && (
-              <p className="text-red-500 text-sm">{formik.errors.videos[index].videoUrl}</p>
-            )}
+            {formik.touched.videos?.[index]?.videoUrl &&
+              typeof formik.errors.videos?.[index] === "object" &&
+              formik.errors.videos[index]?.videoUrl && (
+                <p className="text-red-500 text-sm">
+                  {formik.errors.videos[index].videoUrl}
+                </p>
+              )}
 
             {/* Video Preview */}
             {videoPreviews[index] && (
               <video className="mt-3 w-full rounded-lg" controls>
                 <source src={videoPreviews[index]} type="video/mp4" />
               </video>
-            )}
-
-            {/* Remove Video Button */}
-            {formik.values.videos.length > 1 && (
-              <Button
-                type="button"
-                variant="destructive"
-                className="mt-2"
-                onClick={() => {
-                  formik.setFieldValue(
-                    "videos",
-                    formik.values.videos.filter((_, i) => i !== index)
-                  );
-                  setVideoPreviews(videoPreviews.filter((_, i) => i !== index));
-                }}
-              >
-                Remove Video
-              </Button>
             )}
           </div>
         ))}
@@ -206,7 +209,7 @@ const LectureForm: React.FC = () => {
           onClick={() => {
             formik.setFieldValue("videos", [
               ...formik.values.videos,
-              { title: "", duration: "", videoUrl: null },
+              { title: "", duration: "", isPreviewFree: false, videoUrl: null },
             ]);
             setVideoPreviews([...videoPreviews, ""]);
           }}
@@ -217,7 +220,12 @@ const LectureForm: React.FC = () => {
 
       {/* Submit Buttons */}
       <div className="flex gap-4 mt-6">
-        <Button type="button" variant="outline" className="w-full" onClick={() => navigate(-1)}>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={() => navigate(-1)}
+        >
           Cancel
         </Button>
         <Button type="submit" className="w-full">

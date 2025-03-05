@@ -10,7 +10,7 @@ export class MongoOrderRepository implements IOrderRepository {
   }
 
   async updateOrder(
-    orderId: string, 
+    orderId: string,
     data: Partial<Order>
   ): Promise<Order | null> {
     const order = await OrderModel.findOneAndUpdate({ orderId }, data, {
@@ -24,9 +24,20 @@ export class MongoOrderRepository implements IOrderRepository {
     return order;
   }
 
-  async getOrdersByUserId(userId: string): Promise<Order[]> {
-    const orders = await OrderModel.find({ userId }).sort({ createdAt: -1 });
-    return orders;
+  async getOrdersByUserId(
+    userId: string,
+    page: number,
+    limit: number
+  ): Promise<{ orders: Order[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const orders = await OrderModel.find({ userId })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await OrderModel.countDocuments({ userId });
+
+    return { orders, total };
   }
 
   async getAllOrders(
@@ -258,5 +269,15 @@ export class MongoOrderRepository implements IOrderRepository {
       },
     ]);
     return salesReport;
+  }
+
+  async getCompletedOrdersWithFilters(filterCondition: any): Promise<Order[]> {
+    const orders = await OrderModel.find(filterCondition)
+      .populate("userId")
+      .sort({
+        createdAt: -1,
+      });
+
+    return orders;
   }
 }

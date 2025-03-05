@@ -146,7 +146,18 @@ export const getAdminDashboardAPI = async () => {
   return response;
 };
 
-export const getAdminSalesReportAPI = async (filter: string) => {
-  const response = axios.get(`/sales-report?filter=${filter}`);
+export const getAdminSalesChartAPI = async (filter: string) => {
+  const response = axios.get(`/sales-chart?filter=${filter}`);
+  return response;
+};
+
+export const getAdminSalesReportAPI = async (
+  filter: string,
+  startDate: string,
+  endDate: string
+) => {
+  const response = axios.get(
+    `/sales-report?filter=${filter}&startDate=${startDate}&endDate=${endDate}`
+  );
   return response;
 };

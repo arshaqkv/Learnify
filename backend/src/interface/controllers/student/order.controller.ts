@@ -17,9 +17,11 @@ class OrderController {
   async getOrders(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
       const getOrders = OrderDIContainer.getOrdersUseCase();
-      const orders = await getOrders.execute(id);
-      res.status(200).json({ orders });
+      const { orders, total } = await getOrders.execute(id, page, limit);
+      res.status(200).json({ orders, totalPages: Math.ceil(total / limit) });
     } catch (error: any) {
       next(error);
     }
@@ -29,10 +31,15 @@ class OrderController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const instructor = req.query.instructor as string
-      const paymentStatus = req.query.paymentStatus as string
+      const instructor = req.query.instructor as string;
+      const paymentStatus = req.query.paymentStatus as string;
       const getAllOrders = OrderDIContainer.GetAllOrdersUseCase();
-      const { orders, total } = await getAllOrders.execute(page, limit, instructor, paymentStatus);
+      const { orders, total } = await getAllOrders.execute(
+        page,
+        limit,
+        instructor,
+        paymentStatus
+      );
       res
         .status(200)
         .json({ orders, total, totalPages: Math.ceil(total / limit) });

@@ -103,8 +103,9 @@ const PurchaseManagement = () => {
             </SelectContent>
           </Select>
           <Button
+           variant={"outline"}
             onClick={handlefilter}
-            className="px-3 py-2 text-white bg-red-500 rounded"
+            className=" text-white bg-red-600 rounded"
           >
             Clear
           </Button>

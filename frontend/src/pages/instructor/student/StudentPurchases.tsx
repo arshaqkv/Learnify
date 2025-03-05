@@ -31,7 +31,7 @@ const StudentPurchases = () => {
 
   useEffect(() => {
     const getOrders = async () => {
-      dispatch(startLoading())
+      dispatch(startLoading());
       const result = await dispatch(ordersPerInstructor({ page, limit: 5 }));
       if (ordersPerInstructor.fulfilled.match(result)) {
         const { orders, total, totalPages } = result.payload;
@@ -39,7 +39,7 @@ const StudentPurchases = () => {
         setTotalPages(totalPages);
         setTotalOrders(total);
       }
-      dispatch(endLoading())
+      dispatch(endLoading());
     };
     getOrders();
   }, [dispatch, page]);
