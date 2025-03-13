@@ -8,6 +8,7 @@ import Pagination from "../../components/common/Pagination";
 import ResultNotFound from "../../components/common/ResultNotFound";
 import CourseSkeleton from "../../components/common/CourseSkeleton";
 import CourseBreadcrumb from "../../components/common/BreadCrumb";
+import { Input } from "../../components/ui/input";
 
 const CourseSearchPage = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -75,12 +76,12 @@ const CourseSearchPage = () => {
       <CourseBreadcrumb paths={breadcrumbPaths}/>
       <form onSubmit={handleSearchSubmit} className="mb-6 flex justify-center">
         <div className="relative w-full max-w-lg">
-          <input
+          <Input
             type="text"
             placeholder="Search your favourite courses..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="w-full px-4 py-1.5 border border-gray-300 rounded-full shadow-lg focus:outline-none  "
+            className="w-full px-4 py-1.5 border border-gray-300  rounded-full shadow-lg focus:outline-none  "
           />
           <button
             type="submit"

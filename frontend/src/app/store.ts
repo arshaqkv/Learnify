@@ -3,6 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "../features/auth/authSlice";
 import adminReducer from "../features/admin/adminSlice"
+import chatReducer from "../features/chat/chatSlice"
 
 const userPersistConfig = {
   key: "auth",
@@ -18,7 +19,8 @@ const adminPersistConfig = {
 
 const rootReducer = combineReducers({
   auth: persistReducer(userPersistConfig, authReducer),
-  admin: persistReducer(adminPersistConfig, adminReducer)
+  admin: persistReducer(adminPersistConfig, adminReducer),
+  chat: chatReducer
 });
 
 export const store = configureStore({

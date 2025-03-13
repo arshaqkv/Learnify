@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CourseDIContainer } from "../../../../infrastructure/di/containers/courseDIContainer";
 import { verifyAccessToken } from "../../../../config/verifyToken";
+import { CustomError } from "../../../middlewares/error.middleware";
 
 class CourseController {
   async createCourse(req: Request, res: Response, next: NextFunction) {
@@ -78,7 +79,11 @@ class CourseController {
     try {
       const { courseId } = req.params;
       const token = req.cookies.accessToken;
-      if (token) {
+      const refreshToken = req.cookies.refreshToken;
+      if (token || refreshToken) {
+        if (!token) {
+          throw new CustomError("Unauthorized", 401);
+        }
         const decoded = verifyAccessToken(token);
         req.user = decoded;
       }

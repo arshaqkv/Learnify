@@ -29,6 +29,7 @@ import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { Button } from "../../../components/ui/button";
 import { Download, FileDown } from "lucide-react";
+import { Input } from "../../../components/ui/input";
 
 const AdminSalesReport = () => {
   const dispatch = useAppDispatch();
@@ -206,12 +207,12 @@ const AdminSalesReport = () => {
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="date"
               className="p-2 border rounded-md"
               onChange={(e) => setStartDate(e.target.value)}
             />
-            <input
+            <Input
               type="date"
               className="p-2 border rounded-md"
               onChange={(e) => setEndDate(e.target.value)}

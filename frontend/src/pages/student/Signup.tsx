@@ -12,6 +12,7 @@ import {
   endLoading,
   startLoading,
 } from "../../features/auth/authSlice";
+import { Input } from "../../components/ui/input";
 
 const Signup: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -97,7 +98,7 @@ const Signup: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           {/* First Name */}
           <div className="mb-4">
-            <input
+            <Input
               type="text"
               id="firstname"
               name="firstname"
@@ -119,7 +120,7 @@ const Signup: React.FC = () => {
 
           {/* Last Name */}
           <div className="mb-4">
-            <input
+            <Input
               type="text"
               id="lastname"
               name="lastname"
@@ -141,7 +142,7 @@ const Signup: React.FC = () => {
 
           {/* Email */}
           <div className="mb-4">
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
@@ -163,7 +164,7 @@ const Signup: React.FC = () => {
 
           {/* Phone */}
           <div className="mb-4">
-            <input
+            <Input
               type="text"
               id="phone"
               name="phone"
@@ -185,7 +186,7 @@ const Signup: React.FC = () => {
 
           {/* Password */}
           <div className="mb-4 flex flex-col">
-            <input
+            <Input
               type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"
@@ -219,7 +220,7 @@ const Signup: React.FC = () => {
 
           {/* Confirm Password */}
           <div className="mb-4 flex flex-col">
-            <input
+            <Input
               type={confirmPasswordVisible ? "text" : "password"}
               id="confirmPassword"
               name="confirmPassword"

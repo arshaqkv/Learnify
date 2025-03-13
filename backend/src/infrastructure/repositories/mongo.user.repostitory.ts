@@ -127,9 +127,9 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async GetAllUsersByOppositeRole(role: string): Promise<User[]> {
-    const users = await UserModel.find({ role: { $ne: role } }).select(
-      "-password"
-    );
+    const users = await UserModel.find({
+      $and: [{ role: { $ne: role } }, { role: { $ne: "admin" } }],
+    }).select("-password -enrolledCourses");
     return users;
   }
 }

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Loader, EyeOff, Eye } from "lucide-react";
 import { loginAdmin } from "../../features/admin/adminThunk";
 import { endLoading, startLoading } from "../../features/admin/adminSlice";
+import { Input } from "../../components/ui/input";
 
 const AdminLogin = () => {
   const dispatch = useAppDispatch();
@@ -68,14 +69,14 @@ const AdminLogin = () => {
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               placeholder="abc@gmail.com"
               value={formik.values.email}
               onChange={formik.handleChange}
-              className={`mt-1 block w-full px-3 py-2 border ${
+              className={`mt-1 block text-primary w-full px-3 py-2 border ${
                 formik.touched.email && formik.errors.email
                   ? "border-red-500"
                   : "border-gray-300"
@@ -90,7 +91,7 @@ const AdminLogin = () => {
 
           {/* Password Field */}
           <div className="mb-4 flex flex-col">
-            <input
+            <Input
               type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"

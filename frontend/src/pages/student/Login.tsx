@@ -10,6 +10,7 @@ import { Loader, EyeOff, Eye } from "lucide-react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import ReCAPTCHA from "react-google-recaptcha";
 import { config } from "../../config/config.ts";
+import { Input } from "../../components/ui/input.tsx";
 
 const Login = () => {
   const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
@@ -77,7 +78,7 @@ const Login = () => {
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
@@ -99,7 +100,7 @@ const Login = () => {
 
           {/* Password Field */}
           <div className="mb-4 flex flex-col">
-            <input
+            <Input
               type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"

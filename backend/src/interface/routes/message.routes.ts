@@ -11,8 +11,8 @@ const router = Router();
 
 router
   .use(isAuthenticated, isBlocked, authorizeRole(["student", "instructor"]))
-  .get("/users", messageController.getUsersForSideBar)
+  .get("/get-users", messageController.getUsersForSideBar)
   .get("/:id", messageController.getChatMessages)
-  .post("/:id", upload.single("messageImage"), messageController.sendMessages);
+  .post("/send/:id", upload.single("image"), messageController.sendMessages);
 
 export { router as MessageRoutes };

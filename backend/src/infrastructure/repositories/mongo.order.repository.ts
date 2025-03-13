@@ -242,7 +242,7 @@ export class MongoOrderRepository implements IOrderRepository {
       {
         $match: {
           paymentStatus: "completed",
-          createdAt: { $gt: startDate, $lt: endDate },
+          
         },
       },
       {
@@ -253,23 +253,25 @@ export class MongoOrderRepository implements IOrderRepository {
                   date: {
                     $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
                   },
-                } // Full date
+                }
               : filter === "monthly"
               ? {
                   year: { $year: "$createdAt" },
                   month: { $month: "$createdAt" },
-                } // Year + Month
-              : { year: { $year: "$createdAt" } }, // Year only
+                }
+              : { year: { $year: "$createdAt" } },
           totalEarnings: { $sum: { $multiply: ["$course.coursePrice", 0.2] } },
           totalOrders: { $sum: 1 },
         },
       },
       {
-        $sort: { _id: 1 }, // Sort by date
+        $sort: { "_id.year": 1, "_id.month": 1 },
       },
     ]);
+  
     return salesReport;
   }
+  
 
   async getCompletedOrdersWithFilters(filterCondition: any): Promise<Order[]> {
     const orders = await OrderModel.find(filterCondition)
