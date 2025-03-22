@@ -4,6 +4,7 @@ import { CreateOrder } from "../../../application/use-cases/student/CreateOrder"
 import { GetOrders } from "../../../application/use-cases/student/GetOrders";
 import { HandleFailedPayment } from "../../../application/use-cases/student/HandleFailedPayment";
 import { HandleSuccessfulPayment } from "../../../application/use-cases/student/HandleSuccessfulPayment";
+import { MongoCategoryRepository } from "../../repositories/mongo.category.repository";
 import { MongoCourseRepository } from "../../repositories/mongo.course.repository";
 import { MongoOrderRepository } from "../../repositories/mongo.order.repository";
 import { MongoUserRepository } from "../../repositories/mongo.user.repostitory";
@@ -27,12 +28,17 @@ class OrderDIContainer {
     return new MongoUserRepository();
   }
 
+  static getCategoryRepository() {
+    return new MongoCategoryRepository();
+  }
+
   static getCreateOrderUseCase() {
     return new CreateOrder(
       this.getOrderRepository(),
       this.getStripeService(),
       this.getCourseRepository(),
-      this.getUserRepository()
+      this.getUserRepository(),
+      this.getCategoryRepository()
     );
   }
 
