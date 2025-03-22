@@ -52,7 +52,10 @@ class StudentDIContainer {
   }
 
   static getEnrolledCoursesUseCase() {
-    return new GetEnrolledcourses(this.getUserRepository());
+    return new GetEnrolledcourses(
+      this.getUserRepository(),
+      this.getCourseProgressRepository()
+    );
   }
 
   static getUserCourseProgressUseCase() {

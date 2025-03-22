@@ -110,8 +110,11 @@ class InstructorController {
       const { id } = req.params;
       const getInstructorProfile =
         InstructorDIContainer.getInstructorProfileUseCase();
-      const instructor = await getInstructorProfile.execute(id);
-      res.status(200).json({ instructor });
+      const { instructor, courses, totalStudents, totalCourses } =
+        await getInstructorProfile.execute(id);
+      res
+        .status(200)
+        .json({ instructor, courses, totalStudents, totalCourses });
     } catch (error: any) {
       next(error);
     }

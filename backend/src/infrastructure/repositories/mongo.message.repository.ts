@@ -23,4 +23,13 @@ export class MongoMessageRepository implements IMessageRepository {
     const message = await MessageModel.create(data);
     return message;
   }
+
+  async getLastMessage(userId: string): Promise<Message | null> {
+    return await MessageModel.findOne({
+      $or: [{ senderId: userId }, { receiverId: userId }],
+    })
+      .select("text createdAt")
+      .sort({ createdAt: -1 })
+      .limit(1);
+  }
 }

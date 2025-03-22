@@ -5,8 +5,7 @@ import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import avatar from "../../assets/avatar.jpg";
 
-
-const formatMessageTime = (date: Date) => {
+export const formatMessageTime = (date: Date) => {
   return new Date(date).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -24,8 +23,7 @@ const ChatContainer = () => {
     if (selectedUser?._id) {
       dispatch(getChatMessages(selectedUser?._id));
     }
-  }, [selectedUser?._id]);
-
+  }, [selectedUser?._id, dispatch]);
 
   useEffect(() => {
     if (messageEndRef.current && messages.length > 0) {
@@ -34,12 +32,12 @@ const ChatContainer = () => {
   }, [messages]);
 
   return (
-    <div className="flex-1 w-[500px] flex flex-col overflow-auto">
+    <div className="flex-1 w-full max-w-lg md:max-w-xl lg:max-w-2xl flex flex-col overflow-hidden">
       <ChatHeader />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages?.map((msg) => (
           <div
-            key={msg?._id }
+            key={msg?._id}
             className={`chat ${
               msg?.senderId === user?._id ? "chat-end" : "chat-start"
             }`}
@@ -63,15 +61,15 @@ const ChatContainer = () => {
                 {formatMessageTime(msg?.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col">
+            <div className="chat-bubble flex flex-col max-w-[75%] md:max-w-[60%]">
               {msg?.image && (
                 <img
                   src={msg?.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2 object-cover"
+                  className="w-full max-w-[200px] md:max-w-[300px] rounded-md mb-2 object-cover"
                 />
               )}
-              {msg?.text && <p>{msg?.text}</p>}
+              {msg?.text && <p className="break-words">{msg?.text}</p>}
             </div>
           </div>
         ))}

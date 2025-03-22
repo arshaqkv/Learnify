@@ -64,12 +64,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("audioToggle", ({ to, audioOff }) => {
-    const recipientSocketId = onlineUsers.get(to);
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("audioToggled", { audioOff });
-    }
-  });
 
   socket.on("disconnect", () => {
     onlineUsers.delete(userId);

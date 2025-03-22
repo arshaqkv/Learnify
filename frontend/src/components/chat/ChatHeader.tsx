@@ -1,25 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Video, PhoneOff, Phone, VideoOff } from "lucide-react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Button } from "../ui/button";
 import avatar from "../../assets/avatar.jpg";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import Peer from "simple-peer";
+import { setSelectedUser } from "../../features/chat/chatSlice";
 
 const ChatHeader = () => {
   const { selectedUser, onlineUsers, socket } = useAppSelector(
     (state) => state.chat
   );
   const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
-  const [stream, setStream] = useState<MediaStream>();
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const [receivingCall, setReceivingCall] = useState(false);
   const [caller, setCaller] = useState<string | null>(null);
   const [callerSignal, setCallerSignal] = useState<any>(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [calling, setCalling] = useState(false);
   const [callerName, setCallerName] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
 
   const myVideo = useRef<HTMLVideoElement>(null);
@@ -31,16 +32,7 @@ const ChatHeader = () => {
   }
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((mediaStream) => {
-        setStream(mediaStream);
-        if (myVideo.current) {
-          myVideo.current.srcObject = mediaStream;
-          console.log("Assigned stream to myVideo:", myVideo.current);
-        }
-      })
-      .catch((err) => console.error("Error accessing media devices:", err));
+    
 
     socket.on("callIncoming", ({ signal, from, name }) => {
       setReceivingCall(true);
@@ -62,7 +54,7 @@ const ChatHeader = () => {
 
       peerRef.current?.destroy();
       peerRef.current = null;
-
+      setStream(null);
       setCaller(null);
       setCallerSignal(null);
       window.location.reload();
@@ -103,53 +95,77 @@ const ChatHeader = () => {
     }
   };
 
-  const callUser = () => {
+  const callUser = async () => {
     if (!selectedUser) return;
 
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream,
-    });
+    setCalling(true)
 
-    peer.on("signal", (signal) => {
-      socket.emit("callUser", {
-        to: selectedUser._id,
-        signal,
-        from: user?._id,
-        name: `${user?.firstname} ${user?.lastname}`,
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      setStream(mediaStream);
+
+      if (myVideo.current) {
+        myVideo.current.srcObject = mediaStream;
+      }
+
+      const peer = new Peer({
+        initiator: true,
+        trickle: false,
+        stream: mediaStream,
       });
-    });
 
-    peer.on("stream", (userStream) => {
-      if (userVideo.current) userVideo.current.srcObject = userStream;
-    });
+      peer.on("signal", (signal) => {
+        socket.emit("callUser", {
+          to: selectedUser._id,
+          signal,
+          from: user?._id,
+          name: `${user?.firstname} ${user?.lastname}`,
+        });
+      });
 
-    peerRef.current = peer;
-    setCalling(true);
+      peer.on("stream", (userStream) => {
+        if (userVideo.current) userVideo.current.srcObject = userStream;
+      });
+
+      peerRef.current = peer;
+
+    } catch (err) {
+      console.error("Error accessing media devices:", err);
+    }
   };
 
-  const answerCall = () => {
-    setCallAccepted(true);
-    setReceivingCall(false);
+  const answerCall = async() => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      setStream(mediaStream);
 
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream,
-    });
+      if (myVideo.current) {
+        myVideo.current.srcObject = mediaStream;
+      }
 
-    peer.on("signal", (signal) => {
-      socket.emit("acceptCall", { to: caller, signal });
       setCallAccepted(true);
-    });
+      setReceivingCall(false);
 
-    peer.on("stream", (userStream) => {
-      if (userVideo.current) userVideo.current.srcObject = userStream;
-    });
+      const peer = new Peer({
+        initiator: false,
+        trickle: false,
+        stream: mediaStream,
+      });
 
-    peer.signal(callerSignal);
-    peerRef.current = peer;
+      peer.on("signal", (signal) => {
+        socket.emit("acceptCall", { to: caller, signal });
+        setCallAccepted(true);
+      });
+
+      peer.on("stream", (userStream) => {
+        if (userVideo.current) userVideo.current.srcObject = userStream;
+      });
+
+      peer.signal(callerSignal);
+      peerRef.current = peer;
+    } catch (err) {
+      console.error("Error accessing media devices:", err);
+    }
   };
 
   const leaveCall = () => {
@@ -162,10 +178,14 @@ const ChatHeader = () => {
 
     peerRef.current?.destroy();
     peerRef.current = null;
+
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+
     window.location.reload();
   };
-
-  console.log(calling, callAccepted, receivingCall);
 
   return (
     <div className="p-2.5 border-b border-base-300">
@@ -186,15 +206,11 @@ const ChatHeader = () => {
         </div>
 
         <div className="flex gap-3">
-          {onlineUsers.includes(selectedUser?._id) && (
-            <Button
-              onClick={callUser}
-              className="bg-blue-500 hover:bg-blue-600"
-            >
-              <Video />
-            </Button>
-          )}
-          <button>
+          <Button onClick={callUser} className="bg-blue-500 hover:bg-blue-600">
+            <Video />
+          </Button>
+
+          <button onClick={() => dispatch(setSelectedUser(null))}>
             <X />
           </button>
         </div>
@@ -233,10 +249,7 @@ const ChatHeader = () => {
           )}
 
           <div className="absolute bottom-5 flex gap-4">
-            <Button
-              onClick={toggleVideo}
-              className="hover:bg-gray-600"
-            >
+            <Button onClick={toggleVideo} className="hover:bg-gray-600">
               {videoOff ? <Video /> : <VideoOff />}
             </Button>
             <Button onClick={leaveCall} className="bg-red-500 hover:bg-red-600">

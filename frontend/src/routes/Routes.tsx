@@ -27,6 +27,7 @@ const CancelOrder = lazy(() => import("../pages/student/CancelOrder"))
 const SuccussfullOrder = lazy(() => import("../pages/student/SuccessfullOrder"))
 const OrderHistory = lazy(() => import("../pages/student/OrderHistory"))
 const ChatPage = lazy(() => import("../pages/student/ChatPage"))
+const Certificate = lazy(() => import("../pages/student/Certificate"))
 
 const InstructorDashboardPage = lazy(() => import("../pages/instructor/InstructorDashboardPage"));
 const InstructorDashboard = lazy(() => import("../pages/instructor/InstructorDashboard"));
@@ -37,6 +38,7 @@ const CourseOverview = lazy(() => import("../pages/instructor/course/CourseOverv
 const CreateLecture = lazy(()=> import("../pages/instructor/lecture/CreateLecture"))
 const EditLecture = lazy(()=> import("../pages/instructor/lecture/EditLecture"))
 const StudentPurchases = lazy(() => import("../pages/instructor/student/StudentPurchases"))
+const InstructorDetails = lazy(()=> import("../pages/instructor/InstructorDetails"))
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboardPage"));
 const AdminDashboard = lazy(() => import("../pages/admin/AdminDashboard"));
@@ -69,6 +71,8 @@ const AppRoutes = () => {
           <Route path="/instructor-register" element={<InstructorRegister />} />
           <Route path="/course/draft/:courseId/learn/lecture" element={<ViewLecture />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/user/:id" element={<InstructorDetails />} />
+          <Route path="/certificate/:courseId" element={<Certificate />} />
           
           <Route path="/profile" element={<UserProfilePage />}>
             <Route path="dashboard" element={<ProfileDashboard />} />

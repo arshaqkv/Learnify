@@ -37,7 +37,7 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8 h-screen">
+    <div className="max-w-7xl mx-auto p-4 md:p-8 h-fit">
       <h2 className="text-center text-3xl font-bold">Wishlist</h2>
       {loading ? (
         Array.from({ length: 4 }).map((_, index) => (
@@ -75,7 +75,7 @@ const WishlistNotFound = () => {
           alt="Empty Wishlist"
           className="w-64 h-64 object-contain"
         />
-        <p className="text-gray-500 text-lg mt-4 font-semibold">
+        <p className="text-gray-500 text-sm md:text-lg my-8 font-semibold">
           Your wishlist is empty. Start adding your favorite courses!
         </p>
       </div>

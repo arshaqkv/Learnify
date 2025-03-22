@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Image, Send, X } from "lucide-react";
+import { Image, Laugh, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { sendMessages } from "../../features/chat/chatThunk";
@@ -10,6 +10,8 @@ import {
 } from "../../features/chat/chatSlice";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -19,6 +21,7 @@ const MessageInput = () => {
   const { selectedUser } = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
   const { socket } = useAppSelector((state) => state.chat);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -33,7 +36,12 @@ const MessageInput = () => {
 
   const removeImage = () => {
     setImagePreview("");
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    setImageFile(null);
+  };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setText((prev) => prev + emoji.native); // Append emoji to input
+    setShowEmojiPicker(false)
   };
 
   const handleSendMessage = async (e: any) => {
@@ -72,7 +80,6 @@ const MessageInput = () => {
     }
   };
 
-
   return (
     <div className="p-4 ">
       {imagePreview && (
@@ -96,6 +103,14 @@ const MessageInput = () => {
       )}
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+        <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-2 emoji-button">
+        <Laugh className="text-zinc-500"/>
+      </button>
+        {showEmojiPicker && (
+          <div className="absolute bottom-16  bg-transparent z-10">
+            <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+          </div>
+        )}
         <div className="flex-1 flex gap-2">
           <Input
             type="text"

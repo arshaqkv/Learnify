@@ -267,7 +267,7 @@ class UserController {
       const { id } = req.user;
       const getEnrolledCourses = StudentDIContainer.getEnrolledCoursesUseCase();
       const courses = await getEnrolledCourses.execute(id);
-      res.status(200).json({ courses: courses?.enrolledCourses });
+      res.status(200).json({ courses });
     } catch (error: any) {
       next(error);
     }

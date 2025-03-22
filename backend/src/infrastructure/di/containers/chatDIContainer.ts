@@ -15,7 +15,10 @@ class ChatDIContainer {
   }
 
   static getUsersForChatUseCase() {
-    return new GetUsersForChat(this.getUserRepository());
+    return new GetUsersForChat(
+      this.getUserRepository(),
+      this.getMessageRepository()
+    );
   }
 
   static getCloudinaryService() {

@@ -55,7 +55,11 @@ class InstructorDIContainer {
   }
 
   static getInstructorProfileUseCase() {
-    return new GetInstructorProfile(this.getInstructorRepository());
+    return new GetInstructorProfile(
+      this.getInstructorRepository(),
+      this.getCouresRepository(),
+      this.getUserRepository()
+    );
   }
 
   static getInstructorDashboardUseCase() {

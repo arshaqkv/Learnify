@@ -40,7 +40,7 @@ const InstructorDashboard = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 mt-10">
       {/* Header */}
       <div className="flex items-center gap-1">
       <LayoutDashboard className="mb-5 text-gray-800"/>

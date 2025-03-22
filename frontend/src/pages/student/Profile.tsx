@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/auth/authThunk";
@@ -10,6 +11,8 @@ import {
   LogIn,
   SquareArrowOutUpRight,
   UserRoundCog,
+  X,
+  ListFilter,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
@@ -18,6 +21,7 @@ const UserProfilePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
     {
@@ -63,11 +67,31 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex bg-gray-100 min-h-screen ">
+      {/* Sidebar - Mobile Toggle Button */}
+      <button
+        className="md:hidden p-4 absolute top-24 left-10 bg-white rounded-full shadow-md"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        {sidebarOpen ? <X size={24} /> : <ListFilter size={24} />}
+      </button>
+
       {/* Sidebar */}
-      <aside className="w-72 bg-white mb-1 shadow-lg border-r hidden md:block rounded-md overflow-y-auto max-h-fit">
+      <aside
+        className={`fixed md:relative w-72 bg-white shadow-lg border-r rounded-md  transition-all duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 z-10 md:z-auto`}
+      >
         <div className="p-6">
-          <nav className="space-y-4">
+          {/* Logo for smaller screens */}
+          <div className="flex items-center justify-between md:hidden">
+            <h2></h2>
+            <button onClick={() => setSidebarOpen(false)}>
+              <X size={24} />
+            </button>
+          </div>
+
+          <nav className="space-y-4 mt-6">
             {user?.role === "instructor" && (
               <NavLink
                 to={"/instructor/dashboard"}
@@ -99,7 +123,12 @@ const UserProfilePage = () => {
                   }
                 >
                   <menuItem.icon className="mr-3 h-6 w-6" />
-                  {menuItem.label}
+                  <span
+                    className=" sm:block"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    {menuItem.label}
+                  </span>
                 </NavLink>
               ) : (
                 <Button
@@ -108,8 +137,8 @@ const UserProfilePage = () => {
                   variant="ghost"
                   onClick={handleLogout}
                 >
-                  <menuItem.icon className="mr-3 h-3 w-3" />
-                  {menuItem.label}
+                  <menuItem.icon className="mr-3 h-6 w-6" />
+                  <span className=" sm:block">{menuItem.label}</span>
                 </Button>
               )
             )}
@@ -118,8 +147,8 @@ const UserProfilePage = () => {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-10">
-        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto h-[500px]">
+      <main className="flex-1 p-6 md:p-10">
+        <Card className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 overflow-y-auto min-h-[500px]">
           <Outlet />
         </Card>
       </main>

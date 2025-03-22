@@ -111,7 +111,7 @@ const CreateCourse = () => {
   });
 
   return (
-    <Card className="max-w-3xl mx-auto mt-10 shadow-lg border rounded-lg p-6 bg-white space-y-6">
+    <Card className="max-w-3xl mx-auto mt-1 shadow-lg border rounded-lg p-6 bg-white space-y-6">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-center">
           Add Detailed Information About Course

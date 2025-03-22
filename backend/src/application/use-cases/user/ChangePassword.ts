@@ -13,11 +13,15 @@ export class ChangePassword {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
-      throw new CustomError("User not found", 400);
+      throw new CustomError("User not found", 404);
     }
 
     if(user.googleId){
         throw new CustomError("You can't do this operation", 400)
+    }
+
+    if(!user.password){
+      throw new CustomError("old password not found", 400);
     }
 
     const isPasswordValid = await bcryptjs.compare(oldPassword, user.password);

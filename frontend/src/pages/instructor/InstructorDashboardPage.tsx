@@ -1,15 +1,19 @@
 import {
   ArrowLeftCircleIcon,
   LayoutDashboard,
+  ListFilter,
   ShoppingCart,
   SquareLibrary,
+  X,
 } from "lucide-react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
+import { useState } from "react";
 
 const InstructorDashboardPage = () => {
-  const location = useLocation();
   const { user } = useAppSelector((state) => state.auth);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const menuItems = [
     {
       icon: LayoutDashboard,
@@ -28,41 +32,68 @@ const InstructorDashboardPage = () => {
     },
     {
       icon: ArrowLeftCircleIcon,
-      label: "Back to profile",
+      label: "Back to Profile",
       path: "/profile/dashboard",
     },
   ];
+
   return (
-    <div className="flex h-full min-h-screen shadow-md bg-gray-100">
-      <aside className="w-64 bg-white shadow-md hidden md:block max-h-screen rounded-md">
-        <div className="p-4 mt-5">
-          <p className="text-gray-600 flex items-center gap-2 font-semibold text-center mb-4 px-5 py-4 border-2 rounded-sm">
-          <img src={user?.profileImage} alt="" className="rounded-full w-10 h-10 object-cover"/>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar (Mobile Toggle Button) */}
+      <button
+        className="md:hidden absolute top-24 left-10 bg-white p-3 rounded-full shadow-md"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        {sidebarOpen ? <X size={24} /> : <ListFilter size={24} />}
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 w-72 bg-white shadow-lg transition-transform transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0 md:block md:w-64 z-50`}
+      >
+        <div className="p-5 mt-5">
+        <div className="flex items-center justify-between md:hidden mb-5">
+            <h2></h2>
+            <button onClick={() => setSidebarOpen(false)}>
+              <X size={24} />
+            </button>
+          </div>
+          <p className="flex items-center gap-3 font-semibold text-gray-600 text-lg border-2 px-4 py-3 rounded-md">
+            <img
+              src={user?.profileImage}
+              alt="Profile"
+              className="w-10 h-10 rounded-full object-cover"
+            />
             Welcome {`${user?.firstname}`}
-            
           </p>
 
-          <nav className="space-y-2">
+
+          {/* Navigation Links */}
+          <nav className="mt-6 space-y-2">
             {menuItems.map((menuItem) => (
               <NavLink
                 key={menuItem.path}
                 to={menuItem.path}
-                className={() =>
-                  `flex items-center w-full px-5 py-4 rounded-lg transition-all duration-300 text-md ${
-                    location.pathname.includes(menuItem.path)
+                className={({ isActive }) =>
+                  `flex items-center px-5 py-3 rounded-lg transition duration-300 ${
+                    isActive
                       ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                      : "text-gray-700 hover:bg-gray-200"
                   }`
                 }
               >
-                <menuItem.icon className="mr-2 h-5 w-5" />
+                <menuItem.icon className="w-5 h-5 mr-3" />
                 {menuItem.label}
               </NavLink>
             ))}
           </nav>
         </div>
       </aside>
-      <main className="flex-1 p-8 overflow-y-auto h-[500px]">
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <Outlet />
         </div>

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import { Loader, ArrowLeft } from "lucide-react";
 import { forgotPassword } from "../../features/auth/authThunk";
+import { Input } from "../../components/ui/input";
 
 const ForgotPassword = () => {
   const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
@@ -64,7 +65,7 @@ const ForgotPassword = () => {
               Email
             </label>
 
-            <input
+            <Input
               type="email"
               id="email"
               name="email"

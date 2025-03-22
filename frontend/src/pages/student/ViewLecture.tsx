@@ -162,7 +162,7 @@ const ViewLecture = () => {
             <h1 className=" font-semibold">Instructor</h1>
             <div className="flex flex-col m-3">
               <Avatar>
-                <AvatarImage src={course?.creator?.profileImage} />
+                <AvatarImage className=" object-cover" src={course?.creator?.profileImage} />
               </Avatar>
               <h2 className=" font-semibold">{`${course?.creator?.firstname} ${course?.creator?.lastname}`}</h2>
             </div>
@@ -181,7 +181,7 @@ const ViewLecture = () => {
               {/* Change color here */}
             </Progress>
             <p className="text-sm text-gray-500">
-              {progress?.progressPercentage || 0}% completed
+              {Math.ceil(progress?.progressPercentage) || 0}% completed
             </p>
             <div className="mt-4 space-y-2">
               <Accordion type="multiple" className="w-full">
@@ -250,10 +250,10 @@ const ViewLecture = () => {
           </DialogHeader>
           <DialogFooter>
             <Button
-              onClick={() => navigate("/courses/search")}
+              onClick={() => navigate(`/certificate/${courseId}`)}
               variant="default"
             >
-              Explore Other Courses
+              Get Certificate
             </Button>
             <Button onClick={handleResetCourseProgress} variant="outline">
               Rewatch Course

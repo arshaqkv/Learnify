@@ -14,19 +14,12 @@ import toast from "react-hot-toast";
 import {
   addToWishlist,
   getCourse,
-  getInstructorProfile,
   purchaseCourse,
   removeFromWishlist,
 } from "../../features/auth/authThunk";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { endLoading, startLoading } from "../../features/auth/authSlice";
 import ScrollToTop from "../../components/common/ScrollToTop";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
-import { Avatar, AvatarImage } from "../../components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -44,7 +37,6 @@ import CourseDetailsSkeleton from "../../components/common/CourseDetailsSkeleton
 import CourseBreadcrumb from "../../components/common/BreadCrumb";
 
 const CourseDetails = () => {
-
   const { courseId } = useParams<{ courseId: string }>();
   const { user, loading } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -53,7 +45,6 @@ const CourseDetails = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAlreadyPurchased, setIsAlreadyPurchased] = useState(false);
   const [isCourseOftheSameUser, setIsCourseOftheSameUser] = useState(false);
-  const [instructor, setInstructor] = useState<any>(null);
 
   if (!courseId) {
     toast.error("Course not found");
@@ -83,19 +74,6 @@ const CourseDetails = () => {
 
     fetchCourse();
   }, [dispatch]);
-
-  const handleGetInstructor = async (id: string) => {
-    if (!user) {
-      toast.error("Please Login to continue");
-      navigate("/login");
-      return;
-    }
-    const result = await dispatch(getInstructorProfile(id));
-    if (getInstructorProfile.fulfilled.match(result)) {
-      const { instructor } = result.payload;
-      setInstructor(instructor);
-    }
-  };
 
   const toggleWishlist = async () => {
     try {
@@ -146,14 +124,12 @@ const CourseDetails = () => {
     { name: "Course Details", url: `/courses/course-details/${courseId}` },
   ];
 
-
-
   return (
     <>
       <ScrollToTop />
-      
+
       <div className="mt-10  mb-10">
-      <CourseBreadcrumb paths={breadcrumbPaths} />
+        <CourseBreadcrumb paths={breadcrumbPaths} />
         {/* Course Header Section */}
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-center py-10 px-6 md:px-16 rounded-lg shadow-lg">
           {/* Course Details */}
@@ -165,55 +141,16 @@ const CourseDetails = () => {
             <h2 className="text-xl md:text-1xl font-semibold">
               {course.subtitle}
             </h2>
-            <Popover>
-              <PopoverTrigger
-                className="text-lg"
-                onClick={() => handleGetInstructor(course.creator._id)}
+
+            <div className="text-lg">
+              Created by{" "}
+              <span
+                className=" cursor-pointer text-blue-200 underline italic hover:text-blue-500 hover:transition ease-out"
+                onClick={() => navigate(`/user/${course?.creator?._id}`)}
               >
-                Created by{" "}
-                <span className=" cursor-pointer text-blue-200 underline  hover:text-blue-500 hover:transition ease-out">
-                  {`${course?.creator?.firstname} ${course?.creator?.lastname}`}
-                </span>
-              </PopoverTrigger>
-              <PopoverContent className="bg-white p-4 rounded-lg shadow-lg">
-                {instructor ? (
-                  <div className="text-gray-800">
-                    <div>
-                      <Avatar>
-                        <AvatarImage
-                          src={instructor?.instructorId?.profileImage}
-                          className=" object-cover"
-                        />
-                      </Avatar>
-                      <h3 className="font-bold text-lg">{`${instructor?.instructorId?.firstname} ${instructor?.instructorId?.lastname}`}</h3>
-                    </div>
-                    <p className="text-sm text-gray-600">{instructor?.bio}</p>
-                    <p className="text-sm text-gray-600 font-semibold">
-                      Qualifications:
-                    </p>
-                    <div className="list-disc list-inside text-gray-600">
-                      {instructor?.qualifications?.map(
-                        (qualification: any, index: number) => (
-                          <Badge className="m-1" key={index}>
-                            {qualification}
-                          </Badge>
-                        )
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600 font-semibold">
-                      Skills:
-                    </p>
-                    <ul className="list-disc list-inside text-gray-600">
-                      {instructor?.skills?.map((skill: any, index: number) => (
-                        <li key={index}>{skill}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : (
-                  <p className="text-gray-500">Loading...</p>
-                )}
-              </PopoverContent>
-            </Popover>
+                {`${course?.creator?.firstname} ${course?.creator?.lastname}`}
+              </span>
+            </div>
 
             <p className="text-lg flex gap-1">
               <Users />

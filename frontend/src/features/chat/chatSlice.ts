@@ -19,6 +19,14 @@ interface ChatState {
   loading: boolean | null;
   error: string | null;
   socket: Socket | null;
+  receivingCall: boolean;
+  caller: null;
+  callerSignal: null;
+  callAccepted: boolean;
+  calling: boolean;
+  callerName: null;
+  videoOff: boolean;
+  myStream: null | any;
 }
 
 const initialState: ChatState = {
@@ -29,6 +37,14 @@ const initialState: ChatState = {
   loading: null,
   error: null,
   socket: null,
+  receivingCall: false,
+  caller: null,
+  callerSignal: null,
+  callAccepted: false,
+  calling: false,
+  callerName: null,
+  videoOff: false,
+  myStream: null,
 };
 
 const chatSlice = createSlice({
@@ -57,6 +73,36 @@ const chatSlice = createSlice({
     },
     setSocket(state, action) {
       state.socket = action.payload;
+    },
+    setReceivingCall: (state, action) => {
+      state.receivingCall = action.payload.receivingCall;
+      state.caller = action.payload.caller;
+      state.callerSignal = action.payload.callerSignal;
+      state.callerName = action.payload.callerName;
+    },
+    setCallAccepted: (state, action) => {
+      state.callAccepted = action.payload;
+    },
+    setCalling: (state, action) => {
+      state.calling = action.payload;
+    },
+    setMyStream: (state, action) => {
+      state.myStream = action.payload;
+    },
+    toggleVideo: (state) => {
+      if (state.myStream) {
+        state.myStream.getVideoTracks().forEach((track: any) => {
+          track.enabled = !track.enabled;
+        });
+        state.videoOff = !state.videoOff;
+      }
+    },
+    endCall: (state) => {
+      state.callAccepted = false;
+      state.calling = false;
+      state.receivingCall = false;
+      state.caller = null;
+      state.callerSignal = null;
     },
     disconnectSocket(state) {
       if (state.socket) {
@@ -106,5 +152,11 @@ export const {
   updateMessages,
   setSocket,
   disconnectSocket,
+  setReceivingCall,
+  setCallAccepted,
+  setCalling,
+  setMyStream,
+  toggleVideo,
+  endCall,
 } = chatSlice.actions;
 export default chatSlice.reducer;
