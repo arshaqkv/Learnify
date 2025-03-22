@@ -5,13 +5,15 @@ import { IOrderRepository } from "../../../domain/interfaces/order.repository";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
 import { StripeService } from "../../../infrastructure/services/stripe/StripeService";
+import { ICategoryRepository } from "../../../domain/interfaces/category.repository";
 
 export class CreateOrder {
   constructor(
     private orderRepository: IOrderRepository,
     private stripeService: StripeService,
     private courseRepository: ICourseRepository,
-    private userRepository: IUserRepository
+    private userRepository: IUserRepository,
+    private categoryRepository: ICategoryRepository
   ) {}
 
   async execute(userId: string, courseId: string): Promise<string | null> {
@@ -42,7 +44,12 @@ export class CreateOrder {
       course.creator._id.toString()
     );
     if (!creator) {
-      throw new CustomError("Instructor data not available", 400);
+      throw new CustomError("Instructor data not available", 404);
+    }
+
+    const category = await this.categoryRepository.getCategoryById(course.category.toString())
+    if(!category){
+      throw new CustomError("Category data not available", 404);
     }
 
     const courseObjectId = new mongoose.Types.ObjectId(course._id);
@@ -52,7 +59,7 @@ export class CreateOrder {
       courseTitle: course.title,
       courseDescription: course.description,
       coursePrice: course.price,
-      courseCategory: course?.category?.name,
+      courseCategory: category.name,
       courseCreator: `${creator.firstname} ${creator.lastname}`,
       courseCreatorId: course.creator._id,
       courseCreatorImage: creator.profileImage,

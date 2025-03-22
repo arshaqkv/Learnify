@@ -19,7 +19,7 @@ export class DeleteCourse {
     const lectureIds = course.lectures;
     if (lectureIds) {
       for (let lectureId of lectureIds) {
-        const lecture = await this.lectureRepository.getLectureById(lectureId);
+        const lecture = await this.lectureRepository.getLectureById(lectureId.toString());
         if (!lecture) {
           throw new CustomError("Lecture not found", 400);
         }
@@ -28,7 +28,7 @@ export class DeleteCourse {
           await this.cloudinaryService.deleteVideo(video.publicId);
         });
 
-        await this.lectureRepository.deleteLecture(lectureId);
+        await this.lectureRepository.deleteLecture(lectureId.toString());
       }
     }
 
