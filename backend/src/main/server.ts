@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -34,12 +34,19 @@ app.use(
   })
 );
 
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).json({
+    success: true,
+    message: "API is working",
+  });
+});
+
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/instructor", instructorRoutes);
 app.use("/api/student", studentRoutes);
-app.use("/api/message", MessageRoutes);  
+app.use("/api/message", MessageRoutes);
 
 //Error handling middleware
 app.use(errorHandler);
