@@ -52,7 +52,7 @@ const App = () => {
     }
   }, [dispatch, user]);
 
-console.log(onlineUsers)
+
   return (
     <>
       <Layout>
