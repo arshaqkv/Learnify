@@ -46,7 +46,7 @@ export const config: Config = {
   user: process.env.USER as string,
   pass: process.env.PASS as string,
   cors: {
-    CLIENT_URL: process.env.CLIENT_URL || "http://localhost:5173",
+    CLIENT_URL: process.env.CLIENT_URL as string || "http://localhost:5173",
     ALLOWED_HEADERS: ['Content-type', 'Authorization'],
     ALLOWED_METHODS: ["GET", "POST", "DELETE", "PUT","PATCH"],
     CREDENTIALS: true
