@@ -1,9 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getChatMessages } from "../../features/chat/chatThunk";
+import {
+  deleteSingleMessage,
+  getChatMessages,
+} from "../../features/chat/chatThunk";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import avatar from "../../assets/avatar.jpg";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
+import toast from "react-hot-toast";
 
 export const formatMessageTime = (date: Date) => {
   return new Date(date).toLocaleTimeString("en-US", {
@@ -16,8 +30,9 @@ export const formatMessageTime = (date: Date) => {
 const ChatContainer = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { messages, selectedUser } = useAppSelector((state) => state.chat);
+  const { messages, selectedUser, socket } = useAppSelector((state) => state.chat);
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     if (selectedUser?._id) {
@@ -30,6 +45,21 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  const handleDeleteMessage = async (messageId: string) => {
+    const result = await dispatch(
+      deleteSingleMessage({ messageId, userId: selectedUser?._id })
+    );
+    if (deleteSingleMessage.fulfilled.match(result)) {
+      toast.success(result.payload.message);
+      setShowDialog(false);
+
+      const newMessages = result.payload.newMessages;
+      if(socket){
+        socket.emit("deleteMessage", { newMessages, userId: selectedUser?._id });
+      }
+    }
+  };
 
   return (
     <div className="flex-1 w-full max-w-lg md:max-w-xl lg:max-w-2xl flex flex-col overflow-hidden">
@@ -61,7 +91,10 @@ const ChatContainer = () => {
                 {formatMessageTime(msg?.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col max-w-[75%] md:max-w-[60%]">
+            <div
+              className="chat-bubble flex flex-col max-w-[75%] md:max-w-[60%]"
+              onClick={() => setShowDialog(true)}
+            >
               {msg?.image && (
                 <img
                   src={msg?.image}
@@ -71,6 +104,25 @@ const ChatContainer = () => {
               )}
               {msg?.text && <p className="break-words">{msg?.text}</p>}
             </div>
+            <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will permanently delete the message. This cannot
+                    be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDeleteMessage(msg._id)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         ))}
       </div>

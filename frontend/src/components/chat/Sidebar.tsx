@@ -13,9 +13,8 @@ import { formatMessageTime } from "./ChatContainer";
 
 const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { loading, users, selectedUser, messages, onlineUsers } = useAppSelector(
-    (state) => state.chat
-  );
+  const { loading, users, selectedUser, messages, onlineUsers } =
+    useAppSelector((state) => state.chat);
 
   const fetchUsers = async () => {
     dispatch(startLoading());

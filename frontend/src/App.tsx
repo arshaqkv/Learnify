@@ -24,7 +24,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 const App = () => {
-  const { onlineUsers } = useAppSelector(state => state.chat)
+
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   useEffect(() => {

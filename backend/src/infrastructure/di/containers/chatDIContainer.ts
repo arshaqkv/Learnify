@@ -1,3 +1,5 @@
+import { DeleteMessages } from "../../../application/use-cases/student/message/DeleteMessages";
+import { DeleteSingleMessage } from "../../../application/use-cases/student/message/DeleteSingleMessage";
 import { GetMessages } from "../../../application/use-cases/student/message/GetMessages";
 import { GetUsersForChat } from "../../../application/use-cases/student/message/GetUserForChat";
 import { SendMessages } from "../../../application/use-cases/student/message/SendMessages";
@@ -34,6 +36,14 @@ class ChatDIContainer {
       this.getMessageRepository(),
       this.getCloudinaryService()
     );
+  }
+
+  static deleteMessageUseCase() {
+    return new DeleteMessages(this.getMessageRepository());
+  }
+
+  static deleteSingleMessageUseCase() {
+    return new DeleteSingleMessage(this.getMessageRepository());
   }
 }
 

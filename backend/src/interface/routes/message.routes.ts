@@ -13,6 +13,10 @@ router
   .use(isAuthenticated, isBlocked, authorizeRole(["student", "instructor"]))
   .get("/get-users", messageController.getUsersForSideBar)
   .get("/:id", messageController.getChatMessages)
-  .post("/send/:id", upload.single("image"), messageController.sendMessages);
+  .post("/send/:id", upload.single("image"), messageController.sendMessages)
+  .delete("/delete/:id", messageController.deleteMessages)
+  .delete("/delete/message/:userId/:messageId",
+    messageController.deleteSingleMessage
+  );
 
 export { router as MessageRoutes };

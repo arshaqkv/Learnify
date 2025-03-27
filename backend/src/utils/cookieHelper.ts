@@ -10,13 +10,13 @@ interface ICookieOptions {
 export const accessCookieOptions: ICookieOptions = {
   httpOnly: true,
   secure: config.environment === "production",
-  sameSite: "strict",
+  sameSite: config.environment === 'production' ? "none" : "strict",
   maxAge: 15 * 60 * 1000,
 };
 
 export const resetCookieOptions: ICookieOptions = {
   httpOnly: true,
   secure: config.environment === "production",
-  sameSite: "strict",
+  sameSite: config.environment === 'production' ? "none" : "strict",
   maxAge: 1 * 24 * 60 * 60 * 1000,
 };

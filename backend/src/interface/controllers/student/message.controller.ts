@@ -43,6 +43,34 @@ class MessageController {
       next(error);
     }
   }
+
+  async deleteMessages(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const { id: receiverId } = req.params;
+      const deleteMessages = ChatDIContainer.deleteMessageUseCase();
+      await deleteMessages.execute(id, receiverId);
+      res.status(200).json({ message: "Chat deleted" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteSingleMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const { messageId, userId: receiverId } = req.params;
+      const deleteSingleMessage = ChatDIContainer.deleteSingleMessageUseCase();
+      const newMessages = await deleteSingleMessage.execute(
+        id,
+        receiverId,
+        messageId
+      );
+      res.status(200).json({ message: "Message deleted", newMessages });
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
 
 const messageController = new MessageController();

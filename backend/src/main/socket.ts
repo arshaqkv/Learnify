@@ -31,8 +31,18 @@ io.on("connection", (socket) => {
     const recipientSocketId = onlineUsers.get(message.userId);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("newMessage", message.newMessage);
+      console.log(message)
     }
   });
+
+  //delte messages
+  socket.on("deleteMessage", (message) =>{
+    const recipientSocketId = onlineUsers.get(message.userId)
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("messageDeleted", message.newMessage);
+    }
+  })
+  
 
   //video call feature
   socket.on("callUser", ({ to, signal, from, name }) => {

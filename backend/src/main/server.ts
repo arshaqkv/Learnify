@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -46,7 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/instructor", instructorRoutes);
 app.use("/api/student", studentRoutes);
-app.use("/api/message", MessageRoutes);
+app.use("/api/chat", MessageRoutes);
 
 //Error handling middleware
 app.use(errorHandler);

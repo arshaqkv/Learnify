@@ -32,4 +32,17 @@ export class MongoMessageRepository implements IMessageRepository {
       .sort({ createdAt: -1 })
       .limit(1);
   }
+
+  async deleteMessage(senderId: string, receiverId: string): Promise<void> {
+    await MessageModel.deleteMany({
+      $or: [
+        { senderId, receiverId },
+        { senderId: receiverId, receiverId: senderId },
+      ],
+    });
+  }
+
+  async deleteSingleMessage(messageId: string): Promise<void> {
+    await MessageModel.findByIdAndDelete(messageId);
+  }
 }
