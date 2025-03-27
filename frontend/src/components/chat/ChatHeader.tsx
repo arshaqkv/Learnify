@@ -38,7 +38,7 @@ const ChatHeader = () => {
   const [videoOff, setVideoOff] = useState(false);
 
   const myVideo = useRef<HTMLVideoElement>(null);
-  const userVideo = useRef<HTMLVideoElement>(null);
+  const userVideo: any = useRef<HTMLVideoElement>(null);
   const peerRef = useRef<Peer.Instance | null>(null);
 
   if (!socket) {
@@ -227,7 +227,7 @@ const ChatHeader = () => {
           <div>
             <h3 className="font-medium">{`${selectedUser?.firstname} ${selectedUser?.lastname}`}</h3>
             <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedUser?._id) ? "Online" : "Offline"}
+              {selectedUser && onlineUsers.includes(selectedUser?._id) ? "Online" : "Offline"}
             </p>
           </div>
         </div>
