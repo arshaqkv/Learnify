@@ -10,7 +10,7 @@ interface ArrayFieldProps {
   onChange: (newValue: string[]) => void;
 }
 
-const ArrayField: React.FC<ArrayFieldProps> = ({ name, label, values, onChange }) => {
+const ArrayField: React.FC<ArrayFieldProps> = ({ label, values, onChange }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleAdd = () => {
