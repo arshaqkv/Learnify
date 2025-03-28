@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { CheckCheck } from "lucide-react";
 import { editLecture, getLecture } from "../../../features/auth/authThunk";
@@ -10,6 +9,7 @@ import { Card } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Switch } from "../../../components/ui/switch";
 import { Button } from "../../../components/ui/button";
+import { useAppDispatch } from "../../../app/hooks";
 
 const validationSchema = yup.object().shape({
   title: yup
@@ -28,7 +28,7 @@ const validationSchema = yup.object().shape({
 });
 
 const EditLectureForm: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch()
   const navigate = useNavigate();
   const { courseId, id } = useParams<{ courseId: string; id: string }>();
   
