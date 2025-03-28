@@ -54,6 +54,7 @@ const Login = () => {
         return;
       }
       dispatch(startLoading());
+
       const trimmedValues = {
         email: values.email.trim(),
         password: values.password,
@@ -65,8 +66,9 @@ const Login = () => {
         toast.success(result.payload.message);
         dispatch(endLoading());
       } else if (loginUser.rejected.match(result)) {
-        if(result.payload === 'User not verified'){
-          navigate('/verify-account')
+        if (result.payload === "User not verified") {
+          sessionStorage.setItem("userEmail", values.email.trim());
+          navigate("/verify-account");
         }
         toast.error(result.payload as string);
         dispatch(endLoading());
@@ -74,10 +76,13 @@ const Login = () => {
     },
   });
 
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded-lg w-96">
-        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">Learnify Login</h2>
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">
+          Learnify Login
+        </h2>
         <form onSubmit={formik.handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">

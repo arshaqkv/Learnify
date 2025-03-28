@@ -40,6 +40,10 @@ export class LoginUser {
 
     if (user.isVerified === false) {
       let { otp, expiresAt } = generateOtp();
+      const existingEmail = await this.otpRepository.findOtpByEmail(email);
+      if (existingEmail) {
+        await this.otpRepository.deleteOtpByEmail(email);
+      }
       await this.otpRepository.createOtp({ email, otp, expiresAt });
       await sendVerificationEmail(email, otp);
       throw new CustomError("User not verified", 400);
