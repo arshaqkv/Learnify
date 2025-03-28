@@ -18,6 +18,10 @@ export class ForgotPassword {
       throw new CustomError("User not found", 400);
     }
 
+    if(!user.isVerified){
+      throw new CustomError("Please verify account", 400)
+    }
+
     if(user.googleId){
         throw new CustomError("User registered with social login", 400)
     }
