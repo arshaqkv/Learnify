@@ -47,10 +47,12 @@ export class CreateOrder {
       throw new CustomError("Instructor data not available", 404);
     }
 
-    const category = await this.categoryRepository.getCategoryById(course.category.toString())
+    const category = await this.categoryRepository.getCategoryById(course.category._id.toString())
     if(!category){
       throw new CustomError("Category data not available", 404);
     }
+
+    console.log(category)
 
     const courseObjectId = new mongoose.Types.ObjectId(course._id);
 
