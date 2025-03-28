@@ -8,6 +8,7 @@ import {
   startLoading,
 } from "../../features/auth/authSlice";
 import { sendOtp, verifyOtp } from "../../features/auth/authThunk";
+import { Input } from "../../components/ui/input";
 
 const VerifyAccount = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -87,7 +88,7 @@ const VerifyAccount = () => {
         </p>
         <div className="flex justify-center gap-2 mb-6">
           {otp.map((value, index) => (
-            <input
+            <Input
               key={index}
               id={`otp-${index}`}
               type="text"

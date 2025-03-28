@@ -128,17 +128,17 @@ const CourseDetails = () => {
     <>
       <ScrollToTop />
 
-      <div className="mt-10  mb-10">
+      <div className="mt-10 mb-10 px-4 sm:px-6 md:px-16">
         <CourseBreadcrumb paths={breadcrumbPaths} />
         {/* Course Header Section */}
-        <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-center py-10 px-6 md:px-16 rounded-lg shadow-lg">
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-center py-8 px-6 md:px-12 rounded-lg shadow-lg">
           {/* Course Details */}
-          <div className="max-w-2xl space-y-2">
+          <div className="max-w-2xl space-y-3 text-center md:text-left">
             <Badge className="max-w-max bg-blue-500 text-white text-sm px-3 rounded-full">
               {course?.category?.name}
             </Badge>
-            <h1 className="text-3xl md:text-4xl font-bold">{course.title}</h1>
-            <h2 className="text-xl md:text-1xl font-semibold">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">{course.title}</h1>
+            <h2 className="text-md md:text-1xl font-semibold">
               {course.subtitle}
             </h2>
 
@@ -152,7 +152,7 @@ const CourseDetails = () => {
               </span>
             </div>
 
-            <p className="text-lg flex gap-1">
+            <p className="text-lg flex justify-center md:justify-start gap-1">
               <Users />
               Learners:{" "}
               <span className="font-semibold">{course?.enrolledCount}</span>
@@ -161,13 +161,13 @@ const CourseDetails = () => {
               Course Price: <span className="text-white">₹{course?.price}</span>
             </p>
 
-            <div className="flex items-center gap-3 text-sm text-gray-300">
+            <div className="flex items-center gap-2 text-sm text-gray-300 justify-center md:justify-start">
               <BadgeInfo size={18} />
               <p>Last updated: {new Date(course.updatedAt).toDateString()}</p>
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 mt-5">
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-5">
               {isAlreadyPurchased ? (
                 <Link to={`/course/draft/${courseId}/learn/lecture`}>
                   <Button className="bg-green-600 hover:bg-green-500 text-white text-lg px-10 py-5 rounded-lg shadow-md">
@@ -210,7 +210,7 @@ const CourseDetails = () => {
           <div className="mt-8 md:mt-0">
             <img
               src={course.thumbnail}
-              className="max-w-sm rounded-lg shadow-md border border-gray-700"
+              className="w-full max-w-xs md:max-w-sm rounded-lg shadow-md border border-gray-700"
               alt=""
             />
           </div>
