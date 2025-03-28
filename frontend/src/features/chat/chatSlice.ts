@@ -13,7 +13,7 @@ interface User {
 
 interface ChatState {
   users: User[];
-  selectedUser: User | null;
+  selectedUser?: User | null;
   onlineUsers: string[];
   messages: any[];
   loading: boolean | null;
