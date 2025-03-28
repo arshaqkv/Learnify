@@ -12,6 +12,7 @@ import { Loader, Eye, EyeOff } from "lucide-react";
 import { resetPassword } from "../../features/auth/authThunk";
 import { formikPasswordValidation } from "../../utils/passwordValidation";
 import ExpiredLinkPage from "../../components/ExpiredLink";
+import { Input } from "../../components/ui/input";
 
 const ResetPassword = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -87,7 +88,7 @@ const ResetPassword = () => {
             >
               Password
             </label>
-            <input
+            <Input
               type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"
@@ -127,7 +128,7 @@ const ResetPassword = () => {
             >
               Confirm Password
             </label>
-            <input
+            <Input
               type={confirmPasswordVisible ? "text" : "password"}
               id="confirmPassword"
               name="confirmPassword"
@@ -146,9 +147,9 @@ const ResetPassword = () => {
               onClick={toggleConfirmPasswordVisibility}
             >
               {confirmPasswordVisible ? (
-                <Eye className="w-5 h-5 text-gray-400" />
-              ) : (
                 <EyeOff className="w-5 h-5 text-gray-400" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-400" />
               )}
             </button>
             {formik.touched.confirmPassword &&

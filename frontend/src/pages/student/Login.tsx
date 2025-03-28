@@ -65,6 +65,9 @@ const Login = () => {
         toast.success(result.payload.message);
         dispatch(endLoading());
       } else if (loginUser.rejected.match(result)) {
+        if(result.payload === 'User not verified'){
+          navigate('/verify-account')
+        }
         toast.error(result.payload as string);
         dispatch(endLoading());
       }

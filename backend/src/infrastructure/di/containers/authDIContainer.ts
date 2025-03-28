@@ -38,7 +38,7 @@ class AuthDIContainer {
   }
 
   static getLoginUserUseCase() {
-    return new LoginUser(this.getUserRepository());
+    return new LoginUser(this.getUserRepository(), this.getOtpRepository());
   }
 
   static getRefreshTokenUseCase() {

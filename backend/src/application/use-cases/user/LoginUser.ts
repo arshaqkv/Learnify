@@ -1,11 +1,20 @@
 import { LoginDTO, LoginResponseDTO } from "../../DTOs/UserDTO";
 import bcryptjs from "bcryptjs";
 import { IUserRepository } from "../../../domain/interfaces/user.repository";
-import { generateAccessToken, generateRefreshToken } from "../../../config/generateToken";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../../config/generateToken";
 import { CustomError } from "../../../interface/middlewares/error.middleware";
+import { generateOtp } from "../../../utils/generateOtp";
+import { IOtpRepository } from "../../../domain/interfaces/otp.repository";
+import { sendVerificationEmail } from "../../../infrastructure/services/email/EmailService";
 
 export class LoginUser {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private otpRepository: IOtpRepository
+  ) {}
 
   async execute(data: LoginDTO): Promise<LoginResponseDTO> {
     const { email, password } = data;
@@ -15,12 +24,12 @@ export class LoginUser {
       throw new CustomError("Invalid Credentials", 400);
     }
 
-    if(user.googleId){
-      throw new CustomError("User registered with social login", 400)
-    } 
+    if (user.googleId) {
+      throw new CustomError("User registered with social login", 400);
+    }
 
-    if(!user.password){
-      throw new CustomError("Password missing", 400)
+    if (!user.password) {
+      throw new CustomError("Password missing", 400);
     }
 
     const isPasswordValid = await bcryptjs.compare(password, user.password);
@@ -29,16 +38,22 @@ export class LoginUser {
       throw new CustomError("Invalid Credentials", 400);
     }
 
-    if(user.isVerified === false){
-      throw new CustomError("User not verified", 400)
+    if (user.isVerified === false) {
+      let { otp, expiresAt } = generateOtp();
+      await this.otpRepository.createOtp({ email, otp, expiresAt });
+      await sendVerificationEmail(email, otp);
+      throw new CustomError("User not verified", 400);
     }
 
-    if(user.isBlocked){
-      throw new CustomError("You are blocked", 400)
+    if (user.isBlocked) {
+      throw new CustomError("You are blocked", 400);
     }
 
     const accessToken = generateAccessToken({ id: user._id, role: user.role });
-    const refreshToken = generateRefreshToken({ id: user._id, role: user.role })
+    const refreshToken = generateRefreshToken({
+      id: user._id,
+      role: user.role,
+    });
 
     return {
       accessToken,
