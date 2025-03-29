@@ -58,6 +58,8 @@ const ChatContainer = () => {
       if(socket){
         socket.emit("deleteMessage", { newMessages, userId: selectedUser?._id });
       }
+
+      window.location.reload()
     }
   };
 
